@@ -6,18 +6,15 @@
   <title>Browse Listings — Ludek Marketplace | CRUTECH Okuku</title>
   <meta name="description" content="Browse products, services, tutoring, and housing listings from CRUTECH Okuku students on Ludek Marketplace." />
   <meta name="theme-color" content="#2D5016" />
-
-  <link rel="manifest"         href="manifest.json" />
+  <link rel="manifest"         href="/manifest.json" />
   <link rel="icon"             type="image/svg+xml" href="favicon.svg" />
   <link rel="apple-touch-icon" href="/assets/icon-192.png" />
-
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
   <link rel="stylesheet" href="main.css" />
-  <link rel="stylesheet" href="marketplace.css" />
+  <link rel="stylesheet" href="marketplace.css"/>
 </head>
 
 <body class="marketplace-page">
@@ -28,8 +25,7 @@
   <nav class="nav" id="mainNav" role="navigation" aria-label="Main navigation">
     <div class="nav-inner">
 
-      <!-- Logo -->
-      <a href="/index.html" class="nav-logo" aria-label="Ludek Marketplace home">
+      <a href="index.html" class="nav-logo" aria-label="Ludek Marketplace home">
         <div class="nav-logo-icon">
           <i class="fas fa-store-alt" aria-hidden="true"></i>
         </div>
@@ -39,23 +35,24 @@
         </div>
       </a>
 
-      <!-- Desktop links -->
       <ul class="nav-links" role="list">
         <li>
-          <a href="marketplace.html" class="nav-link" aria-current="page">
+          <!-- BUG FIX 2 (HTML side): Added class="active" alongside aria-current
+               so both the CSS aria selector and the class selector apply. -->
+          <a href="marketplace.html" class="nav-link active" aria-current="page">
             <i class="fas fa-grid-2" aria-hidden="true"></i> Browse
           </a>
         </li>
         <li>
-          <a href="/seller/dashboard.html" class="nav-link">
+          <a href="dashboard.html" class="nav-link">
             <i class="fas fa-shop" aria-hidden="true"></i> Sell
           </a>
         </li>
       </ul>
 
-      <!-- Nav right: sell CTA + user avatar -->
       <div class="nav-actions">
-        <a href="/seller/add-listing.html" class="nav-btn-primary" style="display:none;" id="navSellBtn">
+        <!-- Shown only to sellers (set by JS) -->
+        <a href="/seller/add-listing.html" class="nav-btn-primary" id="navSellBtn" style="display:none;">
           <i class="fas fa-plus" aria-hidden="true"></i>
           Post Listing
         </a>
@@ -66,35 +63,30 @@
                aria-label="User menu" aria-haspopup="true" aria-expanded="false">
             <i class="fas fa-user-circle" aria-hidden="true"></i>
           </div>
-
           <div class="mkt-user-menu" id="userDropdownMenu" role="menu">
             <div class="mkt-user-info">
-              <div class="mkt-user-name" id="navUserName">Loading…</div>
+              <div class="mkt-user-name" id="navUserName">…</div>
               <div class="mkt-user-role">
                 <i class="fas fa-circle-user" aria-hidden="true"></i>
                 <span id="navUserRole">Buyer</span>
               </div>
             </div>
-
-            <a href="marketplace.html" class="mkt-menu-item" role="menuitem">
+            <a href="/marketplace.html" class="mkt-menu-item" role="menuitem">
               <i class="fas fa-grid-2" aria-hidden="true"></i> Browse
             </a>
-            <a href="/seller/dashboard.html" class="mkt-menu-item" role="menuitem" id="sellerDashLink">
+            <a href="/seller/dashboard.html" class="mkt-menu-item" role="menuitem">
               <i class="fas fa-shop" aria-hidden="true"></i> Seller Dashboard
             </a>
             <a href="/seller/profile.html" class="mkt-menu-item" role="menuitem">
               <i class="fas fa-circle-user" aria-hidden="true"></i> My Profile
             </a>
-
             <div class="mkt-menu-divider" aria-hidden="true"></div>
-
             <button class="mkt-menu-item danger" id="logoutBtn" role="menuitem" type="button">
               <i class="fas fa-arrow-right-from-bracket" aria-hidden="true"></i> Log Out
             </button>
           </div>
         </div>
 
-        <!-- Mobile hamburger -->
         <button class="nav-hamburger" id="navHamburger" aria-label="Open menu" aria-expanded="false">
           <i class="fas fa-bars" aria-hidden="true"></i>
         </button>
@@ -103,54 +95,31 @@
     </div>
   </nav>
 
-  <!-- Mobile menu -->
-  <div class="nav-mobile" id="navMobile" role="dialog" aria-label="Mobile nav" aria-modal="true">
+  <!-- Mobile nav -->
+  <div class="nav-mobile" id="navMobile" role="dialog" aria-label="Mobile navigation" aria-modal="true">
     <ul class="nav-mobile-links" role="list">
-      <li>
-        <a href="marketplace.html" class="nav-mobile-link active">
-          <i class="fas fa-grid-2" aria-hidden="true"></i> Browse Marketplace
-        </a>
-      </li>
-      <li>
-        <a href="/seller/dashboard.html" class="nav-mobile-link">
-          <i class="fas fa-shop" aria-hidden="true"></i> Seller Dashboard
-        </a>
-      </li>
-      <li>
-        <a href="/seller/profile.html" class="nav-mobile-link">
-          <i class="fas fa-circle-user" aria-hidden="true"></i> My Profile
-        </a>
-      </li>
+      <li><a href="/marketplace.html"       class="nav-mobile-link active"><i class="fas fa-grid-2" aria-hidden="true"></i> Browse Marketplace</a></li>
+      <li><a href="/seller/dashboard.html"  class="nav-mobile-link"><i class="fas fa-shop" aria-hidden="true"></i> Seller Dashboard</a></li>
+      <li><a href="/seller/profile.html"    class="nav-mobile-link"><i class="fas fa-circle-user" aria-hidden="true"></i> My Profile</a></li>
     </ul>
     <div class="nav-mobile-actions">
       <a href="/seller/add-listing.html" class="btn btn-primary w-full">
-        <i class="fas fa-plus" aria-hidden="true"></i>
-        Post a Listing
+        <i class="fas fa-plus" aria-hidden="true"></i> Post a Listing
       </a>
     </div>
   </div>
 
   <!-- ============================================================
-       DEMO MODE BANNER (shown when Firebase not configured)
+       DEMO BANNER  (shown when Firebase not configured)
        ============================================================ -->
-  <div id="demoBanner" class="hidden" role="alert" style="
-    background: var(--orange);
-    color: var(--milk);
-    text-align: center;
-    padding: 10px 16px;
-    font-size: 13px;
-    font-weight: 600;
-    position: sticky;
-    top: var(--nav-height);
-    z-index: 50;
-  ">
+  <div id="demoBanner" class="hidden" role="alert" style="background:var(--orange);color:var(--milk);text-align:center;padding:10px 16px;font-size:13px;font-weight:600;position:sticky;top:var(--nav-height);z-index:50;">
     <i class="fas fa-circle-info" aria-hidden="true"></i>
     &nbsp;Demo mode — Firebase not configured. Showing sample listings.
     <a href="/README.md" style="color:var(--milk);text-decoration:underline;margin-left:6px;">Setup guide</a>
   </div>
 
   <!-- ============================================================
-       MARKETPLACE HERO / SEARCH BAR
+       HERO + SEARCH
        ============================================================ -->
   <section class="mkt-hero" aria-label="Search marketplace">
     <div class="container mkt-hero-inner">
@@ -158,9 +127,7 @@
       <div class="mkt-hero-top">
         <div>
           <p class="mkt-hero-greeting">CRUTECH Okuku Campus</p>
-          <h1 class="mkt-hero-title">
-            Campus <span>Marketplace</span>
-          </h1>
+          <h1 class="mkt-hero-title">Campus <span>Marketplace</span></h1>
         </div>
         <div class="mkt-hero-actions">
           <a href="/seller/add-listing.html" class="mkt-sell-btn">
@@ -170,7 +137,6 @@
         </div>
       </div>
 
-      <!-- Search -->
       <div class="mkt-search-wrap" role="search">
         <i class="fas fa-magnifying-glass mkt-search-icon" aria-hidden="true"></i>
         <input
@@ -181,12 +147,7 @@
           autocomplete="off"
           aria-label="Search marketplace listings"
         />
-        <button
-          type="button"
-          id="mktSearchClear"
-          class="mkt-search-clear"
-          aria-label="Clear search"
-        >
+        <button type="button" id="mktSearchClear" class="mkt-search-clear" aria-label="Clear search">
           <i class="fas fa-xmark" aria-hidden="true"></i>
         </button>
       </div>
@@ -195,159 +156,97 @@
   </section>
 
   <!-- ============================================================
-       CATEGORY CHIPS BAR (sticky)
+       CATEGORY CHIPS  (sticky)
        ============================================================ -->
   <div class="mkt-cats-bar" role="navigation" aria-label="Filter by category">
     <div class="mkt-cats-inner" id="catChipsBar">
-      <!-- Rendered by JS -->
+      <!-- Populated by marketplace.js immediately on DOMContentLoaded -->
     </div>
   </div>
 
   <!-- ============================================================
-       BODY: SIDEBAR + FEED
+       BODY  (sidebar + feed)
        ============================================================ -->
   <div class="mkt-body">
     <div class="container mkt-body-inner">
 
-      <!-- ========================================================
-           SIDEBAR FILTERS (desktop)
-           ======================================================== -->
+      <!-- Sidebar filters — desktop -->
       <aside class="mkt-sidebar" aria-label="Filter listings">
 
-        <!-- Sort -->
         <div class="mkt-filter-card">
           <div class="mkt-filter-title">
             Sort By
-            <button class="mkt-filter-clear" onclick="clearAllFilters()" type="button">
-              Reset all
-            </button>
+            <button class="mkt-filter-clear" onclick="window.clearAllFilters()" type="button">Reset all</button>
           </div>
-
           <div class="mkt-filter-group" role="radiogroup" aria-label="Sort options">
             <label class="mkt-sort-option">
-              <input type="radio" name="sortBy" value="newest" checked />
-              Newest first
+              <input type="radio" name="sortBy" value="newest" checked /> Newest first
             </label>
             <label class="mkt-sort-option">
-              <input type="radio" name="sortBy" value="price_asc" />
-              Price: Low to High
+              <input type="radio" name="sortBy" value="price_asc" /> Price: Low to High
             </label>
             <label class="mkt-sort-option">
-              <input type="radio" name="sortBy" value="price_desc" />
-              Price: High to Low
+              <input type="radio" name="sortBy" value="price_desc" /> Price: High to Low
             </label>
           </div>
         </div>
 
-        <!-- Price -->
         <div class="mkt-filter-card">
           <div class="mkt-filter-title">Price Range (₦)</div>
           <div class="mkt-filter-group">
             <div class="mkt-price-range">
-              <input
-                type="number"
-                id="priceMin"
-                class="mkt-price-input"
-                placeholder="Min"
-                min="0"
-                aria-label="Minimum price"
-              />
+              <input type="number" id="priceMin" class="mkt-price-input" placeholder="Min" min="0" aria-label="Minimum price" />
               <span class="mkt-price-sep">—</span>
-              <input
-                type="number"
-                id="priceMax"
-                class="mkt-price-input"
-                placeholder="Max"
-                min="0"
-                aria-label="Maximum price"
-              />
+              <input type="number" id="priceMax" class="mkt-price-input" placeholder="Max" min="0" aria-label="Maximum price" />
             </div>
-            <button type="button" class="mkt-apply-btn">
-              <i class="fas fa-check" aria-hidden="true"></i>
-              Apply
+            <!-- BUG FIX 5: Added id="priceApplyBtn" so marketplace.js can wire
+                 this button up. Without an id it was completely disconnected
+                 from any event listener and clicking it did nothing. -->
+            <button type="button" id="priceApplyBtn" class="mkt-apply-btn">
+              <i class="fas fa-check" aria-hidden="true"></i> Apply
             </button>
           </div>
         </div>
 
       </aside>
 
-      <!-- ========================================================
-           MAIN FEED
-           ======================================================== -->
+      <!-- Main feed -->
       <main class="mkt-feed" id="mainFeed" aria-label="Listings feed">
 
         <!-- Toolbar -->
         <div class="mkt-toolbar" role="toolbar" aria-label="Feed controls">
-          <p class="mkt-results-count" id="resultsCount" aria-live="polite" aria-atomic="true">
-            Loading…
-          </p>
+          <p class="mkt-results-count" id="resultsCount" aria-live="polite" aria-atomic="true">Loading…</p>
 
           <div class="mkt-toolbar-right">
-            <!-- Mobile filter button -->
-            <button
-              type="button"
-              id="mktFilterBtn"
-              class="mkt-filter-btn"
-              aria-label="Open filters"
-              aria-haspopup="dialog"
-            >
-              <i class="fas fa-sliders" aria-hidden="true"></i>
-              Filter
+            <button type="button" id="mktFilterBtn" class="mkt-filter-btn" aria-label="Open filters" aria-haspopup="dialog">
+              <i class="fas fa-sliders" aria-hidden="true"></i> Filter
             </button>
-
-            <!-- View toggle -->
             <div class="mkt-view-toggle" role="group" aria-label="View mode">
-              <button
-                type="button"
-                id="viewGrid"
-                class="mkt-view-btn active"
-                aria-label="Grid view"
-                aria-pressed="true"
-              >
+              <button type="button" id="viewGrid" class="mkt-view-btn active" aria-label="Grid view" aria-pressed="true">
                 <i class="fas fa-grid-2" aria-hidden="true"></i>
               </button>
-              <button
-                type="button"
-                id="viewList"
-                class="mkt-view-btn"
-                aria-label="List view"
-                aria-pressed="false"
-              >
+              <button type="button" id="viewList" class="mkt-view-btn" aria-label="List view" aria-pressed="false">
                 <i class="fas fa-list" aria-hidden="true"></i>
               </button>
             </div>
           </div>
         </div>
 
-        <!-- Product grid -->
-        <div
-          id="mktGrid"
-          class="mkt-grid"
-          role="list"
-          aria-label="Product listings"
-          aria-live="polite"
-        >
-          <!-- Populated by JS -->
-        </div>
+        <!-- Product grid — populated by JS -->
+        <div id="mktGrid" class="mkt-grid" role="list" aria-label="Product listings" aria-live="polite"></div>
 
         <!-- Load more -->
         <div class="mkt-load-more-wrap">
-          <button
-            type="button"
-            id="loadMoreBtn"
-            class="mkt-load-more"
-            style="display:none;"
-            aria-label="Load more listings"
-          >
+          <button type="button" id="loadMoreBtn" class="mkt-load-more" style="display:none;" aria-label="Load more listings">
             <i class="fas fa-arrow-down" aria-hidden="true"></i>
             Load More Listings
           </button>
         </div>
 
-      </main><!-- /mkt-feed -->
+      </main>
 
-    </div><!-- /mkt-body-inner -->
-  </div><!-- /mkt-body -->
+    </div>
+  </div>
 
   <!-- ============================================================
        MOBILE FILTER DRAWER
@@ -355,7 +254,6 @@
   <div id="filterDrawerOverlay" class="filter-drawer-overlay" role="dialog" aria-modal="true" aria-label="Filters">
     <div class="filter-drawer">
       <div class="filter-drawer-handle" aria-hidden="true"></div>
-
       <div class="filter-drawer-header">
         <h2 class="filter-drawer-title">Filter Listings</h2>
         <button type="button" id="filterDrawerClose" class="filter-drawer-close" aria-label="Close filters">
@@ -363,120 +261,65 @@
         </button>
       </div>
 
-      <!-- Sort in drawer -->
       <div class="mkt-filter-group" style="margin-bottom:var(--space-6);">
         <div class="mkt-filter-group-label">Sort By</div>
         <div role="radiogroup" aria-label="Sort order">
           <label class="mkt-sort-option">
             <input type="radio" name="sortByDrawer" value="newest" checked
-              onchange="document.querySelector('input[name=sortBy][value=newest]').click()" />
+              onchange="document.querySelector('input[name=sortBy][value=newest]').checked=true;document.querySelector('input[name=sortBy][value=newest]').dispatchEvent(new Event('change'))" />
             Newest first
           </label>
           <label class="mkt-sort-option">
             <input type="radio" name="sortByDrawer" value="price_asc"
-              onchange="document.querySelector('input[name=sortBy][value=price_asc]').click()" />
+              onchange="document.querySelector('input[name=sortBy][value=price_asc]').checked=true;document.querySelector('input[name=sortBy][value=price_asc]').dispatchEvent(new Event('change'))" />
             Price: Low to High
           </label>
           <label class="mkt-sort-option">
             <input type="radio" name="sortByDrawer" value="price_desc"
-              onchange="document.querySelector('input[name=sortBy][value=price_desc]').click()" />
+              onchange="document.querySelector('input[name=sortBy][value=price_desc]').checked=true;document.querySelector('input[name=sortBy][value=price_desc]').dispatchEvent(new Event('change'))" />
             Price: High to Low
           </label>
         </div>
       </div>
 
-      <!-- Price in drawer -->
       <div class="mkt-filter-group">
         <div class="mkt-filter-group-label">Price Range (₦)</div>
         <div class="mkt-price-range">
-          <input
-            type="number"
-            id="priceMinDrawer"
-            class="mkt-price-input"
-            placeholder="Min"
-            min="0"
-            aria-label="Minimum price"
-          />
+          <input type="number" id="priceMinDrawer" class="mkt-price-input" placeholder="Min" min="0" aria-label="Min price" />
           <span class="mkt-price-sep">—</span>
-          <input
-            type="number"
-            id="priceMaxDrawer"
-            class="mkt-price-input"
-            placeholder="Max"
-            min="0"
-            aria-label="Maximum price"
-          />
+          <input type="number" id="priceMaxDrawer" class="mkt-price-input" placeholder="Max" min="0" aria-label="Max price" />
         </div>
       </div>
 
       <div class="filter-drawer-actions">
-        <button type="button" id="filterDrawerApply" class="filter-drawer-apply">
-          Apply Filters
-        </button>
-        <button type="button" id="filterDrawerReset" class="filter-drawer-reset">
-          Reset
-        </button>
+        <button type="button" id="filterDrawerApply" class="filter-drawer-apply">Apply Filters</button>
+        <button type="button" id="filterDrawerReset" class="filter-drawer-reset">Reset</button>
       </div>
     </div>
   </div>
 
-  <!-- ============================================================
-       SCROLL TO TOP
-       ============================================================ -->
+  <!-- Scroll to top -->
   <button id="scrollTopBtn" class="scroll-top" aria-label="Scroll to top" type="button">
     <i class="fas fa-arrow-up" aria-hidden="true"></i>
   </button>
 
-  <!-- Toast container -->
+  <!-- Toast -->
   <div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="true"></div>
 
   <!-- ============================================================
        SCRIPTS
+       Load order (must be exactly this):
+         1. Firebase SDKs (sync — no defer)
+         2. Firebase config (sync — no defer)
+         3. app.js (defer — navigation, SW, scroll)
+         4. marketplace.js (NO defer — must run after config.js)
        ============================================================ -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-
   <script src="config.js"></script>
   <script src="app.js" defer></script>
-  <script src="marketplace.js" defer></script>
-
-  <!-- Sync drawer price inputs with sidebar inputs -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      var minDrawer = document.getElementById('priceMinDrawer');
-      var maxDrawer = document.getElementById('priceMaxDrawer');
-      var minSide   = document.getElementById('priceMin');
-      var maxSide   = document.getElementById('priceMax');
-
-      if (minDrawer && minSide) {
-        minDrawer.addEventListener('input', function(){ minSide.value = this.value; });
-      }
-      if (maxDrawer && maxSide) {
-        maxDrawer.addEventListener('input', function(){ maxSide.value = this.value; });
-      }
-
-      // Show sell btn in nav for sellers (after auth)
-      // This is a lightweight role check — marketplace.js sets state.userRole
-      var sellBtn = document.getElementById('navSellBtn');
-      if (sellBtn) {
-        setTimeout(function () {
-          if (window._ludekState && window._ludekState.userRole === 'seller') {
-            sellBtn.style.display = 'flex';
-          }
-        }, 1500);
-      }
-    });
-  </script>
-
-  <!-- Expose state for inline access -->
-  <script>
-    window._ludekState = null;
-    document.addEventListener('DOMContentLoaded', function () {
-      // state is declared in marketplace.js — expose it after init
-      setTimeout(function () { window._ludekState = typeof state !== 'undefined' ? state : null; }, 100);
-    });
-  </script>
+  <script src="marketplace.js"></script>
 
 </body>
 </html>
