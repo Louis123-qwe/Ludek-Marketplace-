@@ -9,13 +9,14 @@ const STATIC_ASSETS = [
   '/',
   '/index.html',
   '/marketplace.html',
-  '/css/main.css',
-  '/css/components.css',
-  '/js/app.js',
-  '/js/auth.js',
+  '/main.css',
+  '/components.css',
+  '/app.js',
+  '/auth.js',
   '/manifest.json',
   '/assets/icon-192.png',
   '/assets/icon-512.png',
+  '/landing.css',
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css',
   'https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap'
 ];
@@ -77,12 +78,12 @@ self.addEventListener('fetch', (event) => {
 
   // Cache-first for static assets
   if (
-    request.url.includes('/css/') ||
-    request.url.includes('/js/') ||
-    request.url.includes('/assets/') ||
-    request.url.includes('fonts.googleapis.com') ||
-    request.url.includes('font-awesome')
-  ) {
+  request.url.endsWith('.css') ||
+  request.url.endsWith('.js') ||
+  request.url.includes('/assets/') ||
+  request.url.includes('fonts.googleapis.com') ||
+  request.url.includes('font-awesome')
+) {
     event.respondWith(
       caches.match(request).then((cachedResponse) => {
         if (cachedResponse) return cachedResponse;
