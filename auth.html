@@ -1,100 +1,351 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>Auth — Ludek Marketplace</title>
-  <link rel="manifest" href="/manifest.json"/>
-  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg"/>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous"/>
-  <link rel="stylesheet" href="main.css"/>
-  <style>
-    .auth-page {
-      min-height: 100svh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: var(--space-6);
-      background: var(--bg-secondary);
-    }
-    .auth-box {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-2xl);
-      box-shadow: var(--shadow-xl);
-      padding: var(--space-10) var(--space-8);
-      width: 100%;
-      max-width: 420px;
-      text-align: center;
-    }
-    .auth-logo {
-      width: 52px;
-      height: 52px;
-      background: var(--forest);
-      border-radius: var(--radius-lg);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto var(--space-5);
-    }
-    .auth-logo i { color: var(--milk); font-size: 22px; }
-    .auth-title {
-      font-family: var(--font-display);
-      font-weight: var(--weight-black);
-      font-size: var(--text-2xl);
-      color: var(--text-primary);
-      margin-bottom: var(--space-2);
-    }
-    .auth-sub {
-      font-size: var(--text-sm);
-      color: var(--text-muted);
-      margin-bottom: var(--space-8);
-    }
-    .auth-notice {
-      background: var(--forest-tint);
-      border: 1px solid var(--forest-pale);
-      border-radius: var(--radius-lg);
-      padding: var(--space-4) var(--space-5);
-      font-size: var(--text-sm);
-      color: var(--forest);
-      margin-bottom: var(--space-6);
-    }
-    .auth-notice i { margin-right: var(--space-2); }
-    .auth-back {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--space-2);
-      font-size: var(--text-sm);
-      color: var(--text-muted);
-      transition: color var(--transition-fast);
-    }
-    .auth-back:hover { color: var(--forest); }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Sign In — Ludek Marketplace</title>
+  <meta name="description" content="Log in or create your free Ludek Marketplace account. Join CRUTECH Okuku's campus marketplace." />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#2D5016" />
+
+  <link rel="manifest"  href="/manifest.json" />
+  <link rel="icon"      type="image/svg+xml" href="favicon.svg" />
+  <link rel="apple-touch-icon" href="/assets/icon-192.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <link rel="stylesheet" href="main.css" />
+  <link rel="stylesheet" href="auth.css" />
 </head>
+
 <body>
+
+  <!-- Redirect loading screen -->
+  <div id="redirectScreen" class="auth-redirect-screen" aria-live="polite" aria-atomic="true">
+    <div class="auth-redirect-icon">
+      <i class="fas fa-store-alt" aria-hidden="true"></i>
+    </div>
+    <p class="auth-redirect-text">Welcome!</p>
+    <p class="auth-redirect-sub" id="redirectLabel">Taking you to the Marketplace…</p>
+    <div class="spinner" style="margin-top:8px;"></div>
+  </div>
+
   <div class="auth-page">
-    <div class="auth-box animate-scale-in">
-      <div class="auth-logo">
-        <i class="fas fa-store-alt"></i>
-      </div>
-      <h1 class="auth-title">Authentication</h1>
-      <p class="auth-sub">Ludek Marketplace — CRUTECH Okuku</p>
 
-      <div class="auth-notice">
-        <i class="fas fa-circle-info"></i>
-        <strong> Coming Soon.</strong><br/>
-        The full auth system (login, signup, roles) will be built in Phase 2.
+    <!-- LEFT — Branding -->
+    <aside class="auth-panel-brand" aria-label="Ludek branding">
+      <div class="auth-brand-top">
+        <a href="/index.html" class="auth-brand-logo">
+          <div class="auth-brand-logo-icon">
+            <i class="fas fa-store-alt" aria-hidden="true"></i>
+          </div>
+          <span class="auth-brand-logo-name">Ludek</span>
+        </a>
+        <h1 class="auth-brand-headline">
+          Your Campus.<br/>
+          Your <span class="highlight">Market</span>.<br/>
+          Your Hustle.
+        </h1>
+        <p class="auth-brand-desc">
+          Join hundreds of CRUTECH Okuku students buying, selling, finding tutors, and listing housing — all in one place.
+        </p>
+        <div class="auth-brand-features">
+          <div class="auth-brand-feature">
+            <div class="auth-brand-feature-icon"><i class="fas fa-circle-dollar-to-slot" aria-hidden="true"></i></div>
+            <span class="auth-brand-feature-text">100% free — no listing fees ever</span>
+          </div>
+          <div class="auth-brand-feature">
+            <div class="auth-brand-feature-icon"><i class="fab fa-whatsapp" aria-hidden="true"></i></div>
+            <span class="auth-brand-feature-text">Direct WhatsApp contact with sellers</span>
+          </div>
+          <div class="auth-brand-feature">
+            <div class="auth-brand-feature-icon"><i class="fas fa-shield-halved" aria-hidden="true"></i></div>
+            <span class="auth-brand-feature-text">Campus-only — students you can trust</span>
+          </div>
+          <div class="auth-brand-feature">
+            <div class="auth-brand-feature-icon"><i class="fas fa-mobile-screen" aria-hidden="true"></i></div>
+            <span class="auth-brand-feature-text">Install as an app — works offline</span>
+          </div>
+        </div>
       </div>
+      <div class="auth-brand-bottom">
+        &copy; 2025 Ludek Marketplace &bull; CRUTECH Okuku, Cross River State
+      </div>
+    </aside>
 
-      <a href="index.html" class="auth-back">
-        <i class="fas fa-arrow-left"></i>
-        Back to Landing Page
+    <!-- RIGHT — Form -->
+    <main class="auth-panel-form">
+
+      <!-- Mobile logo -->
+      <a href="/index.html" class="auth-mobile-logo" aria-label="Ludek home">
+        <div class="auth-mobile-logo-icon">
+          <i class="fas fa-store-alt" aria-hidden="true"></i>
+        </div>
+        <span class="auth-mobile-logo-name">Ludek</span>
       </a>
+
+      <div class="auth-card animate-scale-in">
+
+        <!-- Tab switcher -->
+        <div class="auth-tabs" role="tablist" aria-label="Auth mode">
+          <button id="tabLogin"  class="auth-tab active" role="tab" aria-selected="true"  aria-controls="paneLogin">
+            <i class="fas fa-arrow-right-to-bracket" aria-hidden="true"></i> Log In
+          </button>
+          <button id="tabSignup" class="auth-tab"        role="tab" aria-selected="false" aria-controls="paneSignup">
+            <i class="fas fa-user-plus" aria-hidden="true"></i> Sign Up
+          </button>
+        </div>
+
+        <!-- LOGIN PANE -->
+        <div id="paneLogin" role="tabpanel" aria-labelledby="tabLogin">
+          <div class="auth-card-header">
+            <h2 class="auth-card-title">Welcome back</h2>
+            <p class="auth-card-subtitle">Log in to your Ludek Marketplace account</p>
+          </div>
+
+          <div id="authAlertLogin" class="auth-alert auth-alert-error" role="alert" aria-live="polite">
+            <i class="fas fa-circle-xmark" aria-hidden="true"></i><span></span>
+          </div>
+
+          <form id="loginForm" class="auth-form" novalidate autocomplete="on">
+            <div class="auth-field">
+              <label class="auth-label" for="loginEmail">Email address</label>
+              <div class="auth-input-wrap">
+                <i class="fas fa-envelope auth-input-icon" aria-hidden="true"></i>
+                <input type="email" id="loginEmail" name="email" class="auth-input"
+                  placeholder="you@example.com" autocomplete="email" inputmode="email" required />
+              </div>
+              <span id="loginEmailError" class="auth-error-msg" role="alert">
+                <i class="fas fa-triangle-exclamation" aria-hidden="true"></i>
+              </span>
+            </div>
+
+            <div class="auth-field">
+              <label class="auth-label" for="loginPassword">Password</label>
+              <div class="auth-input-wrap">
+                <i class="fas fa-lock auth-input-icon" aria-hidden="true"></i>
+                <input type="password" id="loginPassword" name="password" class="auth-input"
+                  placeholder="Your password" autocomplete="current-password" required />
+                <button type="button" id="loginPasswordToggle" class="auth-input-action" aria-label="Show password">
+                  <i class="fas fa-eye" aria-hidden="true"></i>
+                </button>
+              </div>
+              <span id="loginPasswordError" class="auth-error-msg" role="alert">
+                <i class="fas fa-triangle-exclamation" aria-hidden="true"></i>
+              </span>
+            </div>
+
+            <div class="auth-forgot">
+              <a href="#" id="forgotPasswordLink">Forgot password?</a>
+            </div>
+
+            <button type="submit" id="loginBtn" class="auth-submit">
+              <span class="btn-text">
+                <i class="fas fa-arrow-right-to-bracket" aria-hidden="true"></i> Log In
+              </span>
+              <span class="auth-submit-spinner" aria-hidden="true"></span>
+            </button>
+          </form>
+
+          <p class="auth-card-footer">
+            Don't have an account? <a href="#" id="switchToSignup">Create one free</a>
+          </p>
+        </div>
+
+        <!-- SIGNUP PANE -->
+        <div id="paneSignup" role="tabpanel" aria-labelledby="tabSignup" class="hidden">
+          <div class="auth-card-header">
+            <h2 class="auth-card-title">Create account</h2>
+            <p class="auth-card-subtitle">Join Ludek Marketplace — it's free, always</p>
+          </div>
+
+          <div id="authAlertSignup" class="auth-alert auth-alert-error" role="alert" aria-live="polite">
+            <i class="fas fa-circle-xmark" aria-hidden="true"></i><span></span>
+          </div>
+
+          <form id="signupForm" class="auth-form" novalidate autocomplete="on">
+            <div class="auth-form-row">
+              <div class="auth-field">
+                <label class="auth-label" for="signupFirstName">First name</label>
+                <div class="auth-input-wrap">
+                  <i class="fas fa-user auth-input-icon" aria-hidden="true"></i>
+                  <input type="text" id="signupFirstName" name="firstName" class="auth-input"
+                    placeholder="John" autocomplete="given-name" required />
+                </div>
+                <span id="signupFirstNameError" class="auth-error-msg" role="alert">
+                  <i class="fas fa-triangle-exclamation" aria-hidden="true"></i>
+                </span>
+              </div>
+              <div class="auth-field">
+                <label class="auth-label" for="signupLastName">Last name</label>
+                <div class="auth-input-wrap">
+                  <i class="fas fa-user auth-input-icon" aria-hidden="true"></i>
+                  <input type="text" id="signupLastName" name="lastName" class="auth-input"
+                    placeholder="Doe" autocomplete="family-name" required />
+                </div>
+                <span id="signupLastNameError" class="auth-error-msg" role="alert">
+                  <i class="fas fa-triangle-exclamation" aria-hidden="true"></i>
+                </span>
+              </div>
+            </div>
+
+            <div class="auth-field">
+              <label class="auth-label" for="signupEmail">Email address</label>
+              <div class="auth-input-wrap">
+                <i class="fas fa-envelope auth-input-icon" aria-hidden="true"></i>
+                <input type="email" id="signupEmail" name="email" class="auth-input"
+                  placeholder="you@example.com" autocomplete="email" inputmode="email" required />
+              </div>
+              <span id="signupEmailError" class="auth-error-msg" role="alert">
+                <i class="fas fa-triangle-exclamation" aria-hidden="true"></i>
+              </span>
+            </div>
+
+            <div class="auth-field">
+              <label class="auth-label" for="signupPassword">Password</label>
+              <div class="auth-input-wrap">
+                <i class="fas fa-lock auth-input-icon" aria-hidden="true"></i>
+                <input type="password" id="signupPassword" name="password" class="auth-input"
+                  placeholder="At least 6 characters" autocomplete="new-password" required />
+                <button type="button" id="signupPasswordToggle" class="auth-input-action" aria-label="Show password">
+                  <i class="fas fa-eye" aria-hidden="true"></i>
+                </button>
+              </div>
+              <span id="signupPasswordError" class="auth-error-msg" role="alert">
+                <i class="fas fa-triangle-exclamation" aria-hidden="true"></i>
+              </span>
+              <div id="passwordStrength" class="password-strength" aria-live="polite">
+                <div class="strength-bars" aria-hidden="true">
+                  <div class="strength-bar"></div>
+                  <div class="strength-bar"></div>
+                  <div class="strength-bar"></div>
+                  <div class="strength-bar"></div>
+                </div>
+                <span class="strength-label"></span>
+              </div>
+            </div>
+
+            <!-- Role picker -->
+            <div class="auth-field">
+              <span class="role-picker-label" id="roleLabel">I want to join as a…</span>
+              <div class="role-picker" role="radiogroup" aria-labelledby="roleLabel">
+
+                <div class="role-option">
+                  <input type="radio" id="roleCustomer" name="signupRole" value="customer" checked />
+                  <label class="role-option-label" for="roleCustomer">
+                    <div class="role-option-icon"><i class="fas fa-bag-shopping" aria-hidden="true"></i></div>
+                    <span class="role-option-name">Buyer</span>
+                  </label>
+                  <div class="role-option-check" aria-hidden="true"><i class="fas fa-check"></i></div>
+                </div>
+
+                <div class="role-option">
+                  <input type="radio" id="roleSeller" name="signupRole" value="seller" />
+                  <label class="role-option-label" for="roleSeller">
+                    <div class="role-option-icon"><i class="fas fa-shop" aria-hidden="true"></i></div>
+                    <span class="role-option-name">Seller</span>
+                  </label>
+                  <div class="role-option-check" aria-hidden="true"><i class="fas fa-check"></i></div>
+                </div>
+
+                <div class="role-option">
+                  <input type="radio" id="roleTutor" name="signupRole" value="seller" />
+                  <label class="role-option-label" for="roleTutor">
+                    <div class="role-option-icon"><i class="fas fa-chalkboard-user" aria-hidden="true"></i></div>
+                    <span class="role-option-name">Tutor</span>
+                  </label>
+                  <div class="role-option-check" aria-hidden="true"><i class="fas fa-check"></i></div>
+                </div>
+
+              </div>
+            </div>
+
+            <button type="submit" id="signupBtn" class="auth-submit">
+              <span class="btn-text">
+                <i class="fas fa-user-plus" aria-hidden="true"></i> Create Free Account
+              </span>
+              <span class="auth-submit-spinner" aria-hidden="true"></span>
+            </button>
+
+            <p class="auth-terms">
+              By signing up you agree to our
+              <a href="/terms.html">Terms of Service</a> and
+              <a href="/privacy.html">Privacy Policy</a>.
+            </p>
+          </form>
+
+          <p class="auth-card-footer">
+            Already have an account? <a href="#" id="switchToLogin">Log in here</a>
+          </p>
+        </div>
+
+      </div><!-- /auth-card -->
+    </main>
+
+  </div><!-- /auth-page -->
+
+  <!-- FORGOT PASSWORD MODAL -->
+  <div id="forgotModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="forgotTitle">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 class="modal-title" id="forgotTitle">Reset Password</h2>
+        <button id="forgotModalClose" class="modal-close" type="button" aria-label="Close">
+          <i class="fas fa-xmark" aria-hidden="true"></i>
+        </button>
+      </div>
+      <p class="modal-desc">Enter your email and we'll send a reset link to your inbox.</p>
+
+      <div id="resetAlert" class="auth-alert auth-alert-error" role="alert" aria-live="polite">
+        <i class="fas fa-circle-xmark" aria-hidden="true"></i><span></span>
+      </div>
+
+      <form id="forgotForm" class="auth-form" novalidate>
+        <div class="auth-field">
+          <label class="auth-label" for="resetEmail">Email address</label>
+          <div class="auth-input-wrap">
+            <i class="fas fa-envelope auth-input-icon" aria-hidden="true"></i>
+            <input type="email" id="resetEmail" name="resetEmail" class="auth-input"
+              placeholder="you@example.com" autocomplete="email" inputmode="email" required />
+          </div>
+          <span id="resetEmailError" class="auth-error-msg" role="alert">
+            <i class="fas fa-triangle-exclamation" aria-hidden="true"></i>
+          </span>
+        </div>
+        <button type="submit" id="resetBtn" class="auth-submit">
+          <span class="btn-text">
+            <i class="fas fa-paper-plane" aria-hidden="true"></i> Send Reset Link
+          </span>
+          <span class="auth-submit-spinner" aria-hidden="true"></span>
+        </button>
+      </form>
     </div>
   </div>
+
+  <div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Firebase compat SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <script src="config.js"></script>
   <script src="app.js" defer></script>
+  <script src="auth.js" defer></script>
+
+  <!-- Tab cross-link wiring -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      document.getElementById('switchToSignup').addEventListener('click', function(e){
+        e.preventDefault(); document.getElementById('tabSignup').click();
+      });
+      document.getElementById('switchToLogin').addEventListener('click', function(e){
+        e.preventDefault(); document.getElementById('tabLogin').click();
+      });
+    });
+  </script>
+
 </body>
 </html>
