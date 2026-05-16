@@ -5,7 +5,7 @@
 
 ### Project Structure
 
-```
+
 ludek-marketplace/
 ├── index.html              ← Landing page (Phase 1)
 ├── auth.html               ← Auth placeholder (Phase 2)
@@ -32,7 +32,7 @@ ludek-marketplace/
 │   └── dashboard.html      ← Placeholder (Phase 4)
 │
 └── admin/                  ← Placeholder (Phase 7)
-```
+
 
 ---
 
@@ -45,53 +45,12 @@ All colors are CSS custom properties in `css/main.css` under `:root`.
 
 ---
 
-### How to Run Locally
-
-1. **Serve with a local dev server** (required for PWA + service worker):
-   ```bash
-   # Using Node.js + npx
-   npx serve .
-
-   # OR Python
-   python3 -m http.server 8000
-   ```
-
-2. Open `http://localhost:3000` (or the port shown).
-
-3. The PWA install banner will appear after ~3 seconds on first visit.
-
----
-
-### Generate PWA Icons
-
-Use [realfavicongenerator.net](https://realfavicongenerator.net) or:
-
-```bash
-# Using ImageMagick (if installed)
-convert favicon.svg -resize 192x192 assets/icon-192.png
-convert favicon.svg -resize 512x512 assets/icon-512.png
-```
-
-Place the output PNG files in the `/assets/` folder.
-
----
-
-### Firebase Setup (Phase 2)
-
-1. Go to [Firebase Console](https://console.firebase.google.com)
-2. Create a project: `ludek-marketplace`
-3. Enable **Authentication** (Email/Password)
-4. Create **Firestore Database**
-5. Copy your config to `firebase/config.js`
-
----
-
 ### Phase Progress
 
 | Phase | Description              | Status    |
 |-------|--------------------------|-----------|
 | 1     | PWA Foundation           | ✅ Done   |
-| 2     | Auth System (Firebase)   | ⏳ Next   |
+| 2     | Auth System (Firebase)   | ⏳ progress  |
 | 3     | Marketplace Feed         | 🔜 Soon   |
 | 4     | Seller Dashboard         | 🔜 Soon   |
 | 5     | Product System           | 🔜 Soon   |
@@ -101,13 +60,3 @@ Place the output PNG files in the `/assets/` folder.
 
 ---
 
-### Deployment (Firebase Hosting)
-
-```bash
-npm install -g firebase-tools
-firebase login
-firebase init hosting
-firebase deploy
-```
-
-Set `public` directory to `.` (project root).
