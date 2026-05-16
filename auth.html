@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Auth — Ludek Marketplace</title>
+  <link rel="manifest" href="/manifest.json"/>
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous"/>
+  <link rel="stylesheet" href="main.css"/>
+  <style>
+    .auth-page {
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-6);
+      background: var(--bg-secondary);
+    }
+    .auth-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-2xl);
+      box-shadow: var(--shadow-xl);
+      padding: var(--space-10) var(--space-8);
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+    }
+    .auth-logo {
+      width: 52px;
+      height: 52px;
+      background: var(--forest);
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto var(--space-5);
+    }
+    .auth-logo i { color: var(--milk); font-size: 22px; }
+    .auth-title {
+      font-family: var(--font-display);
+      font-weight: var(--weight-black);
+      font-size: var(--text-2xl);
+      color: var(--text-primary);
+      margin-bottom: var(--space-2);
+    }
+    .auth-sub {
+      font-size: var(--text-sm);
+      color: var(--text-muted);
+      margin-bottom: var(--space-8);
+    }
+    .auth-notice {
+      background: var(--forest-tint);
+      border: 1px solid var(--forest-pale);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4) var(--space-5);
+      font-size: var(--text-sm);
+      color: var(--forest);
+      margin-bottom: var(--space-6);
+    }
+    .auth-notice i { margin-right: var(--space-2); }
+    .auth-back {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: var(--text-sm);
+      color: var(--text-muted);
+      transition: color var(--transition-fast);
+    }
+    .auth-back:hover { color: var(--forest); }
+  </style>
+</head>
+<body>
+  <div class="auth-page">
+    <div class="auth-box animate-scale-in">
+      <div class="auth-logo">
+        <i class="fas fa-store-alt"></i>
+      </div>
+      <h1 class="auth-title">Authentication</h1>
+      <p class="auth-sub">Ludek Marketplace — CRUTECH Okuku</p>
+
+      <div class="auth-notice">
+        <i class="fas fa-circle-info"></i>
+        <strong> Coming Soon.</strong><br/>
+        The full auth system (login, signup, roles) will be built in Phase 2.
+      </div>
+
+      <a href="index.html" class="auth-back">
+        <i class="fas fa-arrow-left"></i>
+        Back to Landing Page
+      </a>
+    </div>
+  </div>
+  <script src="app.js" defer></script>
+</body>
+</html>

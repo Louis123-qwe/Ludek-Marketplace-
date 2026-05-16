@@ -1,0 +1,35 @@
+{
+  "name": "Ludek Marketplace - CRUTECH Okuku Campus",
+  "short_name": "Ludek Market",
+  "description": "Buy and sell products, services, tutoring, and housing within CRUTECH Okuku Campus.",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#FAF7F0",
+  "theme_color": "#2D5016",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["shopping", "education", "lifestyle"],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Browse Listings",
+      "short_name": "Browse",
+      "description": "Go directly to the marketplace",
+      "url": "/marketplace.html",
+      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- ============================================================
+       META — SEO, PWA, Social
+       ============================================================ -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <!-- Primary SEO -->
+  <title>Ludek Marketplace — CRUTECH Okuku Campus Buy &amp; Sell Platform</title>
+  <meta name="description" content="Buy and sell products, services, tutoring, and housing within CRUTECH Okuku Campus. Connect students instantly through Ludek Marketplace." />
+  <meta name="keywords" content="campus marketplace, CRUTECH Okuku, student buy and sell, tutoring, housing, Nigeria campus market, Cross River University of Technology" />
+  <meta name="author" content="Ludek Marketplace" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#2D5016" />
+  <link rel="canonical" href="https://ludek.marketplace/" />
+
+  <!-- Open Graph (Facebook, WhatsApp previews) -->
+  <meta property="og:type"        content="website" />
+  <meta property="og:url"         content="https://ludek.marketplace/" />
+  <meta property="og:title"       content="Ludek Marketplace — CRUTECH Okuku Campus" />
+  <meta property="og:description" content="Buy and sell products, services, tutoring, and housing within CRUTECH Okuku Campus." />
+  <meta property="og:image"       content="https://ludek.marketplace/assets/og-image.jpg" />
+  <meta property="og:site_name"   content="Ludek Marketplace" />
+  <meta property="og:locale"      content="en_NG" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content="Ludek Marketplace — CRUTECH Okuku" />
+  <meta name="twitter:description" content="Your campus marketplace. Buy, sell, find housing and tutors." />
+  <meta name="twitter:image"       content="https://ludek.marketplace/assets/og-image.jpg" />
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json" />
+
+  <!-- Apple / iOS PWA -->
+  <meta name="apple-mobile-web-app-capable"          content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title"            content="Ludek Market" />
+  <link rel="apple-touch-icon" href="/assets/icon-192.png" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="icon" type="image/png"     href="/assets/icon-192.png" />
+
+  <!-- Preconnect for performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- App CSS -->
+  <link rel="stylesheet" href="main.css" />
+  <link rel="stylesheet" href="landing.css" />
+
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Ludek Marketplace",
+    "description": "Campus marketplace for CRUTECH Okuku — buy, sell, find tutors and housing.",
+    "url": "https://ludek.marketplace/",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://ludek.marketplace/marketplace.html?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+</head>
+
+<body>
+
+  <!-- ============================================================
+       PAGE LOADER
+       ============================================================ -->
+  <div id="pageLoader" class="page-loader" aria-hidden="true">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:16px;">
+      <div style="width:44px;height:44px;background:var(--forest);border-radius:12px;display:flex;align-items:center;justify-content:center;">
+        <i class="fas fa-store" style="color:var(--milk);font-size:20px;"></i>
+      </div>
+      <div class="spinner"></div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       ANNOUNCEMENT BAR
+       ============================================================ -->
+  <div class="announce-bar" role="banner">
+    <p class="announce-text">
+      <i class="fas fa-bullhorn"></i>
+      &nbsp;Welcome to Ludek Marketplace — CRUTECH Okuku's official student marketplace is now live!
+      <a href="#get-started" style="color:var(--milk);margin-left:6px;">Get started free &rarr;</a>
+    </p>
+  </div>
+
+  <!-- ============================================================
+       NAVIGATION
+       ============================================================ -->
+  <nav class="nav" id="mainNav" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+
+      <!-- Logo -->
+      <a href="/index.html" class="nav-logo" aria-label="Ludek Marketplace home">
+        <div class="nav-logo-icon">
+          <i class="fas fa-store-alt" aria-hidden="true"></i>
+        </div>
+        <div class="nav-logo-text">
+          <span class="nav-logo-name">Ludek</span>
+          <span class="nav-logo-sub">MarketPlace</span>
+        </div>
+      </a>
+
+      <!-- Desktop Links -->
+      <ul class="nav-links" role="list">
+        <li>
+          <a href="/marketplace.html" class="nav-link">
+            <i class="fas fa-grid-2" aria-hidden="true"></i>
+            Browse
+          </a>
+        </li>
+        <li>
+          <a href="#categories" class="nav-link">
+            <i class="fas fa-tags" aria-hidden="true"></i>
+            Categories
+          </a>
+        </li>
+        <li>
+          <a href="#how-it-works" class="nav-link">
+            <i class="fas fa-circle-question" aria-hidden="true"></i>
+            How it works
+          </a>
+        </li>
+        <li>
+          <a href="/seller/dashboard.html" class="nav-link">
+            <i class="fas fa-shop" aria-hidden="true"></i>
+            Sell
+          </a>
+        </li>
+      </ul>
+
+      <!-- Desktop Actions -->
+      <div class="nav-actions">
+        <a href="/auth.html?mode=login" class="nav-btn-ghost">
+          <i class="fas fa-arrow-right-to-bracket" aria-hidden="true"></i>
+          Log in
+        </a>
+        <a href="/auth.html?mode=signup" class="nav-btn-primary">
+          <i class="fas fa-user-plus" aria-hidden="true"></i>
+          Sign up free
+        </a>
+      </div>
+
+      <!-- Mobile Hamburger -->
+      <button class="nav-hamburger" id="navHamburger" aria-label="Open menu" aria-expanded="false" aria-controls="navMobile">
+        <i class="fas fa-bars" aria-hidden="true"></i>
+      </button>
+
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="nav-mobile" id="navMobile" role="dialog" aria-label="Mobile navigation" aria-modal="true">
+    <ul class="nav-mobile-links" role="list">
+      <li>
+        <a href="/marketplace.html" class="nav-mobile-link">
+          <i class="fas fa-grid-2" aria-hidden="true"></i>
+          Browse Marketplace
+        </a>
+      </li>
+      <li>
+        <a href="#categories" class="nav-mobile-link">
+          <i class="fas fa-tags" aria-hidden="true"></i>
+          Categories
+        </a>
+      </li>
+      <li>
+        <a href="#how-it-works" class="nav-mobile-link">
+          <i class="fas fa-circle-question" aria-hidden="true"></i>
+          How It Works
+        </a>
+      </li>
+      <li>
+        <a href="dashboard.html" class="nav-mobile-link">
+          <i class="fas fa-shop" aria-hidden="true"></i>
+          Sell on Ludek
+        </a>
+      </li>
+      <li>
+        <a href="auth.html?mode=login" class="nav-mobile-link">
+          <i class="fas fa-arrow-right-to-bracket" aria-hidden="true"></i>
+          Log In
+        </a>
+      </li>
+    </ul>
+    <div class="nav-mobile-actions">
+      <a href="auth.html?mode=signup" class="btn btn-primary w-full">
+        <i class="fas fa-user-plus" aria-hidden="true"></i>
+        Create Free Account
+      </a>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       HERO SECTION
+       ============================================================ -->
+  <main>
+    <section class="hero" aria-label="Hero" id="get-started">
+      <div class="container">
+        <div class="hero-inner">
+
+          <!-- Content -->
+          <div class="hero-content">
+
+            <div class="hero-eyebrow animate-fade-up">
+              <i class="fas fa-location-dot" aria-hidden="true"></i>
+              Ludek Official online Marketplace 
+            </div>
+
+            <h1 class="hero-heading animate-fade-up delay-100">
+              Your Campus.<br/>
+              Your <span class="accent-green">Market</span>.<br/>
+              Your <span class="accent-orange">Hustle</span>.
+            </h1>
+
+            <p class="hero-description animate-fade-up delay-200">
+              Buy and sell products, find tutors, list housing, and offer services — all within CRUTECH Okuku Campus. Connect with fellow students instantly through WhatsApp.
+            </p>
+
+            <div class="hero-cta-group animate-fade-up delay-300">
+              <a href="marketplace.html" class="btn btn-primary btn-lg">
+                <i class="fas fa-magnifying-glass" aria-hidden="true"></i>
+                Browse Listings
+              </a>
+              <a href="auth.html?mode=signup&role=seller" class="btn btn-outline-orange btn-lg">
+                <i class="fas fa-plus" aria-hidden="true"></i>
+                Start Selling
+              </a>
+            </div>
+
+            <div class="hero-stats animate-fade-up delay-400">
+              <div class="hero-stat">
+                <span class="hero-stat-number">500+</span>
+                <span class="hero-stat-label">Students</span>
+              </div>
+              <div class="hero-stat">
+                <span class="hero-stat-number">8</span>
+                <span class="hero-stat-label">Categories</span>
+              </div>
+              <div class="hero-stat">
+                <span class="hero-stat-number">Free</span>
+                <span class="hero-stat-label">Always</span>
+              </div>
+            </div>
+
+          </div><!-- /hero-content -->
+
+          <!-- Visual mockup -->
+          <div class="hero-visual animate-scale-in delay-200" aria-hidden="true">
+            <div class="hero-phone-frame">
+
+              <!-- Left floating card -->
+              <div class="hero-float-card card-left">
+                <div class="hero-float-icon green">
+                  <i class="fas fa-check" aria-hidden="true"></i>
+                </div>
+                <div>
+                  <span class="hero-float-text-title">New Sale!</span>
+                  <span class="hero-float-text-sub">Textbook sold in 5 mins</span>
+                </div>
+              </div>
+
+              <!-- Right floating card -->
+              <div class="hero-float-card card-right">
+                <div class="hero-float-icon orange">
+                  <i class="fab fa-whatsapp" aria-hidden="true"></i>
+                </div>
+                <div>
+                  <span class="hero-float-text-title">Chat Seller</span>
+                  <span class="hero-float-text-sub">Direct WhatsApp link</span>
+                </div>
+              </div>
+
+              <!-- Main app mockup -->
+              <div class="hero-mockup">
+
+                <!-- App header -->
+                <div class="hero-mockup-header">
+                  <div class="hero-mockup-logo">
+                    <i class="fas fa-store-alt" aria-hidden="true"></i>
+                    <span class="hero-mockup-logo-text">Ludek</span>
+                  </div>
+                  <div class="hero-mockup-status">
+                    <div class="hero-mockup-dot"></div>
+                    <span>Live</span>
+                  </div>
+                </div>
+
+                <!-- Search bar -->
+                <div class="hero-mockup-search">
+                  <div class="hero-mockup-search-bar">
+                    <i class="fas fa-magnifying-glass" aria-hidden="true"></i>
+                    <span class="hero-mockup-search-text">Search on campus...</span>
+                  </div>
+                </div>
+
+                <!-- Category chips -->
+                <div class="hero-mockup-categories">
+                  <div class="hero-cat-chip active">
+                    <i class="fas fa-fire-flame-curved"></i>
+                    All
+                  </div>
+                  <div class="hero-cat-chip inactive">
+                    <i class="fas fa-laptop"></i>
+                    Electronics
+                  </div>
+                  <div class="hero-cat-chip inactive">
+                    <i class="fas fa-book"></i>
+                    Books
+                  </div>
+                  <div class="hero-cat-chip inactive">
+                    <i class="fas fa-house"></i>
+                    Housing
+                  </div>
+                </div>
+
+                <!-- Product grid -->
+                <div class="hero-mockup-grid">
+
+                  <div class="hero-product-card">
+                    <div class="hero-product-img electronics">
+                      <i class="fas fa-laptop" style="color:#2D5016;"></i>
+                      <span class="hero-product-badge">Hot</span>
+                    </div>
+                    <div class="hero-product-info">
+                      <div class="hero-product-name">HP Laptop</div>
+                      <div class="hero-product-price">₦450,000</div>
+                    </div>
+                  </div>
+
+                  <div class="hero-product-card">
+                    <div class="hero-product-img fashion">
+                      <i class="fas fa-shirt" style="color:#D4520A;"></i>
+                    </div>
+                    <div class="hero-product-info">
+                      <div class="hero-product-name">Joggers Set</div>
+                      <div class="hero-product-price">₦3,500</div>
+                    </div>
+                  </div>
+
+                  <div class="hero-product-card">
+                    <div class="hero-product-img books">
+                      <i class="fas fa-book-open" style="color:#2D5016;"></i>
+                      <span class="hero-product-badge">New</span>
+                    </div>
+                    <div class="hero-product-info">
+                      <div class="hero-product-name">Law Textbook</div>
+                      <div class="hero-product-price">₦2,000</div>
+                    </div>
+                  </div>
+
+                  <div class="hero-product-card">
+                    <div class="hero-product-img food">
+                      <i class="fas fa-bowl-food" style="color:#D4520A;"></i>
+                    </div>
+                    <div class="hero-product-info">
+                      <div class="hero-product-name">Jollof Rice</div>
+                      <div class="hero-product-price">₦800</div>
+                    </div>
+                  </div>
+
+                </div><!-- /mockup-grid -->
+
+              </div><!-- /hero-mockup -->
+            </div><!-- /hero-phone-frame -->
+          </div><!-- /hero-visual -->
+
+        </div><!-- /hero-inner -->
+      </div><!-- /container -->
+    </section>
+
+    <!-- ============================================================
+         CATEGORIES SECTION
+         ============================================================ -->
+    <section class="categories-section" id="categories" aria-labelledby="cat-heading">
+      <div class="container">
+
+        <div class="section-header">
+          <div class="section-eyebrow">
+            <i class="fas fa-grid-2" aria-hidden="true"></i>
+            Browse by Category
+          </div>
+          <h2 class="section-title" id="cat-heading">Everything You Need on Campus</h2>
+          <p class="section-desc">
+            From electronics to housing — find or sell anything within your campus community.
+          </p>
+        </div>
+
+        <div class="categories-grid" role="list">
+
+          <a href="/marketplace.html?cat=electronics" class="category-card" role="listitem" data-animate>
+            <div class="cat-icon">
+              <i class="fas fa-laptop" aria-hidden="true"></i>
+            </div>
+            <span class="cat-label">Electronics</span>
+          </a>
+
+          <a href="/marketplace.html?cat=fashion" class="category-card" role="listitem" data-animate>
+            <div class="cat-icon orange-icon">
+              <i class="fas fa-shirt" aria-hidden="true"></i>
+            </div>
+            <span class="cat-label">Fashion</span>
+          </a>
+
+          <a href="/marketplace.html?cat=food" class="category-card" role="listitem" data-animate>
+            <div class="cat-icon orange-icon">
+              <i class="fas fa-utensils" aria-hidden="true"></i>
+            </div>
+            <span class="cat-label">Food</span>
+          </a>
+
+          <a href="/marketplace.html?cat=books" class="category-card" role="listitem" data-animate>
+            <div class="cat-icon">
+              <i class="fas fa-book-open" aria-hidden="true"></i>
+            </div>
+            <span class="cat-label">Books</span>
+          </a>
+
+          <a href="/marketplace.html?cat=hostel" class="category-card" role="listitem" data-animate>
+            <div class="cat-icon">
+              <i class="fas fa-building" aria-hidden="true"></i>
+            </div>
+            <span class="cat-label">Hostel</span>
+          </a>
+
+          <a href="/marketplace.html?cat=services" class="category-card" role="listitem" data-animate>
+            <div class="cat-icon orange-icon">
+              <i class="fas fa-wrench" aria-hidden="true"></i>
+            </div>
+            <span class="cat-label">Services</span>
+          </a>
+
+          <a href="/marketplace.html?cat=tutoring" class="category-card" role="listitem" data-animate>
+            <div class="cat-icon">
+              <i class="fas fa-chalkboard-user" aria-hidden="true"></i>
+            </div>
+            <span class="cat-label">Tutoring</span>
+          </a>
+
+          <a href="/marketplace.html?cat=housing" class="category-card" role="listitem" data-animate>
+            <div class="cat-icon orange-icon">
+              <i class="fas fa-house-chimney" aria-hidden="true"></i>
+            </div>
+            <span class="cat-label">Housing</span>
+          </a>
+
+        </div><!-- /categories-grid -->
+
+      </div>
+    </section>
+
+    <!-- ============================================================
+         HOW IT WORKS
+         ============================================================ -->
+    <section class="how-section" id="how-it-works" aria-labelledby="how-heading">
+      <div class="container">
+
+        <div class="section-header text-center" style="max-width:560px;margin-left:auto;margin-right:auto;">
+          <div class="section-eyebrow" style="justify-content:center;">
+            <i class="fas fa-route" aria-hidden="true"></i>
+            Simple Process
+          </div>
+          <h2 class="section-title" id="how-heading">How Ludek Works</h2>
+          <p class="section-desc" style="margin:0 auto;">
+            Three simple steps to buy or sell anything on campus. No stress, no complications.
+          </p>
+        </div>
+
+        <div class="how-grid">
+
+          <div class="how-step" data-animate>
+            <span class="how-step-number" aria-hidden="true">01</span>
+            <div class="how-step-icon green">
+              <i class="fas fa-user-plus" aria-hidden="true"></i>
+            </div>
+            <h3 class="how-step-title">Create Account</h3>
+            <p class="how-step-desc">
+              Sign up with your email for free. Choose your role — buyer, seller, tutor, or housing agent.
+            </p>
+          </div>
+
+          <div class="how-step" data-animate>
+            <span class="how-step-number" aria-hidden="true">02</span>
+            <div class="how-step-icon orange">
+              <i class="fas fa-camera" aria-hidden="true"></i>
+            </div>
+            <h3 class="how-step-title">Post a Listing</h3>
+            <p class="how-step-desc">
+              Snap a photo, set your price, choose a category and post your listing in under 2 minutes.
+            </p>
+          </div>
+
+          <div class="how-step" data-animate>
+            <span class="how-step-number" aria-hidden="true">03</span>
+            <div class="how-step-icon green">
+              <i class="fab fa-whatsapp" aria-hidden="true"></i>
+            </div>
+            <h3 class="how-step-title">Connect via WhatsApp</h3>
+            <p class="how-step-desc">
+              Buyers tap "Chat Seller" to open a WhatsApp conversation with prefilled product details instantly.
+            </p>
+          </div>
+
+          <div class="how-step" data-animate>
+            <span class="how-step-number" aria-hidden="true">04</span>
+            <div class="how-step-icon orange">
+              <i class="fas fa-handshake" aria-hidden="true"></i>
+            </div>
+            <h3 class="how-step-title">Deal &amp; Done</h3>
+            <p class="how-step-desc">
+              Meet on campus, exchange, and done. Clean, simple, and fully within your student community.
+            </p>
+          </div>
+
+        </div><!-- /how-grid -->
+
+      </div>
+    </section>
+
+    <!-- ============================================================
+         FEATURES SECTION
+         ============================================================ -->
+    <section class="features-section" aria-labelledby="features-heading">
+      <div class="container">
+
+        <div class="section-header">
+          <div class="section-eyebrow">
+            <i class="fas fa-bolt" aria-hidden="true"></i>
+            Platform Features
+          </div>
+          <h2 class="section-title" id="features-heading">Built for CRUTECH Students</h2>
+          <p class="section-desc">
+            Every feature is designed with the student hustle in mind — fast, free, and WhatsApp-first.
+          </p>
+        </div>
+
+        <div class="features-grid">
+
+          <div class="feature-card" data-animate>
+            <div class="feature-icon">
+              <i class="fab fa-whatsapp" aria-hidden="true"></i>
+            </div>
+            <h3 class="feature-title">WhatsApp First</h3>
+            <p class="feature-desc">
+              Every listing has a direct "Chat Seller" button that opens WhatsApp with the product name and price pre-filled. Zero friction.
+            </p>
+          </div>
+
+          <div class="feature-card" data-animate>
+            <div class="feature-icon">
+              <i class="fas fa-store" aria-hidden="true"></i>
+            </div>
+            <h3 class="feature-title">Seller Storefronts</h3>
+            <p class="feature-desc">
+              Every seller gets a public storefront with banner, profile photo, bio, and all their listings in one clean page.
+            </p>
+          </div>
+
+          <div class="feature-card" data-animate>
+            <div class="feature-icon">
+              <i class="fas fa-mobile-screen" aria-hidden="true"></i>
+            </div>
+            <h3 class="feature-title">Works as an App</h3>
+            <p class="feature-desc">
+              Install Ludek to your phone home screen. Works offline and loads instantly — just like a native app.
+            </p>
+          </div>
+
+          <div class="feature-card" data-animate>
+            <div class="feature-icon">
+              <i class="fas fa-chalkboard-user" aria-hidden="true"></i>
+            </div>
+            <h3 class="feature-title">Find Tutors</h3>
+            <p class="feature-desc">
+              Struggling with a course? Find verified student tutors on campus who offer affordable personal tutoring sessions.
+            </p>
+          </div>
+
+          <div class="feature-card" data-animate>
+            <div class="feature-icon">
+              <i class="fas fa-house-chimney" aria-hidden="true"></i>
+            </div>
+            <h3 class="feature-title">Housing Listings</h3>
+            <p class="feature-desc">
+              Looking for a room near campus? Browse student housing listings with photos, location, and direct landlord contact.
+            </p>
+          </div>
+
+          <div class="feature-card" data-animate>
+            <div class="feature-icon">
+              <i class="fas fa-shield-halved" aria-hidden="true"></i>
+            </div>
+            <h3 class="feature-title">Campus-Only</h3>
+            <p class="feature-desc">
+              Exclusively for CRUTECH Okuku students. Every seller is a real student — keeping the community safe and trusted.
+            </p>
+          </div>
+
+        </div><!-- /features-grid -->
+
+      </div>
+    </section>
+
+    <!-- ============================================================
+         TRUST STRIP
+         ============================================================ -->
+    <section class="social-section" aria-label="Trust indicators">
+      <div class="container">
+
+        <div class="section-header text-center" style="max-width:520px;margin:0 auto;">
+          <div class="section-eyebrow" style="justify-content:center;">
+            <i class="fas fa-star" aria-hidden="true"></i>
+            Trusted Community
+          </div>
+          <h2 class="section-title">Built on Trust &amp; Transparency</h2>
+        </div>
+
+        <div class="trust-strip" role="list">
+
+          <div class="trust-item" role="listitem">
+            <i class="fas fa-user-check" aria-hidden="true"></i>
+            <span>Student-verified sellers</span>
+          </div>
+          <div class="trust-divider" aria-hidden="true"></div>
+
+          <div class="trust-item" role="listitem">
+            <i class="fas fa-lock" aria-hidden="true"></i>
+            <span>Secure accounts</span>
+          </div>
+          <div class="trust-divider" aria-hidden="true"></div>
+
+          <div class="trust-item" role="listitem">
+            <i class="fas fa-circle-dollar-to-slot" aria-hidden="true"></i>
+            <span>100% free platform</span>
+          </div>
+          <div class="trust-divider" aria-hidden="true"></div>
+
+          <div class="trust-item" role="listitem">
+            <i class="fas fa-wifi" aria-hidden="true"></i>
+            <span>Works offline (PWA)</span>
+          </div>
+          <div class="trust-divider" aria-hidden="true"></div>
+
+          <div class="trust-item" role="listitem">
+            <i class="fas fa-location-dot" aria-hidden="true"></i>
+            <span>Campus-local deals</span>
+          </div>
+
+        </div><!-- /trust-strip -->
+
+      </div>
+    </section>
+
+    <!-- ============================================================
+         CTA SECTION
+         ============================================================ -->
+    <section class="cta-section" aria-labelledby="cta-heading">
+      <div class="container">
+        <div class="cta-card">
+
+          <span class="cta-label">
+            <i class="fas fa-rocket" aria-hidden="true"></i>
+            Ready to start?
+          </span>
+
+          <h2 class="cta-title" id="cta-heading">
+            Join Ludek Marketplace Today
+          </h2>
+
+          <p class="cta-subtitle">
+            Create a free account, post your first listing in minutes, and start connecting with students on campus.
+          </p>
+
+          <div class="cta-buttons">
+            <a href="auth.html?mode=signup" class="cta-btn-primary">
+              <i class="fas fa-user-plus" aria-hidden="true"></i>
+              Create Free Account
+            </a>
+            <a href="marketplace.html" class="cta-btn-ghost">
+              <i class="fas fa-magnifying-glass" aria-hidden="true"></i>
+              Browse First
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main><!-- /main -->
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+
+      <div class="footer-grid">
+
+        <!-- Brand -->
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <div class="footer-logo-icon">
+              <i class="fas fa-store-alt" aria-hidden="true"></i>
+            </div>
+            <span class="footer-logo-name">Ludek Marketplace</span>
+          </div>
+          <p class="footer-tagline">
+            The official student marketplace for CRUTECH Okuku Campus. Buy, sell, find tutors, and locate housing — all in one place.
+          </p>
+          <div class="footer-socials" role="list" aria-label="Social media links">
+            <a href="#" class="footer-social" role="listitem" aria-label="WhatsApp">
+              <i class="fab fa-whatsapp" aria-hidden="true"></i>
+            </a>
+            <a href="#" class="footer-social" role="listitem" aria-label="Instagram">
+              <i class="fab fa-instagram" aria-hidden="true"></i>
+            </a>
+            <a href="#" class="footer-social" role="listitem" aria-label="Twitter / X">
+              <i class="fab fa-x-twitter" aria-hidden="true"></i>
+            </a>
+            <a href="#" class="footer-social" role="listitem" aria-label="Facebook">
+              <i class="fab fa-facebook-f" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Marketplace links -->
+        <div>
+          <h3 class="footer-col-title">Marketplace</h3>
+          <ul class="footer-links" role="list">
+            <li><a href="marketplace.html" class="footer-link"><i class="fas fa-angle-right" aria-hidden="true"></i> Browse All</a></li>
+            <li><a href="marketplace.html?cat=electronics" class="footer-link"><i class="fas fa-angle-right" aria-hidden="true"></i> Electronics</a></li>
+            <li><a href="marketplace.html?cat=books" class="footer-link"><i class="fas fa-angle-right" aria-hidden="true"></i> Books</a></li>
+            <li><a href="marketplace.html?cat=tutoring" class="footer-link"><i class="fas fa-angle-right" aria-hidden="true"></i> Tutoring</a></li>
+            <li><a href="marketplace.html?cat=housing" class="footer-link"><i class="fas fa-angle-right" aria-hidden="true"></i> Housing</a></li>
+          </ul>
+        </div>
+
+        <!-- Seller links -->
+        <div>
+          <h3 class="footer-col-title">Sellers</h3>
+          <ul class="footer-links" role="list">
+            <li><a href="auth.html?mode=signup&role=seller" class="footer-link"><i class="fas fa-angle-right" aria-hidden="true"></i> Start Selling</a></li>
+            <li><a href="dashboard.html" class="footer-link"><i class="fas fa-angle-right" aria-hidden="true"></i> Dashboard</a></li>
+            <li><a href="/seller/add-listing.html" class="footer-link"><i class="fas fa-angle-right" aria-hidden="true"></i> Add Listing</a></li>
+            <li><a href="/seller/my-listings.html" class="footer-link"><i class="fas fa-angle-right" aria-hidden="true"></i> My Listings</a></li>
+            <li><a href="/seller/profile.html" class="footer-link"><i class="fas fa-angle-right" aria-hidden="true"></i> My Profile</a></li>
+          </ul>
+        </div>
+
+        <!-- Support links -->
+        <div>
+          <h3 class="footer-col-title">Support</h3>
+          <ul class="footer-links" role="list">
+            <li><a href="#how-it-works" class="footer-link"><i class="fas fa-angle-right" aria-hidden="true"></i> How It Works</a></li>
+            <li><a href="#" class="footer-link"><i class="fas fa-angle-right" aria-hidden="true"></i> FAQs</a></li>
+            <li><a href="#" class="footer-link"><i class="fas fa-angle-right" aria-hidden="true"></i> Report a Listing</a></li>
+            <li><a href="#" class="footer-link"><i class="fas fa-angle-right" aria-hidden="true"></i> Contact Us</a></li>
+            <li><a href="#" class="footer-link"><i class="fas fa-angle-right" aria-hidden="true"></i> Privacy Policy</a></li>
+          </ul>
+        </div>
+
+      </div><!-- /footer-grid -->
+
+      <div class="footer-bottom">
+        <p class="footer-copyright">
+          &copy; 2025 Ludek Marketplace. All rights reserved. CRUTECH Okuku, Cross River State.
+        </p>
+        <div class="footer-badge">
+          <i class="fas fa-leaf" aria-hidden="true"></i>
+          Built by Louis Ekemini 
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- ============================================================
+       PWA INSTALL BANNER
+       ============================================================ -->
+  <div id="installBanner" class="install-banner" role="dialog" aria-label="Install app" aria-live="polite">
+    <div class="install-banner-text">
+      <i class="fas fa-mobile-screen" aria-hidden="true"></i>
+      <div>
+        <span class="install-banner-title">Install Ludek Marketplace</span>
+        <span class="install-banner-sub">Add to home screen for instant access — works offline!</span>
+      </div>
+    </div>
+    <div class="install-banner-actions">
+      <button id="installYes" class="install-btn-yes" type="button">
+        <i class="fas fa-download" aria-hidden="true"></i>
+        Install
+      </button>
+      <button id="installNo" class="install-btn-no" type="button" aria-label="Dismiss install prompt">
+        <i class="fas fa-xmark" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SCROLL TO TOP
+       ============================================================ -->
+  <button id="scrollTopBtn" class="scroll-top" aria-label="Scroll to top" type="button">
+    <i class="fas fa-arrow-up" aria-hidden="true"></i>
+  </button>
+
+  <!-- ============================================================
+       TOAST CONTAINER
+       ============================================================ -->
+  <div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- ============================================================
+       SCRIPTS
+       ============================================================ -->
+  <script src="app.js" defer></script>
+
+  <!-- Inline: animate in-view elements -->
+  <style>
+    [data-animate] {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    [data-animate].in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+
+</body>
+</html>

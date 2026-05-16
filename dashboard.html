@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Seller Dashboard — Ludek</title>
+  <link rel="manifest" href="manifest.json"/>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous"/>
+  <link rel="stylesheet" href="main.css"/>
+  <style>
+    .coming-page { min-height:100svh; display:flex; align-items:center; justify-content:center; padding:var(--space-6); background:var(--bg-secondary); }
+    .coming-box { background:var(--bg-card); border:1px solid var(--border-color); border-radius:var(--radius-2xl); box-shadow:var(--shadow-xl); padding:var(--space-12) var(--space-8); text-align:center; max-width:480px; width:100%; }
+    .coming-icon { width:60px; height:60px; background:var(--orange); border-radius:var(--radius-xl); display:flex; align-items:center; justify-content:center; margin:0 auto var(--space-6); }
+    .coming-icon i { color:var(--milk); font-size:26px; }
+    .coming-phase { display:inline-flex; align-items:center; gap:var(--space-2); background:var(--forest-tint); border:1px solid var(--forest-pale); border-radius:var(--radius-full); padding:4px 12px; font-size:var(--text-xs); font-weight:var(--weight-semi); color:var(--forest); margin-bottom:var(--space-4); }
+    .coming-title { font-family:var(--font-display); font-weight:var(--weight-black); font-size:var(--text-2xl); color:var(--text-primary); margin-bottom:var(--space-3); }
+    .coming-desc { font-size:var(--text-sm); color:var(--text-muted); line-height:var(--leading-loose); margin-bottom:var(--space-6); }
+  </style>
+</head>
+<body>
+  <div class="coming-page">
+    <div class="coming-box animate-scale-in">
+      <div class="coming-icon">
+        <i class="fas fa-shop"></i>
+      </div>
+      <div class="coming-phase">
+        <i class="fas fa-clock"></i>
+        Phase 4 — Seller Dashboard
+      </div>
+      <h1 class="coming-title">Seller Dashboard Coming in Phase 4</h1>
+      <p class="coming-desc">Full seller dashboard with listing management, Cloudinary uploads, storefront customisation, and WhatsApp setup is built in Phase 4.</p>
+      <a href="index.html" class="btn btn-orange">
+        <i class="fas fa-arrow-left"></i>
+        Back to Home
+      </a>
+    </div>
+  </div>
+  <script src="app.js" defer></script>
+</body>
+</html>
