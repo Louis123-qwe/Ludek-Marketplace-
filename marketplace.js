@@ -864,7 +864,9 @@ function buildWAMessage(listing) {
     (listing.name || '') + '\nPrice: ₦' + formatPrice(listing.price) + '\n\nIs it still available?';
 }
 
-
+// ============================================================
+// BOOT
+// ============================================================
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initMarketplace);
 } else {
