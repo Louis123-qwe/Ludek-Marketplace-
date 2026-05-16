@@ -1,0 +1,1244 @@
+/* ============================================================
+   LUDEK MARKETPLACE — MARKETPLACE.CSS
+   All classes verified against marketplace.html + marketplace.js
+   Bugs fixed:
+     1. svh fallbacks                   ✓ (kept)
+     2. text-overflow                   ✓ (kept)
+     3. shimmer                         ✓ (kept)
+     4. list-view image collapse        ✓ FIXED — added min-height to list-view img wrapper
+     5. .product-card-save pointer-events ✓ FIXED — pointer-events: all on hover
+   ============================================================ */
+
+/* ============================================================
+   PAGE SHELL
+   ============================================================ */
+.marketplace-page {
+  min-height: 100vh;          /* fallback */
+  min-height: 100svh;
+  background: var(--bg-secondary);
+  padding-top: var(--nav-height);
+}
+
+/* ============================================================
+   HERO SECTION
+   ============================================================ */
+.mkt-hero {
+  background: var(--forest);
+  padding: var(--space-8) 0 var(--space-6);
+  position: relative;
+  overflow: hidden;
+}
+
+.mkt-hero::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 280px; height: 280px;
+  border-radius: 50%;
+  background: rgba(212,82,10,0.10);
+  pointer-events: none;
+}
+
+.mkt-hero::after {
+  content: '';
+  position: absolute;
+  bottom: -80px; left: 5%;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: rgba(250,247,240,0.04);
+  pointer-events: none;
+}
+
+.mkt-hero-inner {
+  position: relative;
+  z-index: 1;
+}
+
+.mkt-hero-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-5);
+}
+
+.mkt-hero-greeting {
+  font-size: var(--text-xs);
+  color: rgba(250,247,240,0.60);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: var(--space-1);
+}
+
+.mkt-hero-title {
+  font-family: var(--font-display);
+  font-weight: var(--weight-black);
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  color: var(--milk);
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+}
+
+.mkt-hero-title span {
+  color: var(--orange-light);
+}
+
+.mkt-hero-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+/* Post Listing button in hero */
+.mkt-sell-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-5);
+  background: var(--orange);
+  color: var(--milk);
+  border-radius: var(--radius-full);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semi);
+  font-family: var(--font-body);
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background var(--transition-fast), transform var(--transition-fast);
+  white-space: nowrap;
+}
+
+.mkt-sell-btn:hover {
+  background: var(--orange-mid);
+  transform: translateY(-1px);
+}
+
+/* ============================================================
+   SEARCH BAR
+   ============================================================ */
+.mkt-search-wrap {
+  position: relative;
+  max-width: 600px;
+}
+
+.mkt-search-icon {
+  position: absolute;
+  left: var(--space-4);
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(250,247,240,0.50);
+  font-size: 15px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.mkt-search-input {
+  width: 100%;
+  padding: var(--space-3) var(--space-10) var(--space-3) var(--space-10);
+  background: rgba(255,255,255,0.10);
+  border: 1.5px solid rgba(255,255,255,0.18);
+  border-radius: var(--radius-full);
+  color: var(--milk);
+  font-size: var(--text-base);
+  font-family: var(--font-body);
+  outline: none;
+  transition: background var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.mkt-search-input::placeholder {
+  color: rgba(250,247,240,0.40);
+}
+
+.mkt-search-input:focus {
+  background: rgba(255,255,255,0.16);
+  border-color: var(--orange-light);
+  box-shadow: 0 0 0 3px rgba(249,115,22,0.22);
+}
+
+/* Clear button */
+.mkt-search-clear {
+  position: absolute;
+  right: var(--space-3);
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,0.15);
+  border: none;
+  color: var(--milk);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 11px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-fast), background var(--transition-fast);
+}
+
+.mkt-search-clear.show {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.mkt-search-clear:hover {
+  background: rgba(255,255,255,0.28);
+}
+
+/* ============================================================
+   CATEGORY CHIPS BAR  (sticky under nav)
+   ============================================================ */
+.mkt-cats-bar {
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border-color);
+  position: sticky;
+  top: var(--nav-height);
+  z-index: 40;
+  box-shadow: var(--shadow-xs);
+}
+
+.mkt-cats-inner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  overflow-x: auto;
+  padding: var(--space-3) var(--space-4);
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.mkt-cats-inner::-webkit-scrollbar {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .mkt-cats-inner {
+    padding: var(--space-3) var(--space-6);
+  }
+}
+
+/* Individual chip */
+.mkt-cat-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-full);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semi);
+  font-family: var(--font-body);
+  white-space: nowrap;
+  cursor: pointer;
+  border: 1.5px solid var(--border-color);
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+  flex-shrink: 0;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.mkt-cat-chip i {
+  font-size: 12px;
+}
+
+.mkt-cat-chip:hover {
+  border-color: var(--forest-pale);
+  background: var(--forest-tint);
+  color: var(--forest);
+}
+
+.mkt-cat-chip.active {
+  background: var(--forest);
+  border-color: var(--forest);
+  color: var(--milk);
+}
+
+/* ============================================================
+   BODY LAYOUT  (sidebar + feed)
+   ============================================================ */
+.mkt-body {
+  padding: var(--space-6) 0 calc(var(--space-16) + 20px);
+}
+
+.mkt-body-inner {
+  display: flex;
+  gap: var(--space-6);
+  align-items: flex-start;
+}
+
+/* ============================================================
+   SIDEBAR FILTERS  (desktop only)
+   ============================================================ */
+.mkt-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  display: none;
+  position: sticky;
+  top: calc(var(--nav-height) + 56px);
+  max-height: calc(100vh - var(--nav-height) - 80px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-color) transparent;
+}
+
+@media (min-width: 1024px) {
+  .mkt-sidebar {
+    display: block;
+  }
+}
+
+.mkt-filter-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+  margin-bottom: var(--space-4);
+}
+
+.mkt-filter-title {
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  margin-bottom: var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mkt-filter-clear {
+  font-size: var(--text-xs);
+  color: var(--orange);
+  font-weight: var(--weight-semi);
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-family: var(--font-body);
+  transition: color var(--transition-fast);
+  padding: 0;
+}
+
+.mkt-filter-clear:hover {
+  color: var(--orange-mid);
+}
+
+.mkt-filter-group {
+  margin-bottom: var(--space-5);
+}
+
+.mkt-filter-group:last-child {
+  margin-bottom: 0;
+}
+
+.mkt-filter-group-label {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semi);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: var(--space-3);
+}
+
+/* Sort radio rows */
+.mkt-sort-option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) 0;
+  cursor: pointer;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  transition: color var(--transition-fast);
+}
+
+.mkt-sort-option:hover {
+  color: var(--forest);
+}
+
+.mkt-sort-option input[type="radio"] {
+  accent-color: var(--forest);
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin: 0;
+}
+
+/* Price range */
+.mkt-price-range {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.mkt-price-input {
+  flex: 1;
+  padding: var(--space-2) var(--space-3);
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  outline: none;
+  transition: border-color var(--transition-fast);
+  -webkit-appearance: none;
+  appearance: none;
+  min-width: 0;
+}
+
+.mkt-price-input:focus {
+  border-color: var(--forest-light);
+}
+
+.mkt-price-input::placeholder {
+  color: var(--text-light);
+}
+
+.mkt-price-sep {
+  font-size: var(--text-xs);
+  color: var(--text-light);
+  flex-shrink: 0;
+}
+
+/* Apply price button */
+.mkt-apply-btn {
+  display: block;
+  width: 100%;
+  margin-top: var(--space-3);
+  padding: var(--space-2) var(--space-4);
+  background: var(--forest);
+  color: var(--milk);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semi);
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+  text-align: center;
+}
+
+.mkt-apply-btn:hover {
+  background: var(--forest-mid);
+}
+
+/* ============================================================
+   MAIN FEED COLUMN
+   ============================================================ */
+.mkt-feed {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Toolbar row */
+.mkt-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.mkt-results-count {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.mkt-results-count strong {
+  color: var(--text-primary);
+  font-weight: var(--weight-semi);
+}
+
+.mkt-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* Mobile filter trigger */
+.mkt-filter-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-full);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semi);
+  font-family: var(--font-body);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.mkt-filter-btn:hover {
+  border-color: var(--forest-pale);
+  color: var(--forest);
+}
+
+@media (min-width: 1024px) {
+  .mkt-filter-btn {
+    display: none;
+  }
+}
+
+/* Grid / List toggle */
+.mkt-view-toggle {
+  display: flex;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  padding: 3px;
+  gap: 2px;
+}
+
+.mkt-view-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: calc(var(--radius-md) - 2px);
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  transition: background var(--transition-fast), color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.mkt-view-btn.active {
+  background: var(--bg-card);
+  color: var(--forest);
+  box-shadow: var(--shadow-xs);
+}
+
+/* ============================================================
+   PRODUCT GRID
+   ============================================================ */
+.mkt-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+}
+
+@media (min-width: 480px) {
+  .mkt-grid {
+    gap: var(--space-4);
+  }
+}
+
+@media (min-width: 768px) {
+  .mkt-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1280px) {
+  .mkt-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* List view overrides */
+.mkt-grid.list-view {
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+}
+
+.mkt-grid.list-view .product-card {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+
+/* BUG FIX 3: List-view image wrapper collapsed to zero height.
+   aspect-ratio: unset removes the intrinsic height. Added an explicit
+   height: 100% so the flex-child fills the card row, and min-height
+   so it never collapses when the card itself is short. */
+.mkt-grid.list-view .product-card-img {
+  width: 140px;
+  height: 100%;
+  min-height: 120px;
+  flex-shrink: 0;
+  border-radius: var(--radius-xl) 0 0 var(--radius-xl);
+  aspect-ratio: unset;
+}
+
+.mkt-grid.list-view .product-card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: var(--space-4);
+}
+
+/* ============================================================
+   PRODUCT CARD
+   ============================================================ */
+.product-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
+  cursor: pointer;
+  display: block;
+  text-decoration: none;
+  position: relative;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--forest-pale);
+}
+
+/* Image wrapper */
+.product-card-img {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: var(--bg-secondary);
+}
+
+.product-card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform var(--transition-slow);
+}
+
+.product-card:hover .product-card-img img {
+  transform: scale(1.05);
+}
+
+/* Placeholder icon when no image */
+.product-card-img-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--milk-border) 100%);
+}
+
+.product-card-img-placeholder i {
+  font-size: 36px;
+  color: var(--text-light);
+  opacity: 0.5;
+}
+
+/* Category label badge */
+.product-card-cat-badge {
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-2);
+  background: rgba(250,247,240,0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: var(--radius-full);
+  padding: 3px 9px;
+  font-size: 10px;
+  font-weight: var(--weight-semi);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  line-height: 1;
+}
+
+.product-card-cat-badge i {
+  font-size: 9px;
+  color: var(--forest);
+}
+
+/* NEW badge */
+.product-card-new-badge {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  background: var(--orange);
+  color: var(--milk);
+  border-radius: var(--radius-full);
+  padding: 2px 8px;
+  font-size: 9px;
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  line-height: 1.6;
+}
+
+/* BUG FIX 4: Save/heart button was pointer-events:none even on hover,
+   making it unclickable despite being visible. Added pointer-events: all
+   to the hover and .saved states so clicks actually register. */
+.product-card-save {
+  position: absolute;
+  bottom: var(--space-2);
+  right: var(--space-2);
+  width: 30px;
+  height: 30px;
+  background: rgba(250,247,240,0.92);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--text-muted);
+  transition: background var(--transition-fast), color var(--transition-fast),
+              opacity var(--transition-fast), transform var(--transition-fast);
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.82);
+}
+
+.product-card:hover .product-card-save {
+  opacity: 1;
+  pointer-events: all;  /* FIX: was missing — button was visible but unclickable */
+  transform: scale(1);
+}
+
+.product-card-save:hover,
+.product-card-save.saved {
+  background: var(--orange-tint);
+  color: var(--orange);
+  pointer-events: all;  /* FIX: ensure saved state is always interactive */
+}
+
+/* Card body */
+.product-card-body {
+  padding: var(--space-3) var(--space-3) var(--space-4);
+}
+
+/* Seller + time row */
+.product-card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-1);
+}
+
+.product-card-seller {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  min-width: 0;
+  flex: 1;
+}
+
+.product-card-seller i {
+  font-size: 9px;
+  flex-shrink: 0;
+}
+
+.product-card-seller span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 90px;
+}
+
+.product-card-time {
+  font-size: 10px;
+  color: var(--text-light);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Product name */
+.product-card-name {
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  margin-bottom: var(--space-1);
+  line-height: var(--leading-snug);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Product description */
+.product-card-desc {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  line-height: var(--leading-normal);
+  margin-bottom: var(--space-3);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Price + WhatsApp row */
+.product-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-top: auto;
+}
+
+.product-card-price {
+  font-family: var(--font-display);
+  font-weight: var(--weight-black);
+  font-size: var(--text-lg);
+  color: var(--forest);
+  line-height: 1;
+}
+
+.product-card-price-neg {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  font-weight: var(--weight-regular);
+  margin-top: 2px;
+}
+
+/* WhatsApp CTA */
+.product-card-wa {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: var(--space-2) var(--space-3);
+  background: #25D366;
+  color: #ffffff;
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semi);
+  font-family: var(--font-body);
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background var(--transition-fast), transform var(--transition-fast);
+  white-space: nowrap;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.product-card-wa:hover {
+  background: #1DAA5B;
+  transform: scale(1.04);
+}
+
+.product-card-wa i {
+  font-size: 12px;
+}
+
+/* ============================================================
+   SKELETON LOADER CARDS
+   ============================================================ */
+.skeleton-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+}
+
+.skeleton-img {
+  aspect-ratio: 1 / 1;
+  background: var(--bg-secondary);
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-body {
+  padding: var(--space-3) var(--space-3) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.skeleton-line {
+  height: 10px;
+  border-radius: var(--radius-full);
+  background: var(--bg-secondary);
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-line.wide  { width: 80%; }
+.skeleton-line.mid   { width: 60%; }
+.skeleton-line.short { width: 40%; }
+.skeleton-line.price { width: 50%; height: 16px; margin-top: var(--space-1); }
+
+/* Shimmer sweep */
+@keyframes shimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.skeleton-img::after,
+.skeleton-line::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent   0%,
+    rgba(255,255,255,0.55) 50%,
+    transparent 100%
+  );
+  transform: translateX(-100%);
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* ============================================================
+   EMPTY STATE
+   ============================================================ */
+.mkt-empty {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-16) var(--space-6);
+  text-align: center;
+}
+
+.mkt-empty-icon {
+  width: 72px;
+  height: 72px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-2xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  color: var(--text-light);
+  margin-bottom: var(--space-5);
+}
+
+.mkt-empty-title {
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-xl);
+  color: var(--text-primary);
+  margin-bottom: var(--space-2);
+}
+
+.mkt-empty-desc {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  max-width: 320px;
+  line-height: var(--leading-loose);
+  margin-bottom: var(--space-6);
+}
+
+/* ============================================================
+   LOAD MORE
+   ============================================================ */
+.mkt-load-more-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-8);
+}
+
+.mkt-load-more {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-8);
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-full);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semi);
+  font-family: var(--font-body);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.mkt-load-more:hover {
+  border-color: var(--forest);
+  color: var(--forest);
+  background: var(--forest-tint);
+}
+
+.mkt-load-more:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ============================================================
+   MOBILE FILTER DRAWER
+   ============================================================ */
+.filter-drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15,18,10,0.52);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  z-index: 200;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-base);
+}
+
+.filter-drawer-overlay.show {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.filter-drawer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--bg-card);
+  border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+  padding: var(--space-4) var(--space-5) calc(var(--space-8) + env(safe-area-inset-bottom, 0px));
+  z-index: 201;
+  transform: translateY(100%);
+  transition: transform var(--transition-slow);
+  max-height: 85vh;
+  max-height: 85svh;
+  overflow-y: auto;
+}
+
+.filter-drawer-overlay.show .filter-drawer {
+  transform: translateY(0);
+}
+
+.filter-drawer-handle {
+  width: 36px;
+  height: 4px;
+  background: var(--border-color);
+  border-radius: var(--radius-full);
+  margin: 0 auto var(--space-5);
+}
+
+.filter-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-6);
+}
+
+.filter-drawer-title {
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-lg);
+  color: var(--text-primary);
+}
+
+.filter-drawer-close {
+  width: 36px;
+  height: 36px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  transition: background var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.filter-drawer-close:hover {
+  background: var(--border-color);
+}
+
+.filter-drawer-actions {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+}
+
+.filter-drawer-apply {
+  flex: 1;
+  padding: var(--space-3);
+  background: var(--forest);
+  color: var(--milk);
+  border: none;
+  border-radius: var(--radius-full);
+  font-size: var(--text-base);
+  font-weight: var(--weight-semi);
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.filter-drawer-apply:hover {
+  background: var(--forest-mid);
+}
+
+.filter-drawer-reset {
+  padding: var(--space-3) var(--space-5);
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  border: none;
+  border-radius: var(--radius-full);
+  font-size: var(--text-base);
+  font-weight: var(--weight-semi);
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.filter-drawer-reset:hover {
+  background: var(--border-color);
+}
+
+/* ============================================================
+   USER AVATAR + DROPDOWN  (nav)
+   ============================================================ */
+.mkt-nav-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--forest-tint);
+  border: 2px solid var(--forest-pale);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: var(--forest);
+  font-weight: var(--weight-bold);
+  font-family: var(--font-display);
+  overflow: hidden;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: border-color var(--transition-fast);
+}
+
+.mkt-nav-avatar:hover {
+  border-color: var(--forest-muted);
+}
+
+.mkt-nav-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.mkt-user-dropdown {
+  position: relative;
+}
+
+/* Dropdown panel */
+.mkt-user-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  min-width: 210px;
+  padding: var(--space-2);
+  z-index: 150;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-8px) scale(0.95);
+  transform-origin: top right;
+  transition: opacity var(--transition-bounce), transform var(--transition-bounce);
+}
+
+.mkt-user-menu.open {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateY(0) scale(1);
+}
+
+.mkt-user-info {
+  padding: var(--space-3) var(--space-3) var(--space-2);
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: var(--space-2);
+}
+
+.mkt-user-name {
+  font-weight: var(--weight-semi);
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mkt-user-role {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 3px;
+}
+
+.mkt-user-role i {
+  font-size: 10px;
+}
+
+/* Menu items */
+.mkt-menu-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast);
+  text-decoration: none;
+  border: none;
+  background: none;
+  font-family: var(--font-body);
+  width: 100%;
+  text-align: left;
+}
+
+.mkt-menu-item:hover {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.mkt-menu-item i {
+  font-size: 13px;
+  color: var(--text-muted);
+  width: 16px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.mkt-menu-item.danger {
+  color: #DC2626;
+}
+
+.mkt-menu-item.danger i {
+  color: #DC2626;
+}
+
+.mkt-menu-item.danger:hover {
+  background: #FEF2F2;
+  color: #B91C1C;
+}
+
+.mkt-menu-divider {
+  height: 1px;
+  background: var(--border-color);
+  margin: var(--space-2) 0;
+}
