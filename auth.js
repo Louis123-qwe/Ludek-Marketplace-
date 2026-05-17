@@ -52,6 +52,7 @@ function db()   { return firebase.firestore(); }
 var REDIRECTS = {
   customer : '/marketplace.html',
   seller   : '/dashboard.html',
+  tutor   : '/dashboard.html',
   admin    : '/admin/dashboard.html'
 };
 
