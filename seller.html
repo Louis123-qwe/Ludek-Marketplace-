@@ -1,0 +1,1567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seller Profile — Ludek Marketplace | CRUTECH Okuku Campus</title>
+  <meta name="description" content="View seller profile, listings, and contact on Ludek Marketplace — CRUTECH Okuku Campus student buy and sell platform." />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet" />
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- Manifest -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#2D5016" />
+
+  <style>
+    /* ============================================================
+       DESIGN TOKENS
+       ============================================================ */
+    :root {
+      --milk:          #FAF7F0;
+      --milk-dark:     #F0EBE0;
+      --milk-border:   #E4DCCF;
+
+      --forest:        #2D5016;
+      --forest-mid:    #3D6B1F;
+      --forest-light:  #4E8426;
+      --forest-muted:  #6BA33A;
+      --forest-pale:   #C8DFB0;
+      --forest-tint:   #EFF6E8;
+
+      --orange:        #D4520A;
+      --orange-mid:    #E86A1A;
+      --orange-light:  #F97316;
+      --orange-pale:   #FDE8D6;
+      --orange-tint:   #FFF4EE;
+
+      --bark:          #5B3A1E;
+      --bark-mid:      #7A5230;
+      --bark-light:    #A67C52;
+      --bark-pale:     #E8D5BF;
+
+      --bg-primary:    var(--milk);
+      --bg-secondary:  var(--milk-dark);
+      --bg-card:       #FFFFFF;
+      --bg-card-alt:   var(--forest-tint);
+
+      --text-primary:  #1A1207;
+      --text-secondary:#4A3728;
+      --text-muted:    #7A6552;
+      --text-light:    #A89070;
+      --text-on-dark:  var(--milk);
+
+      --border-color:  var(--milk-border);
+
+      --shadow-xs:  0 1px 3px rgba(45,80,22,0.06), 0 1px 2px rgba(45,80,22,0.04);
+      --shadow-sm:  0 2px 8px rgba(45,80,22,0.08), 0 1px 3px rgba(45,80,22,0.06);
+      --shadow-md:  0 4px 16px rgba(45,80,22,0.10), 0 2px 6px rgba(45,80,22,0.08);
+      --shadow-lg:  0 8px 32px rgba(45,80,22,0.12), 0 4px 12px rgba(45,80,22,0.08);
+      --shadow-xl:  0 16px 48px rgba(45,80,22,0.14), 0 8px 20px rgba(45,80,22,0.10);
+
+      --font-display: 'Syne', sans-serif;
+      --font-body:    'DM Sans', sans-serif;
+
+      --text-xs:   0.75rem;
+      --text-sm:   0.875rem;
+      --text-base: 1rem;
+      --text-md:   1.125rem;
+      --text-lg:   1.25rem;
+      --text-xl:   1.5rem;
+      --text-2xl:  1.875rem;
+      --text-3xl:  2.25rem;
+
+      --space-1:  0.25rem;
+      --space-2:  0.5rem;
+      --space-3:  0.75rem;
+      --space-4:  1rem;
+      --space-5:  1.25rem;
+      --space-6:  1.5rem;
+      --space-8:  2rem;
+      --space-10: 2.5rem;
+      --space-12: 3rem;
+      --space-16: 4rem;
+      --space-20: 5rem;
+
+      --radius-sm:   6px;
+      --radius-md:   12px;
+      --radius-lg:   18px;
+      --radius-xl:   24px;
+      --radius-2xl:  32px;
+      --radius-full: 9999px;
+
+      --transition-fast:   150ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-base:   250ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-slow:   400ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-bounce: 350ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+      --max-width:  1280px;
+      --nav-height: 64px;
+    }
+
+    /* ============================================================
+       RESET
+       ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    img { max-width: 100%; height: auto; display: block; }
+    a { color: inherit; text-decoration: none; }
+    button { cursor: pointer; border: none; background: none; font-family: var(--font-body); }
+    ul { list-style: none; }
+
+    /* ============================================================
+       PAGE LOADER
+       ============================================================ */
+    #pageLoader {
+      position: fixed; inset: 0;
+      background: var(--milk);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.4s ease;
+    }
+    #pageLoader.hidden { opacity: 0; pointer-events: none; }
+    .loader-inner { text-align: center; }
+    .loader-logo {
+      width: 52px; height: 52px;
+      background: var(--forest);
+      border-radius: var(--radius-lg);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto var(--space-3);
+      animation: loaderPulse 1.2s ease-in-out infinite;
+    }
+    .loader-logo i { color: var(--milk); font-size: 22px; }
+    @keyframes loaderPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+    .loader-text {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: var(--text-md);
+      color: var(--forest);
+    }
+
+    /* ============================================================
+       NAVIGATION
+       ============================================================ */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: var(--nav-height);
+      background: rgba(250,247,240,0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-color);
+      transition: box-shadow var(--transition-base);
+    }
+    .nav.scrolled { box-shadow: var(--shadow-md); }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 100%; padding: 0 var(--space-4);
+      max-width: var(--max-width); margin: 0 auto;
+    }
+    @media (min-width: 640px) { .nav-inner { padding: 0 var(--space-6); } }
+    .nav-logo { display: flex; align-items: center; gap: var(--space-2); }
+    .nav-logo-icon {
+      width: 36px; height: 36px; background: var(--forest);
+      border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .nav-logo-icon i { color: var(--milk); font-size: 16px; }
+    .nav-logo-text { display: flex; flex-direction: column; line-height: 1; }
+    .nav-logo-name {
+      font-family: var(--font-display); font-weight: 800;
+      font-size: var(--text-base); color: var(--forest); letter-spacing: -0.02em;
+    }
+    .nav-logo-sub { font-size: var(--text-xs); color: var(--text-muted); font-weight: 500; }
+    .nav-actions { display: flex; align-items: center; gap: var(--space-2); }
+    .nav-btn {
+      padding: var(--space-2) var(--space-4); border-radius: var(--radius-full);
+      font-size: var(--text-sm); font-weight: 600;
+      display: flex; align-items: center; gap: var(--space-2);
+      transition: all var(--transition-fast);
+    }
+    .nav-btn-ghost {
+      color: var(--forest); border: 1.5px solid var(--forest-muted);
+    }
+    .nav-btn-ghost:hover { background: var(--forest-tint); }
+    .nav-btn-primary { background: var(--orange); color: var(--milk); }
+    .nav-btn-primary:hover {
+      background: var(--orange-mid);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(212,82,10,0.35);
+    }
+    .nav-back {
+      display: flex; align-items: center; gap: var(--space-2);
+      color: var(--text-muted); font-size: var(--text-sm); font-weight: 500;
+      padding: var(--space-2) var(--space-3);
+      border-radius: var(--radius-md);
+      transition: all var(--transition-fast);
+    }
+    .nav-back:hover { color: var(--forest); background: var(--forest-tint); }
+
+    /* ============================================================
+       MAIN LAYOUT
+       ============================================================ */
+    .page-wrap {
+      padding-top: var(--nav-height);
+      min-height: 100vh;
+    }
+
+    /* ============================================================
+       SELLER BANNER
+       ============================================================ */
+    .seller-banner {
+      position: relative;
+      height: 220px;
+      background: linear-gradient(135deg, var(--forest) 0%, var(--forest-mid) 60%, var(--forest-light) 100%);
+      overflow: hidden;
+    }
+    @media (min-width: 640px) { .seller-banner { height: 280px; } }
+
+    .seller-banner-img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      opacity: 0.9;
+    }
+    .seller-banner-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.45) 100%);
+    }
+    .seller-banner-pattern {
+      position: absolute; inset: 0;
+      background-image:
+        radial-gradient(circle at 20% 30%, rgba(249,115,22,0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(255,255,255,0.05) 0%, transparent 50%);
+    }
+
+    /* ============================================================
+       SELLER PROFILE HEADER
+       ============================================================ */
+    .seller-profile-header {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 var(--space-4);
+      position: relative;
+    }
+    @media (min-width: 640px) { .seller-profile-header { padding: 0 var(--space-6); } }
+
+    .seller-profile-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-lg);
+      padding: var(--space-5);
+      margin-top: -72px;
+      position: relative;
+    }
+    @media (min-width: 640px) { .seller-profile-card { padding: var(--space-6); } }
+
+    .seller-profile-top {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-4);
+      flex-wrap: wrap;
+    }
+
+    /* Avatar */
+    .seller-avatar-wrap {
+      position: relative;
+      flex-shrink: 0;
+    }
+    .seller-avatar {
+      width: 80px; height: 80px;
+      border-radius: var(--radius-full);
+      border: 4px solid var(--bg-card);
+      box-shadow: var(--shadow-md);
+      object-fit: cover;
+      background: var(--forest-tint);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    @media (min-width: 640px) {
+      .seller-avatar { width: 96px; height: 96px; }
+    }
+    .seller-avatar-fallback {
+      width: 80px; height: 80px;
+      border-radius: var(--radius-full);
+      border: 4px solid var(--bg-card);
+      box-shadow: var(--shadow-md);
+      background: var(--forest);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    @media (min-width: 640px) { .seller-avatar-fallback { width: 96px; height: 96px; } }
+    .seller-avatar-fallback span {
+      font-family: var(--font-display);
+      font-weight: 800; font-size: 1.75rem;
+      color: var(--milk);
+      line-height: 1;
+    }
+    .seller-verified-badge {
+      position: absolute; bottom: 2px; right: 2px;
+      width: 22px; height: 22px;
+      background: var(--forest);
+      border-radius: var(--radius-full);
+      border: 2px solid var(--bg-card);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .seller-verified-badge i { color: var(--milk); font-size: 9px; }
+
+    /* Info */
+    .seller-info { flex: 1; min-width: 200px; }
+    .seller-name-row {
+      display: flex; align-items: center; gap: var(--space-2);
+      flex-wrap: wrap; margin-bottom: var(--space-1);
+    }
+    .seller-name {
+      font-family: var(--font-display);
+      font-weight: 800; font-size: var(--text-xl);
+      color: var(--text-primary); letter-spacing: -0.02em;
+    }
+    .seller-verified-tag {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 2px 8px; border-radius: var(--radius-full);
+      background: var(--forest-tint); color: var(--forest);
+      font-size: var(--text-xs); font-weight: 600;
+      border: 1px solid var(--forest-pale);
+    }
+    .seller-verified-tag i { font-size: 9px; }
+    .seller-category {
+      font-size: var(--text-sm); color: var(--text-muted);
+      font-weight: 500; margin-bottom: var(--space-3);
+    }
+    .seller-category i { margin-right: var(--space-1); opacity: 0.7; }
+
+    /* Stats row */
+    .seller-stats {
+      display: flex; align-items: center; gap: var(--space-4);
+      flex-wrap: wrap;
+    }
+    .seller-stat {
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .seller-stat-value {
+      font-family: var(--font-display);
+      font-weight: 700; font-size: var(--text-md);
+      color: var(--text-primary);
+    }
+    .seller-stat-label {
+      font-size: var(--text-xs); color: var(--text-muted);
+      font-weight: 500;
+    }
+    .stat-divider {
+      width: 1px; height: 30px;
+      background: var(--border-color);
+    }
+
+    /* CTA Area */
+    .seller-cta-area {
+      margin-top: var(--space-4);
+      padding-top: var(--space-4);
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+    .seller-bio {
+      flex: 1; min-width: 200px;
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .seller-bio.hidden-bio { display: none; }
+    .seller-actions {
+      display: flex; gap: var(--space-2); flex-shrink: 0;
+    }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: var(--space-2);
+      padding: var(--space-3) var(--space-5);
+      border-radius: var(--radius-full);
+      font-family: var(--font-body); font-size: var(--text-sm);
+      font-weight: 600; line-height: 1;
+      transition: all var(--transition-base);
+      white-space: nowrap; cursor: pointer; border: none;
+    }
+    .btn i { font-size: 13px; }
+    .btn-whatsapp {
+      background: #25D366; color: #fff;
+      box-shadow: 0 2px 8px rgba(37,211,102,0.3);
+    }
+    .btn-whatsapp:hover {
+      background: #20BA5A;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(37,211,102,0.4);
+    }
+    .btn-share {
+      background: var(--bg-secondary); color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+    }
+    .btn-share:hover { background: var(--milk-border); color: var(--text-primary); }
+
+    /* ============================================================
+       CONTENT AREA
+       ============================================================ */
+    .content-area {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: var(--space-6) var(--space-4);
+    }
+    @media (min-width: 640px) { .content-area { padding: var(--space-8) var(--space-6); } }
+
+    /* Filter / Search bar */
+    .listings-toolbar {
+      display: flex; align-items: center; gap: var(--space-3);
+      flex-wrap: wrap;
+      margin-bottom: var(--space-6);
+    }
+    .search-wrap {
+      flex: 1; min-width: 200px;
+      position: relative;
+    }
+    .search-wrap i {
+      position: absolute; left: var(--space-3); top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-light); font-size: 14px;
+    }
+    .search-input {
+      width: 100%;
+      padding: var(--space-3) var(--space-3) var(--space-3) 2.5rem;
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-full);
+      background: var(--bg-card);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: var(--text-sm);
+      outline: none;
+      transition: all var(--transition-fast);
+    }
+    .search-input:focus {
+      border-color: var(--forest-light);
+      box-shadow: 0 0 0 3px rgba(78,132,38,0.1);
+    }
+    .search-input::placeholder { color: var(--text-light); }
+
+    /* Category pills */
+    .category-pills {
+      display: flex; gap: var(--space-2);
+      overflow-x: auto; padding-bottom: var(--space-1);
+      scrollbar-width: none;
+    }
+    .category-pills::-webkit-scrollbar { display: none; }
+    .pill {
+      flex-shrink: 0;
+      padding: var(--space-2) var(--space-4);
+      border-radius: var(--radius-full);
+      font-size: var(--text-sm); font-weight: 500;
+      border: 1.5px solid var(--border-color);
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      white-space: nowrap;
+    }
+    .pill:hover { border-color: var(--forest-muted); color: var(--forest); }
+    .pill.active {
+      background: var(--forest); color: var(--milk);
+      border-color: var(--forest);
+    }
+
+    /* Listings section header */
+    .section-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: var(--space-5);
+    }
+    .section-title {
+      font-family: var(--font-display);
+      font-weight: 700; font-size: var(--text-xl);
+      color: var(--text-primary);
+    }
+    .section-count {
+      font-size: var(--text-sm); color: var(--text-muted); font-weight: 500;
+    }
+
+    /* ============================================================
+       PRODUCT GRID
+       ============================================================ */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-4);
+    }
+    @media (min-width: 640px) {
+      .product-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (min-width: 1024px) {
+      .product-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+
+    /* Product Card */
+    .product-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      transition: all var(--transition-base);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+    }
+    .product-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--forest-pale);
+    }
+
+    /* Image */
+    .product-img-wrap {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      background: var(--milk-dark);
+    }
+    .product-img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .product-card:hover .product-img { transform: scale(1.06); }
+    .product-img-placeholder {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--forest-tint);
+    }
+    .product-img-placeholder i { font-size: 2rem; color: var(--forest-pale); }
+
+    /* Category badge on card */
+    .product-cat-badge {
+      position: absolute; top: var(--space-2); left: var(--space-2);
+      padding: 3px 10px; border-radius: var(--radius-full);
+      font-size: 10px; font-weight: 700; letter-spacing: 0.04em;
+      background: var(--forest); color: var(--milk);
+      text-transform: uppercase;
+    }
+    .product-featured-badge {
+      position: absolute; top: var(--space-2); right: var(--space-2);
+      width: 28px; height: 28px; border-radius: var(--radius-full);
+      background: var(--orange); color: var(--milk);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .product-featured-badge i { font-size: 11px; }
+
+    /* Body */
+    .product-body {
+      padding: var(--space-3);
+      display: flex; flex-direction: column; gap: var(--space-2);
+      flex: 1;
+    }
+    .product-name {
+      font-family: var(--font-display);
+      font-weight: 700; font-size: var(--text-sm);
+      color: var(--text-primary);
+      line-height: 1.3;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .product-price {
+      font-family: var(--font-display);
+      font-weight: 800; font-size: var(--text-md);
+      color: var(--forest);
+    }
+    .product-price .naira { font-size: var(--text-sm); opacity: 0.7; }
+    .product-wa-btn {
+      display: flex; align-items: center; justify-content: center;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-3);
+      background: #25D366; color: #fff;
+      border-radius: var(--radius-md);
+      font-size: var(--text-xs); font-weight: 700;
+      border: none; cursor: pointer;
+      transition: all var(--transition-fast);
+      margin-top: auto;
+    }
+    .product-wa-btn:hover {
+      background: #20BA5A;
+      transform: translateY(-1px);
+    }
+    .product-wa-btn i { font-size: 12px; }
+
+    /* ============================================================
+       EMPTY STATE
+       ============================================================ */
+    .empty-state {
+      text-align: center;
+      padding: var(--space-20) var(--space-4);
+      grid-column: 1 / -1;
+    }
+    .empty-state-icon {
+      width: 72px; height: 72px;
+      background: var(--forest-tint);
+      border-radius: var(--radius-full);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto var(--space-4);
+    }
+    .empty-state-icon i { font-size: 1.75rem; color: var(--forest-muted); }
+    .empty-state h3 {
+      font-family: var(--font-display);
+      font-weight: 700; font-size: var(--text-lg);
+      color: var(--text-primary); margin-bottom: var(--space-2);
+    }
+    .empty-state p { font-size: var(--text-sm); color: var(--text-muted); }
+
+    /* ============================================================
+       SKELETON LOADERS
+       ============================================================ */
+    .skeleton {
+      background: linear-gradient(90deg, var(--milk-dark) 25%, var(--milk-border) 50%, var(--milk-dark) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: var(--radius-md);
+    }
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+    .skeleton-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+    }
+    .skeleton-img { height: 160px; }
+    .skeleton-body { padding: var(--space-3); display: flex; flex-direction: column; gap: var(--space-2); }
+    .skeleton-title { height: 14px; width: 80%; }
+    .skeleton-price { height: 18px; width: 50%; }
+    .skeleton-btn { height: 32px; width: 100%; }
+    @media (min-width: 640px) { .skeleton-img { height: 180px; } }
+
+    /* ============================================================
+       SCROLL TO TOP
+       ============================================================ */
+    .scroll-top {
+      position: fixed; bottom: var(--space-6); right: var(--space-6);
+      width: 44px; height: 44px;
+      background: var(--forest); color: var(--milk);
+      border-radius: var(--radius-full);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: var(--shadow-lg);
+      opacity: 0; pointer-events: none;
+      transform: translateY(12px);
+      transition: all var(--transition-base);
+      z-index: 50; border: none; cursor: pointer;
+    }
+    .scroll-top.visible { opacity: 1; pointer-events: all; transform: translateY(0); }
+    .scroll-top:hover { background: var(--forest-mid); transform: translateY(-2px); }
+
+    /* ============================================================
+       TOAST
+       ============================================================ */
+    .toast-container {
+      position: fixed; top: calc(var(--nav-height) + var(--space-4));
+      right: var(--space-4); z-index: 300;
+      display: flex; flex-direction: column; gap: var(--space-2);
+      pointer-events: none;
+    }
+    .toast {
+      display: flex; align-items: center; gap: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      background: var(--text-primary); color: var(--milk);
+      border-radius: var(--radius-lg); box-shadow: var(--shadow-xl);
+      font-size: var(--text-sm); font-weight: 500;
+      pointer-events: all;
+      transform: translateX(120%);
+      transition: transform 350ms cubic-bezier(0.34, 1.56, 0.64, 1);
+      max-width: 320px;
+    }
+    .toast.show { transform: translateX(0); }
+    .toast-success { border-left: 4px solid var(--forest-muted); }
+    .toast-info { border-left: 4px solid var(--orange-light); }
+
+    /* ============================================================
+       FOOTER
+       ============================================================ */
+    .footer {
+      background: var(--forest); color: var(--milk);
+      padding: var(--space-8) 0 var(--space-6);
+      margin-top: var(--space-16);
+    }
+    .footer-inner {
+      max-width: var(--max-width); margin: 0 auto;
+      padding: 0 var(--space-4);
+      display: flex; flex-direction: column;
+      align-items: center; gap: var(--space-4);
+      text-align: center;
+    }
+    @media (min-width: 640px) { .footer-inner { padding: 0 var(--space-6); } }
+    .footer-logo { display: flex; align-items: center; gap: var(--space-2); }
+    .footer-logo-icon {
+      width: 36px; height: 36px;
+      background: rgba(255,255,255,0.1);
+      border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .footer-logo-icon i { color: var(--orange-light); font-size: 16px; }
+    .footer-logo-name {
+      font-family: var(--font-display); font-weight: 800;
+      font-size: var(--text-md); color: var(--milk);
+    }
+    .footer-copy {
+      font-size: var(--text-sm);
+      color: rgba(250,247,240,0.5);
+    }
+
+    /* ============================================================
+       PRODUCT MODAL
+       ============================================================ */
+    .modal-backdrop {
+      position: fixed; inset: 0;
+      background: rgba(15,18,10,0.7);
+      backdrop-filter: blur(6px);
+      z-index: 500;
+      opacity: 0; pointer-events: none;
+      transition: opacity var(--transition-base);
+      display: flex; align-items: flex-end; justify-content: center;
+    }
+    @media (min-width: 640px) {
+      .modal-backdrop { align-items: center; }
+    }
+    .modal-backdrop.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: var(--bg-card);
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+      width: 100%; max-width: 520px; max-height: 90vh;
+      overflow-y: auto;
+      transform: translateY(100%);
+      transition: transform var(--transition-slow);
+      padding: var(--space-5);
+    }
+    @media (min-width: 640px) {
+      .modal {
+        border-radius: var(--radius-xl);
+        transform: scale(0.92) translateY(20px);
+        max-height: 85vh;
+      }
+    }
+    .modal-backdrop.open .modal {
+      transform: translateY(0);
+    }
+    @media (min-width: 640px) {
+      .modal-backdrop.open .modal { transform: scale(1) translateY(0); }
+    }
+    .modal-handle {
+      width: 40px; height: 4px;
+      background: var(--border-color);
+      border-radius: var(--radius-full);
+      margin: 0 auto var(--space-5);
+    }
+    @media (min-width: 640px) { .modal-handle { display: none; } }
+    .modal-img-wrap {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      aspect-ratio: 4/3;
+      background: var(--milk-dark);
+      margin-bottom: var(--space-4);
+    }
+    .modal-img { width: 100%; height: 100%; object-fit: cover; }
+    .modal-img-placeholder {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .modal-img-placeholder i { font-size: 3rem; color: var(--forest-pale); }
+    .modal-cat-badge {
+      display: inline-flex; padding: 3px 10px;
+      border-radius: var(--radius-full);
+      font-size: var(--text-xs); font-weight: 700;
+      background: var(--forest-tint); color: var(--forest);
+      border: 1px solid var(--forest-pale);
+      margin-bottom: var(--space-2);
+    }
+    .modal-title {
+      font-family: var(--font-display);
+      font-weight: 800; font-size: var(--text-xl);
+      color: var(--text-primary);
+      margin-bottom: var(--space-2);
+    }
+    .modal-price {
+      font-family: var(--font-display);
+      font-weight: 800; font-size: var(--text-2xl);
+      color: var(--forest);
+      margin-bottom: var(--space-4);
+    }
+    .modal-desc {
+      font-size: var(--text-sm);
+      color: var(--text-secondary); line-height: 1.7;
+      margin-bottom: var(--space-5);
+    }
+    .modal-actions { display: flex; gap: var(--space-3); }
+    .btn-full { flex: 1; justify-content: center; }
+    .btn-lg {
+      padding: var(--space-4) var(--space-6);
+      font-size: var(--text-base);
+    }
+    .btn-close-modal {
+      padding: var(--space-4);
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border-color);
+      transition: all var(--transition-fast);
+    }
+    .btn-close-modal:hover { background: var(--milk-border); }
+
+    /* Animations */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-up { animation: fadeUp 0.6s cubic-bezier(0.4,0,0.2,1) both; }
+    .delay-100 { animation-delay: 100ms; }
+    .delay-200 { animation-delay: 200ms; }
+    .delay-300 { animation-delay: 300ms; }
+
+    /* Accessibility */
+    :focus-visible { outline: 2px solid var(--forest-light); outline-offset: 3px; }
+    .sr-only {
+      position: absolute; width: 1px; height: 1px;
+      padding: 0; margin: -1px; overflow: hidden;
+      clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Page Loader -->
+  <div id="pageLoader">
+    <div class="loader-inner">
+      <div class="loader-logo">
+        <i class="fas fa-store-alt"></i>
+      </div>
+      <div class="loader-text">Ludek</div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- ======================================================
+       NAVIGATION
+  ====================================================== -->
+  <nav class="nav" id="mainNav" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo" aria-label="Ludek Marketplace Home">
+        <div class="nav-logo-icon">
+          <i class="fas fa-store-alt" aria-hidden="true"></i>
+        </div>
+        <div class="nav-logo-text">
+          <span class="nav-logo-name">Ludek</span>
+          <span class="nav-logo-sub">CRUTECH Okuku</span>
+        </div>
+      </a>
+
+      <a href="marketplace.html" class="nav-back" aria-label="Back to Marketplace">
+        <i class="fas fa-arrow-left" aria-hidden="true"></i>
+        <span>Marketplace</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- ======================================================
+       PAGE WRAP
+  ====================================================== -->
+  <div class="page-wrap">
+
+    <!-- SELLER BANNER -->
+    <div class="seller-banner" id="sellerBannerWrap">
+      <img
+        id="sellerBannerImg"
+        class="seller-banner-img"
+        src=""
+        alt="Seller banner"
+        style="display:none;"
+        loading="lazy"
+      />
+      <div class="seller-banner-overlay"></div>
+      <div class="seller-banner-pattern"></div>
+    </div>
+
+    <!-- SELLER PROFILE CARD -->
+    <div class="seller-profile-header">
+      <div class="seller-profile-card animate-fade-up">
+
+        <div class="seller-profile-top">
+
+          <!-- Avatar -->
+          <div class="seller-avatar-wrap">
+            <div class="seller-avatar-fallback" id="avatarFallback">
+              <span id="avatarInitial">?</span>
+            </div>
+            <img
+              id="sellerAvatarImg"
+              class="seller-avatar"
+              src=""
+              alt="Seller photo"
+              style="display:none; position:absolute; top:0; left:0;"
+              loading="lazy"
+            />
+            <div class="seller-verified-badge" aria-label="Verified seller">
+              <i class="fas fa-check" aria-hidden="true"></i>
+            </div>
+          </div>
+
+          <!-- Info -->
+          <div class="seller-info">
+            <div class="seller-name-row">
+              <h1 class="seller-name" id="sellerName">Loading…</h1>
+              <span class="seller-verified-tag">
+                <i class="fas fa-shield-check"></i> Verified
+              </span>
+            </div>
+            <p class="seller-category" id="sellerCategory">
+              <i class="fas fa-tag"></i> <span>—</span>
+            </p>
+            <div class="seller-stats">
+              <div class="seller-stat">
+                <span class="seller-stat-value" id="statListings">—</span>
+                <span class="seller-stat-label">Listings</span>
+              </div>
+              <div class="stat-divider"></div>
+              <div class="seller-stat">
+                <span class="seller-stat-value" id="statJoined">—</span>
+                <span class="seller-stat-label">Joined</span>
+              </div>
+              <div class="stat-divider"></div>
+              <div class="seller-stat">
+                <span class="seller-stat-value" id="statWhatsapp">Active</span>
+                <span class="seller-stat-label">Status</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Bio + Actions -->
+        <div class="seller-cta-area">
+          <p class="seller-bio" id="sellerBio">Loading seller information…</p>
+          <div class="seller-actions">
+            <button
+              class="btn btn-share"
+              id="shareBtn"
+              aria-label="Share seller profile"
+              title="Share Profile"
+            >
+              <i class="fas fa-share-nodes" aria-hidden="true"></i>
+              Share
+            </button>
+            <button
+              class="btn btn-whatsapp"
+              id="contactWaBtn"
+              aria-label="Contact seller on WhatsApp"
+            >
+              <i class="fab fa-whatsapp" aria-hidden="true"></i>
+              Chat Seller
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ======================================================
+         LISTINGS
+    ====================================================== -->
+    <div class="content-area">
+
+      <!-- Toolbar -->
+      <div class="listings-toolbar animate-fade-up delay-100">
+        <div class="search-wrap">
+          <i class="fas fa-search" aria-hidden="true"></i>
+          <input
+            type="search"
+            class="search-input"
+            id="searchInput"
+            placeholder="Search this seller's listings…"
+            aria-label="Search seller listings"
+          />
+        </div>
+      </div>
+
+      <!-- Category Pills -->
+      <div class="category-pills" id="categoryPills" role="list" aria-label="Filter by category"></div>
+
+      <!-- Section Header -->
+      <div class="section-header" style="margin-top: var(--space-6);">
+        <h2 class="section-title">All Listings</h2>
+        <span class="section-count" id="listingCount">Loading…</span>
+      </div>
+
+      <!-- Product Grid -->
+      <div class="product-grid" id="productGrid" role="list" aria-live="polite" aria-label="Seller's listings"></div>
+
+    </div>
+
+  </div><!-- end .page-wrap -->
+
+  <!-- ======================================================
+       PRODUCT DETAIL MODAL
+  ====================================================== -->
+  <div class="modal-backdrop" id="productModal" role="dialog" aria-modal="true" aria-label="Product detail">
+    <div class="modal" id="modalContent">
+      <div class="modal-handle" aria-hidden="true"></div>
+      <div class="modal-img-wrap">
+        <img id="modalImg" class="modal-img" src="" alt="" style="display:none;" loading="lazy"/>
+        <div class="modal-img-placeholder" id="modalImgPlaceholder">
+          <i class="fas fa-image" aria-hidden="true"></i>
+        </div>
+      </div>
+      <span class="modal-cat-badge" id="modalCategory"></span>
+      <h2 class="modal-title" id="modalTitle"></h2>
+      <p class="modal-price" id="modalPrice"></p>
+      <p class="modal-desc" id="modalDesc"></p>
+      <div class="modal-actions">
+        <a
+          href="#"
+          class="btn btn-whatsapp btn-full btn-lg"
+          id="modalWaBtn"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <i class="fab fa-whatsapp"></i>
+          Chat Seller on WhatsApp
+        </a>
+        <button
+          class="btn btn-close-modal"
+          id="modalCloseBtn"
+          aria-label="Close product detail"
+        >
+          <i class="fas fa-xmark"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================
+       FOOTER
+  ====================================================== -->
+  <footer class="footer" role="contentinfo">
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <div class="footer-logo-icon">
+          <i class="fas fa-store-alt" aria-hidden="true"></i>
+        </div>
+        <span class="footer-logo-name">Ludek Marketplace</span>
+      </div>
+      <p class="footer-copy">
+        &copy; <span id="footerYear"></span> Ludek Marketplace — CRUTECH Okuku Campus. All rights reserved.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Scroll to Top -->
+  <button class="scroll-top" id="scrollTopBtn" aria-label="Scroll to top">
+    <i class="fas fa-arrow-up" aria-hidden="true"></i>
+  </button>
+
+  <!-- ======================================================
+       FIREBASE SDK (CDN)
+  ====================================================== -->
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+    import {
+      getFirestore,
+      doc, getDoc, collection, query, where, getDocs, orderBy
+    } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+    // ============================================================
+    // FIREBASE CONFIG — Replace with your actual config
+    // ============================================================
+    const firebaseConfig = {
+      apiKey:            "YOUR_API_KEY",
+      authDomain:        "YOUR_AUTH_DOMAIN",
+      projectId:         "YOUR_PROJECT_ID",
+      storageBucket:     "YOUR_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId:             "YOUR_APP_ID"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db  = getFirestore(app);
+
+    // ============================================================
+    // STATE
+    // ============================================================
+    let allListings     = [];
+    let filteredListings = [];
+    let currentSeller   = null;
+    let activeCategory  = 'all';
+    let searchQuery     = '';
+
+    // ============================================================
+    // HELPERS
+    // ============================================================
+    function getSellerId() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('uid') || params.get('id');
+    }
+
+    function formatPrice(price) {
+      if (!price && price !== 0) return 'Price on request';
+      const num = parseFloat(price);
+      if (isNaN(num)) return String(price);
+      return '₦' + num.toLocaleString('en-NG');
+    }
+
+    function formatJoinDate(ts) {
+      if (!ts) return '—';
+      const d = ts.toDate ? ts.toDate() : new Date(ts);
+      return d.toLocaleDateString('en-NG', { month: 'short', year: 'numeric' });
+    }
+
+    function buildWaLink(phone, productName, productPrice, sellerName) {
+      const cleanPhone = phone ? phone.replace(/\D/g, '') : '';
+      const waPhone = cleanPhone.startsWith('0')
+        ? '234' + cleanPhone.slice(1)
+        : cleanPhone || '';
+      const msg = encodeURIComponent(
+`Hello, I found your listing on Ludek Marketplace (CRUTECH Okuku Campus).
+
+Product: ${productName}
+Price: ${productPrice}
+
+Is it still available?`
+      );
+      return waPhone
+        ? `https://wa.me/${waPhone}?text=${msg}`
+        : `https://wa.me/?text=${msg}`;
+    }
+
+    function getInitial(name) {
+      if (!name) return '?';
+      return name.trim().charAt(0).toUpperCase();
+    }
+
+    // ============================================================
+    // RENDER SELLER PROFILE
+    // ============================================================
+    function renderSellerProfile(seller) {
+      currentSeller = seller;
+
+      // Banner
+      if (seller.bannerUrl) {
+        const bannerImg = document.getElementById('sellerBannerImg');
+        bannerImg.src = seller.bannerUrl;
+        bannerImg.style.display = 'block';
+      }
+
+      // Avatar
+      if (seller.photoUrl) {
+        const avatarImg = document.getElementById('sellerAvatarImg');
+        const avatarFall = document.getElementById('avatarFallback');
+        avatarImg.src = seller.photoUrl;
+        avatarImg.style.display = 'block';
+        avatarImg.style.position = 'relative';
+        avatarFall.style.display = 'none';
+      } else {
+        document.getElementById('avatarInitial').textContent = getInitial(seller.name || seller.displayName);
+      }
+
+      // Name
+      const name = seller.storeName || seller.name || seller.displayName || 'Campus Seller';
+      document.getElementById('sellerName').textContent = name;
+      document.title = `${name} — Ludek Marketplace | CRUTECH Okuku`;
+
+      // Category
+      const catSpan = document.querySelector('#sellerCategory span');
+      if (catSpan) catSpan.textContent = seller.category || seller.storeCategory || 'General';
+
+      // Joined date
+      document.getElementById('statJoined').textContent = formatJoinDate(seller.createdAt);
+
+      // Bio
+      const bio = document.getElementById('sellerBio');
+      if (seller.bio || seller.description) {
+        bio.textContent = seller.bio || seller.description;
+      } else {
+        bio.textContent = 'This seller has not added a bio yet.';
+        bio.style.opacity = '0.5';
+      }
+
+      // WhatsApp contact (seller level)
+      const contactBtn = document.getElementById('contactWaBtn');
+      if (seller.whatsapp || seller.phone) {
+        const phone = seller.whatsapp || seller.phone;
+        const cleanPhone = phone.replace(/\D/g, '');
+        const waPhone = cleanPhone.startsWith('0') ? '234' + cleanPhone.slice(1) : cleanPhone;
+        const msg = encodeURIComponent(`Hello ${name}, I found your store on Ludek Marketplace (CRUTECH Okuku Campus). I'd like to enquire about your listings.`);
+        contactBtn.onclick = () => window.open(`https://wa.me/${waPhone}?text=${msg}`, '_blank', 'noopener,noreferrer');
+      } else {
+        contactBtn.textContent = 'No WhatsApp set';
+        contactBtn.disabled = true;
+        contactBtn.style.opacity = '0.5';
+        contactBtn.style.cursor = 'not-allowed';
+      }
+    }
+
+    // ============================================================
+    // RENDER CATEGORY PILLS
+    // ============================================================
+    function renderCategoryPills(listings) {
+      const categories = ['all', ...new Set(listings.map(l => l.category).filter(Boolean))];
+      const container = document.getElementById('categoryPills');
+      container.innerHTML = categories.map(cat => `
+        <button
+          class="pill${cat === 'all' ? ' active' : ''}"
+          data-cat="${cat}"
+          role="listitem"
+          aria-pressed="${cat === 'all'}"
+        >
+          ${cat === 'all' ? 'All' : cat}
+        </button>
+      `).join('');
+
+      container.querySelectorAll('.pill').forEach(pill => {
+        pill.addEventListener('click', () => {
+          container.querySelectorAll('.pill').forEach(p => {
+            p.classList.remove('active');
+            p.setAttribute('aria-pressed', 'false');
+          });
+          pill.classList.add('active');
+          pill.setAttribute('aria-pressed', 'true');
+          activeCategory = pill.dataset.cat;
+          applyFilters();
+        });
+      });
+    }
+
+    // ============================================================
+    // RENDER PRODUCT GRID
+    // ============================================================
+    function renderListings(listings) {
+      const grid = document.getElementById('productGrid');
+      const count = document.getElementById('listingCount');
+
+      count.textContent = `${listings.length} listing${listings.length !== 1 ? 's' : ''}`;
+
+      if (listings.length === 0) {
+        grid.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">
+              <i class="fas fa-box-open" aria-hidden="true"></i>
+            </div>
+            <h3>No listings found</h3>
+            <p>Try a different search or category.</p>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = listings.map((listing, i) => {
+        const name  = listing.title || listing.name || 'Untitled';
+        const price = formatPrice(listing.price);
+        const cat   = listing.category || 'General';
+        const waLink = buildWaLink(
+          currentSeller?.whatsapp || currentSeller?.phone,
+          name, price,
+          currentSeller?.storeName || currentSeller?.name
+        );
+        const imgSrc = listing.images?.[0] || listing.imageUrl || '';
+
+        return `
+          <article
+            class="product-card animate-fade-up"
+            style="animation-delay:${Math.min(i * 60, 400)}ms"
+            role="listitem"
+            data-id="${listing.id}"
+            tabindex="0"
+            aria-label="${name}, ${price}"
+          >
+            <div class="product-img-wrap">
+              ${imgSrc
+                ? `<img class="product-img" src="${imgSrc}" alt="${name}" loading="lazy" />`
+                : `<div class="product-img-placeholder"><i class="fas fa-image" aria-hidden="true"></i></div>`
+              }
+              <span class="product-cat-badge" aria-hidden="true">${cat}</span>
+              ${listing.featured ? `<span class="product-featured-badge" aria-label="Featured listing"><i class="fas fa-star" aria-hidden="true"></i></span>` : ''}
+            </div>
+            <div class="product-body">
+              <h3 class="product-name">${name}</h3>
+              <p class="product-price"><span class="naira">NGN</span> ${price.replace('₦','')}</p>
+              <a
+                class="product-wa-btn"
+                href="${waLink}"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Chat seller about ${name}"
+                onclick="event.stopPropagation()"
+              >
+                <i class="fab fa-whatsapp" aria-hidden="true"></i>
+                Chat Seller
+              </a>
+            </div>
+          </article>
+        `;
+      }).join('');
+
+      // Card click → open modal
+      grid.querySelectorAll('.product-card').forEach((card, i) => {
+        card.addEventListener('click', () => openModal(listings[i]));
+        card.addEventListener('keydown', e => {
+          if (e.key === 'Enter' || e.key === ' ') openModal(listings[i]);
+        });
+      });
+    }
+
+    // ============================================================
+    // APPLY FILTERS
+    // ============================================================
+    function applyFilters() {
+      filteredListings = allListings.filter(l => {
+        const matchCat = activeCategory === 'all' || l.category === activeCategory;
+        const matchSearch = !searchQuery ||
+          (l.title || l.name || '').toLowerCase().includes(searchQuery) ||
+          (l.description || '').toLowerCase().includes(searchQuery);
+        return matchCat && matchSearch;
+      });
+      renderListings(filteredListings);
+    }
+
+    // ============================================================
+    // MODAL
+    // ============================================================
+    function openModal(listing) {
+      const modal    = document.getElementById('productModal');
+      const name     = listing.title || listing.name || 'Untitled';
+      const price    = formatPrice(listing.price);
+      const cat      = listing.category || 'General';
+      const desc     = listing.description || 'No description provided.';
+      const imgSrc   = listing.images?.[0] || listing.imageUrl || '';
+
+      document.getElementById('modalTitle').textContent    = name;
+      document.getElementById('modalPrice').textContent    = price;
+      document.getElementById('modalCategory').textContent = cat;
+      document.getElementById('modalDesc').textContent     = desc;
+
+      const modalImg  = document.getElementById('modalImg');
+      const modalPlaceholder = document.getElementById('modalImgPlaceholder');
+      if (imgSrc) {
+        modalImg.src = imgSrc; modalImg.alt = name;
+        modalImg.style.display = 'block';
+        modalPlaceholder.style.display = 'none';
+      } else {
+        modalImg.style.display = 'none';
+        modalPlaceholder.style.display = 'flex';
+      }
+
+      const waLink = buildWaLink(
+        currentSeller?.whatsapp || currentSeller?.phone,
+        name, price,
+        currentSeller?.storeName || currentSeller?.name
+      );
+      document.getElementById('modalWaBtn').href = waLink;
+
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      document.getElementById('modalCloseBtn').focus();
+    }
+
+    function closeModal() {
+      document.getElementById('productModal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    document.getElementById('modalCloseBtn').addEventListener('click', closeModal);
+    document.getElementById('productModal').addEventListener('click', e => {
+      if (e.target === e.currentTarget) closeModal();
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    // ============================================================
+    // SKELETON LOADERS
+    // ============================================================
+    function showSkeletons(count = 6) {
+      const grid = document.getElementById('productGrid');
+      grid.innerHTML = Array.from({ length: count }).map(() => `
+        <div class="skeleton-card" aria-hidden="true">
+          <div class="skeleton skeleton-img"></div>
+          <div class="skeleton-body">
+            <div class="skeleton skeleton-title"></div>
+            <div class="skeleton skeleton-price"></div>
+            <div class="skeleton skeleton-btn"></div>
+          </div>
+        </div>
+      `).join('');
+      document.getElementById('listingCount').textContent = 'Loading…';
+    }
+
+    // ============================================================
+    // MAIN LOAD
+    // ============================================================
+    async function loadPage() {
+      const sellerId = getSellerId();
+
+      if (!sellerId) {
+        document.getElementById('sellerName').textContent = 'Seller not found';
+        document.getElementById('sellerBio').textContent  = 'No seller ID provided in the URL. Try accessing via a listing or marketplace link.';
+        document.getElementById('productGrid').innerHTML  = `
+          <div class="empty-state">
+            <div class="empty-state-icon"><i class="fas fa-user-slash"></i></div>
+            <h3>Seller not found</h3>
+            <p>Invalid or missing seller link.</p>
+          </div>`;
+        document.getElementById('listingCount').textContent = '0 listings';
+        return;
+      }
+
+      showSkeletons(6);
+
+      try {
+        // Fetch seller profile
+        const sellerRef  = doc(db, 'users', sellerId);
+        const sellerSnap = await getDoc(sellerRef);
+
+        if (!sellerSnap.exists()) {
+          throw new Error('Seller profile not found.');
+        }
+
+        const seller = { id: sellerSnap.id, ...sellerSnap.data() };
+        renderSellerProfile(seller);
+
+        // Fetch listings
+        const listingsRef = collection(db, 'listings');
+        const q = query(
+          listingsRef,
+          where('sellerId', '==', sellerId),
+          where('status', '==', 'active'),
+          orderBy('createdAt', 'desc')
+        );
+        const listingsSnap = await getDocs(q);
+
+        allListings = listingsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+        // Update listing stat
+        document.getElementById('statListings').textContent = allListings.length;
+
+        renderCategoryPills(allListings);
+        filteredListings = [...allListings];
+        renderListings(filteredListings);
+
+      } catch (err) {
+        console.error('[Ludek] Failed to load seller page:', err);
+        document.getElementById('productGrid').innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon"><i class="fas fa-exclamation-triangle"></i></div>
+            <h3>Could not load listings</h3>
+            <p>${err.message || 'Please check your connection and try again.'}</p>
+          </div>`;
+        document.getElementById('listingCount').textContent = '0 listings';
+        showToast('Failed to load seller data. Please refresh.', 'error');
+      }
+    }
+
+    // ============================================================
+    // SEARCH
+    // ============================================================
+    const searchInput = document.getElementById('searchInput');
+    let searchDebounce = null;
+    searchInput.addEventListener('input', () => {
+      clearTimeout(searchDebounce);
+      searchDebounce = setTimeout(() => {
+        searchQuery = searchInput.value.trim().toLowerCase();
+        applyFilters();
+      }, 280);
+    });
+
+    // ============================================================
+    // SHARE BUTTON
+    // ============================================================
+    document.getElementById('shareBtn').addEventListener('click', async () => {
+      const url  = window.location.href;
+      const name = document.getElementById('sellerName').textContent;
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: `${name} — Ludek Marketplace`,
+            text:  `Check out ${name}'s store on Ludek Marketplace (CRUTECH Okuku Campus)!`,
+            url
+          });
+        } catch (e) { /* user cancelled */ }
+      } else {
+        navigator.clipboard.writeText(url).then(() => {
+          showToast('Profile link copied to clipboard!', 'success');
+        }).catch(() => showToast('Could not copy link.', 'error'));
+      }
+    });
+
+    // ============================================================
+    // TOAST
+    // ============================================================
+    function showToast(message, type = 'info', duration = 4000) {
+      const container = document.getElementById('toastContainer');
+      const icons = { success: 'fa-circle-check', error: 'fa-circle-xmark', info: 'fa-circle-info' };
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      toast.innerHTML = `<i class="fas ${icons[type] || icons.info}" aria-hidden="true"></i><span>${message}</span>`;
+      container.appendChild(toast);
+      requestAnimationFrame(() => requestAnimationFrame(() => toast.classList.add('show')));
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 400);
+      }, duration);
+    }
+    window.showToast = showToast;
+
+    // ============================================================
+    // NAV SCROLL SHADOW
+    // ============================================================
+    const nav = document.getElementById('mainNav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 20);
+    }, { passive: true });
+
+    // ============================================================
+    // SCROLL TO TOP
+    // ============================================================
+    const scrollBtn = document.getElementById('scrollTopBtn');
+    window.addEventListener('scroll', () => {
+      scrollBtn.classList.toggle('visible', window.scrollY > 400);
+    }, { passive: true });
+    scrollBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+    // ============================================================
+    // FOOTER YEAR
+    // ============================================================
+    document.getElementById('footerYear').textContent = new Date().getFullYear();
+
+    // ============================================================
+    // HIDE LOADER + INIT
+    // ============================================================
+    window.addEventListener('load', () => {
+      const loader = document.getElementById('pageLoader');
+      loader.classList.add('hidden');
+      setTimeout(() => loader.remove(), 500);
+    });
+
+    loadPage();
+  </script>
+
+</body>
+</html>
