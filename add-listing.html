@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Add Listing — Ludek Marketplace</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#2D5016" />
+
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <link rel="stylesheet" href="main.css" />
+  <link rel="stylesheet" href="seller.css" />
+</head>
+
+<body>
+
+  <div id="pageLoader" class="page-loader" aria-hidden="true">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:16px;">
+      <div style="width:44px;height:44px;background:var(--forest);border-radius:12px;display:flex;align-items:center;justify-content:center;">
+        <i class="fas fa-camera" style="color:var(--milk);font-size:20px;"></i>
+      </div>
+      <div class="spinner"></div>
+    </div>
+  </div>
+
+  <div class="seller-shell" id="sellerShell">
+
+    <!-- SIDEBAR (shared) -->
+    <aside class="seller-sidebar" id="sellerSidebar" aria-label="Seller navigation">
+      <div class="sidebar-header">
+        <a href="index.html" class="sidebar-logo">
+          <div class="sidebar-logo-icon"><i class="fas fa-store-alt"></i></div>
+          <div>
+            <span class="sidebar-logo-name">Ludek</span>
+            <span class="sidebar-logo-sub">Seller Hub</span>
+          </div>
+        </a>
+        <button class="sidebar-close" id="sidebarClose" aria-label="Close menu"><i class="fas fa-xmark"></i></button>
+      </div>
+      <div class="sidebar-profile" id="sidebarProfile">
+        <div class="sidebar-avatar" id="sidebarAvatar"><i class="fas fa-user"></i></div>
+        <div class="sidebar-profile-info">
+          <span class="sidebar-profile-name" id="sidebarName">Loading…</span>
+          <span class="sidebar-profile-role"><i class="fas fa-circle" style="font-size:6px;color:var(--forest-muted);"></i> Seller</span>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-nav-label">Main</div>
+        <ul class="sidebar-nav-list">
+          <li><a href="dashboard.html" class="sidebar-nav-link"><i class="fas fa-chart-pie"></i><span>Dashboard</span></a></li>
+          <li><a href="my-listings.html" class="sidebar-nav-link"><i class="fas fa-list-ul"></i><span>My Listings</span><span class="sidebar-badge" id="listingCountBadge">0</span></a></li>
+          <li><a href="add-listing.html" class="sidebar-nav-link active"><i class="fas fa-plus-circle"></i><span>Add Listing</span></a></li>
+        </ul>
+        <div class="sidebar-nav-label">Account</div>
+        <ul class="sidebar-nav-list">
+          <li><a href="profile.html" class="sidebar-nav-link"><i class="fas fa-id-card"></i><span>My Profile</span></a></li>
+          <li><a href="marketplace.html" class="sidebar-nav-link"><i class="fas fa-store"></i><span>View Marketplace</span></a></li>
+          <li><a href="#" class="sidebar-nav-link" id="logoutBtn"><i class="fas fa-arrow-right-from-bracket"></i><span>Log Out</span></a></li>
+        </ul>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="add-listing.html" class="sidebar-cta-btn"><i class="fas fa-plus"></i> New Listing</a>
+      </div>
+    </aside>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- MAIN -->
+    <div class="seller-main">
+      <header class="seller-topbar">
+        <div class="topbar-left">
+          <button class="topbar-hamburger" id="topbarHamburger" aria-label="Open menu"><i class="fas fa-bars"></i></button>
+          <div class="topbar-breadcrumb">
+            <a href="dashboard.html" class="topbar-breadcrumb-link">Dashboard</a>
+            <i class="fas fa-angle-right topbar-breadcrumb-sep"></i>
+            <span class="topbar-breadcrumb-page" id="formPageTitle">Add Listing</span>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <a href="profile.html" class="topbar-avatar" id="topbarAvatar" aria-label="My profile"><i class="fas fa-user"></i></a>
+        </div>
+      </header>
+
+      <main class="seller-content">
+
+        <div class="listing-form-wrap animate-fade-up">
+
+          <!-- Form Header -->
+          <div class="listing-form-header">
+            <div class="listing-form-header-text">
+              <h1 class="listing-form-title" id="listingFormHeading">Create New Listing</h1>
+              <p class="listing-form-sub">Fill in the details below. Your listing goes live instantly.</p>
+            </div>
+          </div>
+
+          <!-- THE FORM -->
+          <form id="listingForm" class="listing-form" novalidate>
+
+            <!-- ── SECTION: Images ── -->
+            <div class="lf-section">
+              <div class="lf-section-header">
+                <span class="lf-section-number">01</span>
+                <div>
+                  <h2 class="lf-section-title">Product Images</h2>
+                  <p class="lf-section-sub">Add up to 4 photos. First image is the cover.</p>
+                </div>
+              </div>
+
+              <div class="image-upload-grid" id="imageUploadGrid">
+                <!-- Slot 0 — Cover (always visible) -->
+                <div class="img-slot img-slot-cover" data-slot="0" id="imgSlot0">
+                  <input type="file" accept="image/*" class="img-slot-input" id="imgInput0" aria-label="Upload cover image" />
+                  <div class="img-slot-placeholder">
+                    <div class="img-slot-placeholder-icon">
+                      <i class="fas fa-camera-retro"></i>
+                    </div>
+                    <span class="img-slot-placeholder-text">Cover Photo</span>
+                    <span class="img-slot-placeholder-sub">Click to upload</span>
+                  </div>
+                  <div class="img-slot-preview" id="imgPreview0" style="display:none;">
+                    <img src="" alt="" id="imgPreviewImg0" />
+                    <button type="button" class="img-slot-remove" data-slot="0" aria-label="Remove image">
+                      <i class="fas fa-xmark"></i>
+                    </button>
+                    <span class="img-slot-cover-badge">Cover</span>
+                  </div>
+                  <div class="img-slot-uploading" id="imgUploading0" style="display:none;">
+                    <div class="spinner"></div>
+                  </div>
+                </div>
+
+                <!-- Slots 1-3 -->
+                <div class="img-slot" data-slot="1" id="imgSlot1">
+                  <input type="file" accept="image/*" class="img-slot-input" id="imgInput1" aria-label="Upload image 2" />
+                  <div class="img-slot-placeholder"><i class="fas fa-plus"></i></div>
+                  <div class="img-slot-preview" id="imgPreview1" style="display:none;">
+                    <img src="" alt="" id="imgPreviewImg1" />
+                    <button type="button" class="img-slot-remove" data-slot="1" aria-label="Remove image"><i class="fas fa-xmark"></i></button>
+                  </div>
+                  <div class="img-slot-uploading" id="imgUploading1" style="display:none;"><div class="spinner"></div></div>
+                </div>
+
+                <div class="img-slot" data-slot="2" id="imgSlot2">
+                  <input type="file" accept="image/*" class="img-slot-input" id="imgInput2" aria-label="Upload image 3" />
+                  <div class="img-slot-placeholder"><i class="fas fa-plus"></i></div>
+                  <div class="img-slot-preview" id="imgPreview2" style="display:none;">
+                    <img src="" alt="" id="imgPreviewImg2" />
+                    <button type="button" class="img-slot-remove" data-slot="2" aria-label="Remove image"><i class="fas fa-xmark"></i></button>
+                  </div>
+                  <div class="img-slot-uploading" id="imgUploading2" style="display:none;"><div class="spinner"></div></div>
+                </div>
+
+                <div class="img-slot" data-slot="3" id="imgSlot3">
+                  <input type="file" accept="image/*" class="img-slot-input" id="imgInput3" aria-label="Upload image 4" />
+                  <div class="img-slot-placeholder"><i class="fas fa-plus"></i></div>
+                  <div class="img-slot-preview" id="imgPreview3" style="display:none;">
+                    <img src="" alt="" id="imgPreviewImg3" />
+                    <button type="button" class="img-slot-remove" data-slot="3" aria-label="Remove image"><i class="fas fa-xmark"></i></button>
+                  </div>
+                  <div class="img-slot-uploading" id="imgUploading3" style="display:none;"><div class="spinner"></div></div>
+                </div>
+
+              </div><!-- /image-upload-grid -->
+              <span id="imagesError" class="lf-error-msg"><i class="fas fa-triangle-exclamation"></i> Please add at least one image.</span>
+            </div>
+
+            <!-- ── SECTION: Details ── -->
+            <div class="lf-section">
+              <div class="lf-section-header">
+                <span class="lf-section-number">02</span>
+                <div>
+                  <h2 class="lf-section-title">Listing Details</h2>
+                  <p class="lf-section-sub">Tell buyers what you're selling.</p>
+                </div>
+              </div>
+
+              <div class="lf-fields">
+
+                <!-- Title -->
+                <div class="lf-field">
+                  <label class="lf-label" for="listingTitle">Listing Title <span class="lf-required">*</span></label>
+                  <input type="text" id="listingTitle" name="title" class="lf-input" placeholder="e.g. HP Laptop Core i5 8GB RAM" maxlength="100" required />
+                  <div class="lf-input-meta">
+                    <span id="titleError" class="lf-error-msg"><i class="fas fa-triangle-exclamation"></i></span>
+                    <span class="lf-char-count"><span id="titleCount">0</span>/100</span>
+                  </div>
+                </div>
+
+                <!-- Category -->
+                <div class="lf-field">
+                  <label class="lf-label" for="listingCategory">Category <span class="lf-required">*</span></label>
+                  <div class="lf-select-wrap">
+                    <select id="listingCategory" name="category" class="lf-input lf-select" required>
+                      <option value="">Select a category…</option>
+                      <option value="electronics">📱 Electronics</option>
+                      <option value="fashion">👕 Fashion</option>
+                      <option value="food">🍽️ Food</option>
+                      <option value="books">📚 Books</option>
+                      <option value="hostel">🏢 Hostel</option>
+                      <option value="services">🔧 Services</option>
+                      <option value="tutoring">🎓 Tutoring</option>
+                      <option value="housing">🏠 Housing</option>
+                      <option value="custom">✏️ Other (specify below)</option>
+                    </select>
+                    <i class="fas fa-angle-down lf-select-arrow"></i>
+                  </div>
+                  <span id="categoryError" class="lf-error-msg"><i class="fas fa-triangle-exclamation"></i></span>
+                </div>
+
+                <!-- Custom Category (conditional) -->
+                <div class="lf-field" id="customCategoryField" style="display:none;">
+                  <label class="lf-label" for="customCategory">Custom Category Name <span class="lf-required">*</span></label>
+                  <input type="text" id="customCategory" name="customCategory" class="lf-input" placeholder="e.g. Accessories, Photography…" maxlength="40" />
+                  <span id="customCategoryError" class="lf-error-msg"><i class="fas fa-triangle-exclamation"></i></span>
+                </div>
+
+                <!-- Price -->
+                <div class="lf-form-row">
+                  <div class="lf-field">
+                    <label class="lf-label" for="listingPrice">Price (₦) <span class="lf-required">*</span></label>
+                    <div class="lf-input-prefix-wrap">
+                      <span class="lf-input-prefix">₦</span>
+                      <input type="number" id="listingPrice" name="price" class="lf-input lf-input-prefixed" placeholder="5000" min="0" step="50" required />
+                    </div>
+                    <span id="priceError" class="lf-error-msg"><i class="fas fa-triangle-exclamation"></i></span>
+                  </div>
+
+                  <div class="lf-field">
+                    <label class="lf-label" for="listingCondition">Condition</label>
+                    <div class="lf-select-wrap">
+                      <select id="listingCondition" name="condition" class="lf-input lf-select">
+                        <option value="new">Brand New</option>
+                        <option value="like-new">Like New</option>
+                        <option value="used-good">Used – Good</option>
+                        <option value="used-fair">Used – Fair</option>
+                        <option value="service">Service / N/A</option>
+                      </select>
+                      <i class="fas fa-angle-down lf-select-arrow"></i>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Description -->
+                <div class="lf-field">
+                  <label class="lf-label" for="listingDesc">Description <span class="lf-required">*</span></label>
+                  <textarea id="listingDesc" name="description" class="lf-input lf-textarea" placeholder="Describe your item — condition, specs, why you're selling, any extras included…" rows="5" maxlength="1000" required></textarea>
+                  <div class="lf-input-meta">
+                    <span id="descError" class="lf-error-msg"><i class="fas fa-triangle-exclamation"></i></span>
+                    <span class="lf-char-count"><span id="descCount">0</span>/1000</span>
+                  </div>
+                </div>
+
+                <!-- Negotiable Toggle -->
+                <div class="lf-field lf-toggle-field">
+                  <label class="lf-toggle" for="listingNegotiable">
+                    <input type="checkbox" id="listingNegotiable" name="negotiable" class="lf-toggle-input" />
+                    <span class="lf-toggle-track"></span>
+                    <span class="lf-toggle-label-text">Price is negotiable</span>
+                  </label>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- ── SECTION: Contact ── -->
+            <div class="lf-section">
+              <div class="lf-section-header">
+                <span class="lf-section-number">03</span>
+                <div>
+                  <h2 class="lf-section-title">Contact & Location</h2>
+                  <p class="lf-section-sub">How buyers will reach you.</p>
+                </div>
+              </div>
+
+              <div class="lf-fields">
+
+                <div class="lf-form-row">
+                  <!-- WhatsApp -->
+                  <div class="lf-field">
+                    <label class="lf-label" for="listingWhatsapp">WhatsApp Number <span class="lf-required">*</span></label>
+                    <div class="lf-input-prefix-wrap">
+                      <span class="lf-input-prefix" style="color:#25D366;"><i class="fab fa-whatsapp"></i></span>
+                      <input type="tel" id="listingWhatsapp" name="whatsapp" class="lf-input lf-input-prefixed" placeholder="08012345678" inputmode="tel" required />
+                    </div>
+                    <span id="whatsappError" class="lf-error-msg"><i class="fas fa-triangle-exclamation"></i></span>
+                  </div>
+
+                  <!-- Location on campus -->
+                  <div class="lf-field">
+                    <label class="lf-label" for="listingLocation">Location on Campus</label>
+                    <input type="text" id="listingLocation" name="location" class="lf-input" placeholder="e.g. Block C, Hall 3…" maxlength="60" />
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- ── SECTION: Visibility ── -->
+            <div class="lf-section">
+              <div class="lf-section-header">
+                <span class="lf-section-number">04</span>
+                <div>
+                  <h2 class="lf-section-title">Visibility</h2>
+                  <p class="lf-section-sub">Choose whether to publish immediately.</p>
+                </div>
+              </div>
+
+              <div class="lf-radio-group" role="radiogroup" aria-label="Listing status">
+                <label class="lf-radio-card">
+                  <input type="radio" name="listingStatus" value="active" checked />
+                  <div class="lf-radio-card-inner">
+                    <div class="lf-radio-icon green"><i class="fas fa-globe"></i></div>
+                    <div>
+                      <span class="lf-radio-title">Publish Now</span>
+                      <span class="lf-radio-sub">Visible to all students immediately</span>
+                    </div>
+                  </div>
+                  <div class="lf-radio-check"><i class="fas fa-check"></i></div>
+                </label>
+                <label class="lf-radio-card">
+                  <input type="radio" name="listingStatus" value="draft" />
+                  <div class="lf-radio-card-inner">
+                    <div class="lf-radio-icon orange"><i class="fas fa-pen-to-square"></i></div>
+                    <div>
+                      <span class="lf-radio-title">Save as Draft</span>
+                      <span class="lf-radio-sub">Only visible to you — publish later</span>
+                    </div>
+                  </div>
+                  <div class="lf-radio-check"><i class="fas fa-check"></i></div>
+                </label>
+              </div>
+            </div>
+
+            <!-- Form Submit -->
+            <div class="lf-submit-row">
+              <a href="my-listings.html" class="btn btn-outline-forest">
+                Cancel
+              </a>
+              <button type="submit" id="listingSubmitBtn" class="btn btn-primary btn-lg">
+                <span class="btn-text"><i class="fas fa-rocket"></i> Publish Listing</span>
+                <span class="auth-submit-spinner" aria-hidden="true"></span>
+              </button>
+            </div>
+
+          </form><!-- /listingForm -->
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+
+  <script src="config.js"></script>
+  <script src="app.js" defer></script>
+  <script src="seller-shell.js" defer></script>
+  <script src="add-listing.js" defer></script>
+</body>
+  </html>
+              
