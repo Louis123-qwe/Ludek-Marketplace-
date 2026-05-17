@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>My Listings — Ludek Marketplace</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#2D5016" />
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <link rel="stylesheet" href="main.css" />
+  <link rel="stylesheet" href="seller.css" />
+</head>
+
+<body>
+
+  <div id="pageLoader" class="page-loader" aria-hidden="true">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:16px;">
+      <div style="width:44px;height:44px;background:var(--forest);border-radius:12px;display:flex;align-items:center;justify-content:center;">
+        <i class="fas fa-list-ul" style="color:var(--milk);font-size:20px;"></i>
+      </div>
+      <div class="spinner"></div>
+    </div>
+  </div>
+
+  <div class="seller-shell" id="sellerShell">
+
+    <!-- SIDEBAR -->
+    <aside class="seller-sidebar" id="sellerSidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="sidebar-logo">
+          <div class="sidebar-logo-icon"><i class="fas fa-store-alt"></i></div>
+          <div><span class="sidebar-logo-name">Ludek</span><span class="sidebar-logo-sub">Seller Hub</span></div>
+        </a>
+        <button class="sidebar-close" id="sidebarClose" aria-label="Close menu"><i class="fas fa-xmark"></i></button>
+      </div>
+      <div class="sidebar-profile" id="sidebarProfile">
+        <div class="sidebar-avatar" id="sidebarAvatar"><i class="fas fa-user"></i></div>
+        <div class="sidebar-profile-info">
+          <span class="sidebar-profile-name" id="sidebarName">Loading…</span>
+          <span class="sidebar-profile-role"><i class="fas fa-circle" style="font-size:6px;color:var(--forest-muted);"></i> Seller</span>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-nav-label">Main</div>
+        <ul class="sidebar-nav-list">
+          <li><a href="dashboard.html" class="sidebar-nav-link"><i class="fas fa-chart-pie"></i><span>Dashboard</span></a></li>
+          <li><a href="my-listings.html" class="sidebar-nav-link active"><i class="fas fa-list-ul"></i><span>My Listings</span><span class="sidebar-badge" id="listingCountBadge">0</span></a></li>
+          <li><a href="add-listing.html" class="sidebar-nav-link"><i class="fas fa-plus-circle"></i><span>Add Listing</span></a></li>
+        </ul>
+        <div class="sidebar-nav-label">Account</div>
+        <ul class="sidebar-nav-list">
+          <li><a href="profile.html" class="sidebar-nav-link"><i class="fas fa-id-card"></i><span>My Profile</span></a></li>
+          <li><a href="marketplace.html" class="sidebar-nav-link"><i class="fas fa-store"></i><span>View Marketplace</span></a></li>
+          <li><a href="#" class="sidebar-nav-link" id="logoutBtn"><i class="fas fa-arrow-right-from-bracket"></i><span>Log Out</span></a></li>
+        </ul>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="add-listing.html" class="sidebar-cta-btn"><i class="fas fa-plus"></i> New Listing</a>
+      </div>
+    </aside>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- MAIN -->
+    <div class="seller-main">
+      <header class="seller-topbar">
+        <div class="topbar-left">
+          <button class="topbar-hamburger" id="topbarHamburger" aria-label="Open menu"><i class="fas fa-bars"></i></button>
+          <div class="topbar-breadcrumb">
+            <a href="dashboard.html" class="topbar-breadcrumb-link">Dashboard</a>
+            <i class="fas fa-angle-right topbar-breadcrumb-sep"></i>
+            <span class="topbar-breadcrumb-page">My Listings</span>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <a href="add-listing.html" class="topbar-action-btn">
+            <i class="fas fa-plus"></i><span>Add Listing</span>
+          </a>
+          <a href="profile.html" class="topbar-avatar" id="topbarAvatar"><i class="fas fa-user"></i></a>
+        </div>
+      </header>
+
+      <main class="seller-content">
+
+        <!-- Toolbar -->
+        <div class="listings-toolbar animate-fade-up">
+          <div class="listings-toolbar-left">
+            <h1 class="listings-page-title">My Listings</h1>
+            <span class="listings-count-badge" id="listingsPageCount">0 listings</span>
+          </div>
+          <div class="listings-toolbar-right">
+            <!-- Filter tabs -->
+            <div class="listings-filter-tabs" role="tablist">
+              <button class="listings-filter-tab active" data-filter="all" role="tab">All</button>
+              <button class="listings-filter-tab" data-filter="active" role="tab">Active</button>
+              <button class="listings-filter-tab" data-filter="draft" role="tab">Drafts</button>
+            </div>
+            <!-- Search -->
+            <div class="listings-search-wrap">
+              <i class="fas fa-magnifying-glass"></i>
+              <input type="search" id="listingsSearch" class="listings-search-input" placeholder="Search listings…" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Listings Grid -->
+        <div class="listings-grid animate-fade-up delay-100" id="listingsGrid" role="list">
+          <!-- JS renders cards here -->
+        </div>
+
+        <!-- Empty State -->
+        <div class="dash-empty-state" id="listingsEmptyState" style="display:none;">
+          <div class="dash-empty-icon"><i class="fas fa-box-open"></i></div>
+          <p class="dash-empty-title">No listings found</p>
+          <p class="dash-empty-sub" id="listingsEmptyMsg">You haven't posted anything yet.</p>
+          <a href="add-listing.html" class="btn btn-primary btn-sm" style="margin-top:16px;">
+            <i class="fas fa-plus"></i> Add Your First Listing
+          </a>
+        </div>
+
+        <!-- Loading State -->
+        <div class="listings-loading" id="listingsLoading">
+          <div class="spinner"></div>
+          <span>Loading your listings…</span>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Delete Confirm Modal -->
+  <div id="deleteModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 class="modal-title" id="deleteModalTitle" style="color:#DC2626;">
+          <i class="fas fa-triangle-exclamation" style="margin-right:8px;"></i>Delete Listing
+        </h2>
+        <button id="deleteModalClose" class="modal-close" type="button" aria-label="Close"><i class="fas fa-xmark"></i></button>
+      </div>
+      <p class="modal-desc">
+        Are you sure you want to delete <strong id="deleteListingName">"this listing"</strong>? This cannot be undone.
+      </p>
+      <div style="display:flex;gap:12px;margin-top:20px;">
+        <button type="button" id="deleteModalCancel" class="btn btn-outline-forest" style="flex:1;">Cancel</button>
+        <button type="button" id="deleteModalConfirm" class="btn" style="flex:1;background:#DC2626;color:#fff;">
+          <i class="fas fa-trash"></i> Delete
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <script src="config.js"></script>
+  <script src="app.js" defer></script>
+  <script src="seller-shell.js" defer></script>
+  <script src="my-listings.js" defer></script>
+</body>
+</html>
