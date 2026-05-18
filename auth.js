@@ -83,9 +83,15 @@ function doRedirect(role) {
 // AUTH STATE OBSERVER
 // If user is already logged in → fetch role → redirect
 // ============================================================
+
+
 function watchAuthState() {
+  var redirecting = false; // prevent double-fire
+
   auth().onAuthStateChanged(function (user) {
-    if (!user) return; // not logged in — stay on page
+    if (!user) return;
+    if (redirecting) return; // already in progress
+    redirecting = true;
 
     db().collection('users').doc(user.uid).get()
       .then(function (snap) {
@@ -94,12 +100,10 @@ function watchAuthState() {
       })
       .catch(function (err) {
         console.warn('[Ludek] onAuthStateChanged role fetch failed:', err.message);
-        // Still redirect — just default to customer
         doRedirect('customer');
       });
   });
 }
-
 // ============================================================
 // SIGNUP HANDLER
 // ============================================================
