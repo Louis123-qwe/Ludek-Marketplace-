@@ -149,8 +149,28 @@ function renderDemoMode() {
 // ============================================================
 // AUTH WATCH — redirect if not logged in
 // ============================================================
+
+
 function startAuthWatch() {
+  var authResolved = false; // guard against premature null
+
   fbAuth().onAuthStateChanged(function (user) {
+    // On the very first call, Firebase may emit null before it has
+    // actually checked persistent storage. We skip redirecting on
+    // the first null and allow a short grace window.
+    if (!user && !authResolved) {
+      // Give Firebase one tick to re-check persistence
+      setTimeout(function () {
+        if (!authResolved) {
+          // Still no user after grace period — genuinely unauthenticated
+          window.location.href = '/auth.html?mode=login';
+        }
+      }, 2000); // 2s covers all real network scenarios
+      return;
+    }
+
+    authResolved = true;
+
     if (!user) {
       window.location.href = '/auth.html?mode=login';
       return;
@@ -158,7 +178,6 @@ function startAuthWatch() {
 
     state.currentUser = user;
 
-    // Load user data then fetch listings
     fbDB().collection('users').doc(user.uid).get()
       .then(function (snap) {
         if (snap.exists) {
@@ -171,13 +190,11 @@ function startAuthWatch() {
         fetchListings(true);
       })
       .catch(function () {
-        // Couldn't get Firestore user doc — still show listings
         updateNavUser(user);
         fetchListings(true);
       });
   });
 }
-
 function arrayToSet(arr) {
   var set = {};
   if (Array.isArray(arr)) {
