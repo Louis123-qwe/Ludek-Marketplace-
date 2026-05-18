@@ -22,18 +22,7 @@
 
   // ── Boot: wait for shell auth signal ──────────────────────
 
-window.addEventListener('seller:ready', ({ detail: { user, data } }) => {
-  currentUser = user;
-  currentData = data;
-  init();
-});
 
-// Also handle case where seller:ready already fired before this script ran
-if (window._sellerUser && window._sellerData) {
-  currentUser = window._sellerUser;
-  currentData = window._sellerData;
-  init();
-}
   // ── Init ──────────────────────────────────────────────────
   function init() {
     detectEditMode();
@@ -602,5 +591,18 @@ if (window._sellerUser && window._sellerData) {
       if (icon) el.appendChild(icon);
     });
   }
+window.addEventListener('seller:ready', ({ detail: { user, data } }) => {
+  currentUser = user;
+  currentData = data;
+  init();
+});
 
+// Also handle case where seller:ready already fired before this script ran
+if (window._sellerUser && window._sellerData) {
+  currentUser = window._sellerUser;
+  currentData = window._sellerData;
+  init();
+ }
+
+  
 })();
