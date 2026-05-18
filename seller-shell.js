@@ -115,6 +115,13 @@ function initAuthGuard() {
   if (loader) {
     loader.classList.add('hidden');
     setTimeout(function () { loader.remove(); }, 500);
+    var shell = document.getElementById('sellerShell');
+  if (shell) shell.style.visibility = '';
+
+  var loader = document.getElementById('pageLoader');
+  if (loader) {
+    loader.classList.add('hidden');
+    setTimeout(function () { loader.remove(); }, 500);
   }
   }
 
