@@ -3,36 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-
-  <!-- Dynamic SEO -->
-  <title>Seller Store — Ludek Marketplace</title>
-  <meta name="description" content="Browse listings from this seller on Ludek Marketplace, CRUTECH Okuku Campus." />
-  <meta name="robots" content="index, follow" />
+  <title>Seller Profile — Ludek Marketplace</title>
+  <meta name="description" content="View this seller's listings on Ludek Marketplace — CRUTECH Okuku Campus." />
   <meta name="theme-color" content="#2D5016" />
 
-  <!-- Open Graph -->
-  <meta property="og:type"        content="profile" />
-  <meta property="og:site_name"   content="Ludek Marketplace" />
-  <meta property="og:locale"      content="en_NG" />
-  <meta id="ogTitle"       property="og:title"       content="Seller Store — Ludek Marketplace" />
-  <meta id="ogDescription" property="og:description" content="Browse this seller's listings on Ludek Marketplace, CRUTECH Okuku Campus." />
-  <meta id="ogImage"       property="og:image"       content="" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 
-  <!-- PWA -->
-  <link rel="manifest"          href="manifest.json" />
-  <link rel="icon"              type="image/svg+xml" href="favicon.svg" />
-  <link rel="apple-touch-icon"  href="/assets/icon-192.png" />
-  <meta name="apple-mobile-web-app-capable"          content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-
-  <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-  <!-- CSS -->
   <link rel="stylesheet" href="main.css" />
   <link rel="stylesheet" href="seller-public.css" />
 </head>
@@ -49,231 +31,110 @@
     </div>
   </div>
 
-  <!-- ============================================================
-       NAVIGATION
-       ============================================================ -->
-  <nav class="main-nav" id="mainNav" role="navigation" aria-label="Main navigation">
-    <div class="nav-container">
-
-      <a href="index.html" class="nav-logo" aria-label="Ludek Marketplace Home">
-        <div class="nav-logo-icon" aria-hidden="true">
-          <i class="fas fa-store-alt"></i>
-        </div>
-        <div class="nav-logo-text">
-          <span class="nav-logo-name">Ludek</span>
-          <span class="nav-logo-campus">CRUTECH Okuku</span>
-        </div>
+  <!-- ── Top Nav ── -->
+  <nav class="sp-nav" id="mainNav">
+    <div class="sp-nav-inner">
+      <a href="index.html" class="sp-nav-logo">
+        <div class="sp-nav-logo-icon"><i class="fas fa-store-alt"></i></div>
+        <span>Ludek</span>
       </a>
-
-      <ul class="nav-links" role="list">
-        <li><a href="marketplace.html" class="nav-link"><i class="fas fa-store"></i> Marketplace</a></li>
-        <li><a href="marketplace.html?cat=housing" class="nav-link"><i class="fas fa-house-chimney"></i> Housing</a></li>
-        <li><a href="marketplace.html?cat=tutoring" class="nav-link"><i class="fas fa-chalkboard-user"></i> Tutoring</a></li>
-      </ul>
-
-      <div class="nav-actions">
-        <div class="nav-user-wrap" id="navUserWrap" style="display:none;">
-          <button class="nav-avatar" id="navAvatar" aria-label="My account" aria-haspopup="true">
-            <i class="fas fa-user"></i>
-          </button>
-          <div class="nav-dropdown" id="userDropdownMenu" role="menu">
-            <div class="nav-dropdown-header">
-              <span class="nav-dropdown-name" id="navUserName">—</span>
-              <span class="nav-dropdown-role" id="navUserRole">Student</span>
-            </div>
-            <a href="marketplace.html" class="nav-dropdown-item" role="menuitem"><i class="fas fa-store"></i> Marketplace</a>
-            <a href="dashboard.html"   class="nav-dropdown-item" id="sellerDashLink" style="display:none;" role="menuitem"><i class="fas fa-chart-pie"></i> Seller Hub</a>
-            <div class="nav-dropdown-divider"></div>
-            <a href="#" class="nav-dropdown-item danger" id="logoutBtn" role="menuitem"><i class="fas fa-arrow-right-from-bracket"></i> Log Out</a>
-          </div>
-        </div>
-        <a href="auth.html?mode=login"  class="btn btn-outline btn-sm" id="navLoginBtn">Log In</a>
-        <a href="auth.html?mode=signup" class="btn btn-primary btn-sm" id="navSignupBtn">Sign Up</a>
-      </div>
-
-      <button class="nav-hamburger" id="navHamburger" aria-label="Toggle menu" aria-expanded="false">
-        <i class="fas fa-bars"></i>
-      </button>
-    </div>
-
-    <div class="nav-mobile" id="navMobile">
-      <a href="marketplace.html" class="nav-mobile-link"><i class="fas fa-store"></i> Marketplace</a>
-      <a href="marketplace.html?cat=housing"  class="nav-mobile-link"><i class="fas fa-house-chimney"></i> Housing</a>
-      <a href="marketplace.html?cat=tutoring" class="nav-mobile-link"><i class="fas fa-chalkboard-user"></i> Tutoring</a>
-      <div class="nav-mobile-divider"></div>
-      <a href="auth.html?mode=login"  class="nav-mobile-link" id="mobileLoginLink"><i class="fas fa-sign-in-alt"></i> Log In</a>
-      <a href="auth.html?mode=signup" class="nav-mobile-link" id="mobileSignupLink"><i class="fas fa-user-plus"></i> Sign Up</a>
-      <a href="dashboard.html" class="nav-mobile-link" id="mobileDashLink" style="display:none;"><i class="fas fa-chart-pie"></i> Seller Hub</a>
-      <a href="#" class="nav-mobile-link danger" id="mobileLogoutBtn" style="display:none;"><i class="fas fa-arrow-right-from-bracket"></i> Log Out</a>
+      <a href="marketplace.html" class="btn btn-outline-forest sp-nav-back">
+        <i class="fas fa-arrow-left"></i> Marketplace
+      </a>
     </div>
   </nav>
 
-  <!-- ============================================================
-       SELLER PAGE MAIN
-       ============================================================ -->
-  <main class="seller-public-page" id="sellerPublicPage">
-
-    <!-- ── NOT FOUND ── -->
-    <div class="spf-not-found hidden" id="sellerNotFound">
-      <div class="container">
-        <div class="pnf-wrap">
-          <div class="pnf-icon"><i class="fas fa-store-slash"></i></div>
-          <h1 class="pnf-title">Store Not Found</h1>
-          <p class="pnf-sub">This seller's store may have been removed or the link is invalid.</p>
-          <a href="marketplace.html" class="btn btn-primary">
-            <i class="fas fa-arrow-left"></i> Back to Marketplace
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── SELLER PROFILE ── -->
-    <div class="spf-profile" id="sellerProfile" style="display:none;">
-
-      <!-- BANNER -->
-      <div class="spf-banner-wrap">
-        <div class="spf-banner" id="spfBanner">
-          <div class="spf-banner-placeholder" id="spfBannerPlaceholder">
-            <i class="fas fa-store-alt"></i>
-          </div>
-          <img class="spf-banner-img hidden" id="spfBannerImg" alt="Seller banner" loading="eager" />
-        </div>
-      </div>
-
-      <!-- PROFILE HEADER -->
-      <div class="container">
-        <div class="spf-header">
-
-          <!-- Avatar + names -->
-          <div class="spf-identity">
-            <div class="spf-avatar" id="spfAvatar">
-              <i class="fas fa-user"></i>
-            </div>
-            <div class="spf-names">
-              <h1 class="spf-store-name" id="spfStoreName">—</h1>
-              <p class="spf-real-name" id="spfRealName"></p>
-              <div class="spf-badges" id="spfBadges">
-                <span class="spf-badge-verified" id="spfBadgeVerified" style="display:none;">
-                  <i class="fas fa-circle-check"></i> Verified Seller
-                </span>
-                <span class="spf-badge-joined" id="spfBadgeJoined">
-                  <i class="fas fa-calendar-alt"></i> —
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Stats + CTA -->
-          <div class="spf-cta-group">
-            <div class="spf-stats-row">
-              <div class="spf-stat">
-                <span class="spf-stat-val" id="spfStatListings">—</span>
-                <span class="spf-stat-label">Listings</span>
-              </div>
-              <div class="spf-stat-divider"></div>
-              <div class="spf-stat">
-                <span class="spf-stat-val" id="spfStatViews">—</span>
-                <span class="spf-stat-label">Total Views</span>
-              </div>
-              <div class="spf-stat-divider"></div>
-              <div class="spf-stat">
-                <span class="spf-stat-val" id="spfStatCategories">—</span>
-                <span class="spf-stat-label">Categories</span>
-              </div>
-            </div>
-
-            <!-- WhatsApp CTA -->
-            <a href="#" class="spf-wa-btn" id="spfWhatsAppBtn" target="_blank" rel="noopener noreferrer">
-              <i class="fab fa-whatsapp"></i>
-              Chat on WhatsApp
-            </a>
-
-            <!-- Share -->
-            <button class="spf-share-btn" id="spfShareBtn">
-              <i class="fas fa-share-nodes"></i>
-              Share Store
-            </button>
-          </div>
-
-        </div><!-- /spf-header -->
-
-        <!-- DESCRIPTION -->
-        <div class="spf-desc-block" id="spfDescBlock" style="display:none;">
-          <p class="spf-desc" id="spfDesc"></p>
-        </div>
-
-        <!-- CATEGORY FILTER TABS -->
-        <div class="spf-filter-row" id="spfFilterRow">
-          <div class="spf-filter-tabs" id="spfFilterTabs">
-            <button class="spf-tab active" data-cat="all">
-              <i class="fas fa-fire-flame-curved"></i> All
-            </button>
-            <!-- Dynamic tabs injected by JS -->
-          </div>
-        </div>
-
-        <!-- LISTINGS GRID -->
-        <div class="spf-listings-wrap">
-
-          <!-- Loading state -->
-          <div class="spf-loading" id="spfLoading">
-            <div class="spf-skeleton-grid">
-              <div class="spf-skeleton"></div>
-              <div class="spf-skeleton"></div>
-              <div class="spf-skeleton"></div>
-              <div class="spf-skeleton"></div>
-              <div class="spf-skeleton"></div>
-              <div class="spf-skeleton"></div>
-            </div>
-          </div>
-
-          <!-- Empty state -->
-          <div class="spf-empty hidden" id="spfEmpty">
-            <div class="spf-empty-icon"><i class="fas fa-box-open"></i></div>
-            <p class="spf-empty-title" id="spfEmptyTitle">No listings yet</p>
-            <p class="spf-empty-sub">This seller hasn't posted any listings.</p>
-          </div>
-
-          <!-- Listings grid -->
-          <div class="spf-grid" id="spfGrid"></div>
-
-        </div>
-
-      </div><!-- /container -->
-
-    </div><!-- /spf-profile -->
-
-  </main>
-
-  <!-- ── INSTALL BANNER ── -->
-  <div class="install-banner" id="installBanner" role="complementary">
-    <div class="install-banner-inner">
-      <div class="install-banner-icon"><i class="fas fa-store-alt"></i></div>
-      <div class="install-banner-text">
-        <strong>Install Ludek Marketplace</strong>
-        <span>Access faster from your home screen</span>
-      </div>
-      <div class="install-banner-actions">
-        <button class="install-btn-yes" id="installYes">Install</button>
-        <button class="install-btn-no"  id="installNo">Later</button>
-      </div>
-    </div>
+  <!-- ── Not Found State (hidden by default) ── -->
+  <div class="sp-not-found" id="sellerNotFound" style="display:none;" aria-live="polite">
+    <i class="fas fa-store-slash"></i>
+    <h2>Seller Not Found</h2>
+    <p>This store doesn't exist or may have been removed.</p>
+    <a href="marketplace.html" class="btn btn-primary">Browse Marketplace</a>
   </div>
 
-  <!-- Scroll to top -->
-  <button class="scroll-top-btn" id="scrollTopBtn" aria-label="Scroll to top">
-    <i class="fas fa-arrow-up"></i>
-  </button>
+  <!-- ── Main Storefront (shown after data loads) ── -->
+  <main class="sp-main" id="sellerMain" style="visibility:hidden;">
 
-  <!-- Toast -->
-  <div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+    <!-- Banner -->
+    <div class="sp-banner" id="sellerBanner">
+      <div class="sp-banner-placeholder" id="bannerPlaceholder">
+        <i class="fas fa-image"></i>
+      </div>
+      <img id="bannerImg" src="" alt="Store banner" style="display:none;" />
+    </div>
 
-  <!-- Firebase -->
+    <!-- Store Header -->
+    <div class="sp-header-wrap">
+      <div class="sp-header-inner">
+
+        <!-- Avatar -->
+        <div class="sp-avatar-wrap">
+          <div class="sp-avatar" id="sellerAvatar">
+            <i class="fas fa-user"></i>
+          </div>
+        </div>
+
+        <!-- Info + CTA -->
+        <div class="sp-header-body">
+          <div class="sp-header-text">
+            <h1 class="sp-store-name" id="sellerStoreName">Loading…</h1>
+            <div class="sp-store-meta" id="sellerMeta"></div>
+            <p class="sp-store-bio" id="sellerBio" style="display:none;"></p>
+          </div>
+          <div class="sp-header-cta">
+            <a href="#" id="whatsappContactBtn" class="btn btn-whatsapp" target="_blank" rel="noopener" style="display:none;">
+              <i class="fab fa-whatsapp"></i> Chat Seller
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Listings Section -->
+    <div class="sp-listings-section">
+      <div class="sp-listings-header">
+        <h2 class="sp-listings-title">Listings <span class="sp-listings-count" id="listingsCount"></span></h2>
+        <!-- Filter chips -->
+        <div class="sp-filter-chips" id="filterChips" role="list" aria-label="Filter by category"></div>
+      </div>
+
+      <!-- Loading skeleton -->
+      <div class="sp-listings-loading" id="listingsLoading" aria-label="Loading listings">
+        <div class="sp-skeleton-grid">
+          <div class="sp-skeleton-card"></div>
+          <div class="sp-skeleton-card"></div>
+          <div class="sp-skeleton-card"></div>
+          <div class="sp-skeleton-card"></div>
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div class="sp-empty" id="listingsEmpty" style="display:none;">
+        <i class="fas fa-box-open"></i>
+        <p>No listings yet.</p>
+      </div>
+
+      <!-- Listings grid -->
+      <div class="sp-listings-grid" id="listingsGrid" style="display:none;" role="list"></div>
+
+    </div>
+  </main>
+
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+  <div id="scrollTopBtn" class="scroll-top-btn" aria-label="Scroll to top"><i class="fas fa-arrow-up"></i></div>
+
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
   <script src="config.js"></script>
+  <script>
+  // Initialize Firebase for public seller page
+  if (window.LUDEK_FIREBASE_CONFIG && !firebase.apps.length) {
+    firebase.initializeApp(window.LUDEK_FIREBASE_CONFIG);
+  }
+  </script>
   <script src="app.js" defer></script>
   <script src="seller-public.js" defer></script>
 </body>
