@@ -369,25 +369,23 @@ function setupStrengthMeter() {
     var pw = input.value;
 
     if (!pw) {
-      meter.classList.remove('show');
+      meter.removeAttribute('data-strength');
       bars.forEach(function (b) { b.className = 'strength-bar'; });
-      if (label) label.textContent = '';
+      if (label) { label.textContent = ''; label.style.color = ''; }
       return;
     }
 
-    meter.classList.add('show');
     var score = passwordScore(pw);                     // 0–4
-    var levels = ['', 'weak', 'fair', 'good', 'strong'];
     var names  = ['', 'Weak', 'Fair', 'Good', 'Strong'];
-    var colors = ['', '#E53E3E', '#F97316', '#EAB308', '#6BA33A'];
+    var colors = ['', '#EF4444', '#F97316', '#EAB308', '#6BA33A'];
 
-    bars.forEach(function (bar, i) {
-      bar.className = 'strength-bar';
-      if (i < score) bar.classList.add('filled-' + levels[score]);
-    });
+    // CSS drives bar colors via [data-strength="N"] on the container element;
+    // setting per-bar classes like .filled-weak never matched any CSS rule.
+    meter.setAttribute('data-strength', score);
+    bars.forEach(function (bar) { bar.className = 'strength-bar'; });
 
     if (label) {
-      label.textContent = 'Strength: ' + (names[score] || '');
+      label.textContent = score > 0 ? 'Strength: ' + names[score] : '';
       label.style.color = colors[score] || '';
     }
   });
