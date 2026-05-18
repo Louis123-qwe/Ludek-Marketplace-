@@ -204,32 +204,3 @@
 
 })();
 
-// ── SIDEBAR TOGGLE LOGIC ──────────────────────────────────
-(function initSidebarToggle() {
-  const hamburger = document.getElementById('topbarHamburger');
-  const closeBtn  = document.getElementById('sidebarClose');
-  const sidebar   = document.getElementById('sellerSidebar');
-  const overlay   = document.getElementById('sidebarOverlay');
-
-  // Function to open sidebar
-  function openSidebar() {
-    // Matches CSS: .seller-sidebar.open
-    if (sidebar) sidebar.classList.add('open'); 
-    // Matches CSS: .sidebar-overlay.show
-    if (overlay) overlay.classList.add('show'); 
-    document.body.style.overflow = 'hidden'; // Prevents background scrolling when open
-  }
-
-  // Function to close sidebar
-  function closeSidebar() {
-    if (sidebar) sidebar.classList.remove('open');
-    if (overlay) overlay.classList.remove('show');
-    document.body.style.overflow = ''; // Restores scrolling
-  }
-
-  // Event Listeners
-  if (hamburger) hamburger.addEventListener('click', openSidebar);
-  if (closeBtn)  closeBtn.addEventListener('click', closeSidebar);
-  if (overlay)   overlay.addEventListener('click', closeSidebar);
-})();
-
