@@ -10,15 +10,29 @@
 
   // ── Wait for Firebase auth state ──────────────────────────
     // ── Wait for Firebase auth state & Initialization ─────────
-  function waitForFirebase(cb) {
-    const check = setInterval(() => {
-      // Check if SDK is loaded AND an app has been successfully initialized
-      if (window.firebase && window.firebase.auth && window.firebase.apps && window.firebase.apps.length > 0) {
-        clearInterval(check);
-        cb();
+
+
+function waitForFirebase(cb) {
+  var check = setInterval(function () {
+    if (window.firebase && window.firebase.apps !== undefined) {
+      clearInterval(check);
+
+      // Initialize if not already done (seller pages don't load auth.js)
+      var cfg = window.LUDEK_FIREBASE_CONFIG;
+      if (cfg && cfg.apiKey && !firebase.apps.length) {
+        firebase.initializeApp(cfg);
       }
-    }, 60);
-  }
+
+      // Now check apps are ready
+      if (firebase.apps && firebase.apps.length > 0) {
+        cb();
+      } else {
+        // Config missing — redirect to auth for safety
+        window.location.replace('/auth.html?mode=login');
+      }
+    }
+  }, 60);
+}
 
 
   // ── Auth Guard ────────────────────────────────────────────
