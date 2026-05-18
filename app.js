@@ -278,7 +278,6 @@ function init() {
   setupSmoothScroll();
   setupInstallBanner();
   setupScrollAnimations();
-  hidePageLoader();
 }
 
 // Run after DOM is ready
