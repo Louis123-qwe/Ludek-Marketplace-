@@ -25,14 +25,21 @@
 
   // ── Init ──────────────────────────────────────────────────
   function init() {
-    detectEditMode();
-    setupImageSlots();
-    setupCategoryToggle();
-    setupCharCounters();
-    setupFormSubmit();
-    setupRadioCards();
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', runInit);
+  } else {
+    runInit();
   }
+}
 
+function runInit() {
+  detectEditMode();
+  setupImageSlots();
+  setupCategoryToggle();
+  setupCharCounters();
+  setupFormSubmit();
+  setupRadioCards();
+}
   // ── Edit Mode Detection ────────────────────────────────────
   // If URL has ?edit=<listingId>, we load existing data
   function detectEditMode() {
