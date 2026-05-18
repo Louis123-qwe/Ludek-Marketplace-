@@ -37,14 +37,19 @@
 // ============================================================
 let deferredInstallPrompt = null;
 
-window.addEventListener('beforeinstallprompt', (e) => {
+
+
+window.addEventListener('beforeinstallprompt', function (e) {
   e.preventDefault();
   deferredInstallPrompt = e;
 
-  // Only show if not dismissed before
-  const dismissed = sessionStorage.getItem('install-dismissed');
+  // Only schedule the banner if the markup exists on this page
+  var banner = document.getElementById('installBanner');
+  if (!banner) return; // page doesn't have the install banner — skip
+
+  var dismissed = sessionStorage.getItem('install-dismissed');
   if (!dismissed) {
-    setTimeout(() => showInstallBanner(), 3000);
+    setTimeout(function () { showInstallBanner(); }, 3000);
   }
 });
 
