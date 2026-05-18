@@ -111,7 +111,7 @@
 
   function buildListingRow(id, d) {
     const row = document.createElement('a');
-    row.href  = `/seller/add-listing.html?edit=${id}`;
+    row.href  = `add-listing.html?edit=${id}`;
     row.className = 'dash-listing-row';
 
     const imgSrc   = (d.images && d.images[0]) ? d.images[0] : null;
@@ -167,7 +167,7 @@
           <i class="fas ${c.done ? 'fa-check' : 'fa-minus'}"></i>
         </div>
         <span class="completeness-item-text ${c.done ? 'done' : ''}">${c.label}</span>
-        ${!c.done ? `<a href="/seller/profile.html" style="margin-left:auto;font-size:11px;color:var(--orange);font-weight:600;">Fix →</a>` : ''}
+        ${!c.done ? `<a href="profile.html" style="margin-left:auto;font-size:11px;color:var(--orange);font-weight:600;">Fix →</a>` : ''}
       `;
       container.appendChild(item);
     });
