@@ -99,6 +99,11 @@ function waitForFirebase(cb) {
     // Store current user data globally so page scripts can access it
     window._sellerUser = user;
     window._sellerData = data;
+  var loader = document.getElementById('pageLoader');
+  if (loader) {
+    loader.classList.add('hidden');
+    setTimeout(function () { loader.remove(); }, 500);
+  }
   }
 
   function setAvatarImage(wrapperId, url) {
