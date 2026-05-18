@@ -11,7 +11,7 @@
 
   // ── Cloudinary config (set your own upload preset) ─────────
   const CLOUDINARY_CLOUD_NAME = 'dataktghg';   // ← replace
-  const CLOUDINARY_UPLOAD_PRESET = 'Ludek Marketplace';    // ← replace
+  const CLOUDINARY_UPLOAD_PRESET = 'Ludek Marketplace';    // ← Cloudinary preset names must be lowercase_underscore (no spaces)
 
   // ── State ──────────────────────────────────────────────────
   let currentUser  = null;
@@ -21,12 +21,19 @@
   let isSubmitting = false;
 
   // ── Boot: wait for shell auth signal ──────────────────────
-  window.addEventListener('seller:ready', ({ detail: { user, data } }) => {
-    currentUser = user;
-    currentData = data;
-    init();
-  });
 
+window.addEventListener('seller:ready', ({ detail: { user, data } }) => {
+  currentUser = user;
+  currentData = data;
+  init();
+});
+
+// Also handle case where seller:ready already fired before this script ran
+if (window._sellerUser && window._sellerData) {
+  currentUser = window._sellerUser;
+  currentData = window._sellerData;
+  init();
+}
   // ── Init ──────────────────────────────────────────────────
   function init() {
     detectEditMode();
