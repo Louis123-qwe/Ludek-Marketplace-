@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Product — Ludek Marketplace | CRUTECH Okuku</title>
+  <meta name="description" content="View product details on Ludek Marketplace — CRUTECH Okuku Campus student buy and sell platform." />
+  <meta name="theme-color" content="#2D5016" />
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="apple-touch-icon" href="/assets/icon-192.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <style>
+    /* ============================================================
+       DESIGN TOKENS — mirrors exact values from main.css
+       ============================================================ */
+    :root {
+      --milk:          #FAF7F0;
+      --milk-dark:     #F0EBE0;
+      --milk-border:   #E4DCCF;
+
+      --forest:        #2D5016;
+      --forest-mid:    #3D6B1F;
+      --forest-light:  #4E8426;
+      --forest-muted:  #6BA33A;
+      --forest-pale:   #C8DFB0;
+      --forest-tint:   #EFF6E8;
+
+      --orange:        #D4520A;
+      --orange-mid:    #E86A1A;
+      --orange-light:  #F97316;
+      --orange-pale:   #FDE8D6;
+      --orange-tint:   #FFF4EE;
+
+      --bark:          #5B3A1E;
+      --bark-mid:      #7A5230;
+      --bark-light:    #A67C52;
+      --bark-pale:     #E8D5BF;
+
+      --bg-primary:    var(--milk);
+      --bg-secondary:  var(--milk-dark);
+      --bg-card:       #FFFFFF;
+      --bg-card-alt:   var(--forest-tint);
+
+      --text-primary:  #1A1207;
+      --text-secondary:#4A3728;
+      --text-muted:    #7A6552;
+      --text-light:    #A89070;
+      --text-on-dark:  var(--milk);
+
+      --border-color:  var(--milk-border);
+
+      --shadow-xs: 0 1px 3px rgba(45,80,22,0.06), 0 1px 2px rgba(45,80,22,0.04);
+      --shadow-sm: 0 2px 8px rgba(45,80,22,0.08), 0 1px 3px rgba(45,80,22,0.06);
+      --shadow-md: 0 4px 16px rgba(45,80,22,0.10), 0 2px 6px rgba(45,80,22,0.08);
+      --shadow-lg: 0 8px 32px rgba(45,80,22,0.12), 0 4px 12px rgba(45,80,22,0.08);
+      --shadow-xl: 0 16px 48px rgba(45,80,22,0.14), 0 8px 20px rgba(45,80,22,0.10);
+
+      --font-display: 'Syne', sans-serif;
+      --font-body:    'DM Sans', sans-serif;
+
+      --radius-sm:   6px;
+      --radius-md:   12px;
+      --radius-lg:   18px;
+      --radius-xl:   24px;
+      --radius-2xl:  32px;
+      --radius-full: 9999px;
+
+      --transition-fast:   150ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-base:   250ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-slow:   400ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-bounce: 350ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+      --max-width:  1280px;
+      --nav-height: 64px;
+    }
+
+    /* ============================================================
+       RESET
+       ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    img { max-width: 100%; height: auto; display: block; }
+    a { color: inherit; text-decoration: none; }
+    button { cursor: pointer; border: none; background: none; font-family: var(--font-body); }
+    ul { list-style: none; }
+
+    /* ============================================================
+       PAGE LOADER
+       ============================================================ */
+    #pageLoader {
+      position: fixed; inset: 0;
+      background: var(--milk);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.4s ease;
+    }
+    #pageLoader.hidden { opacity: 0; pointer-events: none; }
+    .loader-inner { text-align: center; }
+    .loader-logo {
+      width: 52px; height: 52px;
+      background: var(--forest);
+      border-radius: var(--radius-lg);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 12px;
+      animation: loaderPulse 1.2s ease-in-out infinite;
+    }
+    .loader-logo i { color: var(--milk); font-size: 22px; }
+    @keyframes loaderPulse {
+      0%, 100% { transform: scale(1); }
+      50%       { transform: scale(1.08); }
+    }
+    .loader-text {
+      font-family: var(--font-display);
+      font-weight: 800; font-size: 1.125rem;
+      color: var(--forest);
+    }
+
+    /* ============================================================
+       NAVIGATION
+       ============================================================ */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: var(--nav-height);
+      background: rgba(250,247,240,0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-color);
+      transition: box-shadow var(--transition-base);
+    }
+    .nav.scrolled { box-shadow: var(--shadow-md); }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 100%; padding: 0 1rem;
+      max-width: var(--max-width); margin: 0 auto;
+    }
+    @media (min-width: 640px) { .nav-inner { padding: 0 1.5rem; } }
+
+    .nav-logo { display: flex; align-items: center; gap: 8px; }
+    .nav-logo-icon {
+      width: 36px; height: 36px; background: var(--forest);
+      border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .nav-logo-icon i { color: var(--milk); font-size: 16px; }
+    .nav-logo-text { display: flex; flex-direction: column; line-height: 1; }
+    .nav-logo-name {
+      font-family: var(--font-display); font-weight: 800;
+      font-size: 1rem; color: var(--forest); letter-spacing: -0.02em;
+    }
+    .nav-logo-sub { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; }
+
+    .nav-back {
+      display: flex; align-items: center; gap: 8px;
+      color: var(--text-muted); font-size: 0.875rem; font-weight: 500;
+      padding: 8px 12px;
+      border-radius: var(--radius-md);
+      transition: all var(--transition-fast);
+    }
+    .nav-back:hover { color: var(--forest); background: var(--forest-tint); }
+
+    /* ============================================================
+       PAGE WRAP
+       ============================================================ */
+    .page-wrap {
+      padding-top: var(--nav-height);
+      min-height: 100vh;
+    }
+
+    /* ============================================================
+       BREADCRUMB
+       ============================================================ */
+    .breadcrumb-bar {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 1rem 1rem 0;
+    }
+    @media (min-width: 640px) { .breadcrumb-bar { padding: 1.25rem 1.5rem 0; } }
+    .breadcrumb {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 0.8125rem; color: var(--text-muted); font-weight: 500;
+      flex-wrap: wrap;
+    }
+    .breadcrumb a { color: var(--text-muted); transition: color var(--transition-fast); }
+    .breadcrumb a:hover { color: var(--forest); }
+    .breadcrumb i { font-size: 9px; opacity: 0.5; }
+    .breadcrumb-current { color: var(--text-primary); }
+
+    /* ============================================================
+       PRODUCT LAYOUT
+       ============================================================ */
+    .product-layout {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 1.5rem 1rem 4rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    @media (min-width: 640px) { .product-layout { padding: 2rem 1.5rem 5rem; } }
+    @media (min-width: 900px) {
+      .product-layout {
+        grid-template-columns: 1fr 420px;
+        gap: 2.5rem;
+        align-items: start;
+      }
+    }
+    @media (min-width: 1100px) {
+      .product-layout { grid-template-columns: 1fr 460px; }
+    }
+
+    /* ============================================================
+       IMAGE GALLERY
+       ============================================================ */
+    .gallery-col { position: relative; }
+
+    @media (min-width: 900px) {
+      .gallery-col { position: sticky; top: calc(var(--nav-height) + 1.5rem); }
+    }
+
+    .gallery-main {
+      position: relative;
+      aspect-ratio: 4/3;
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      background: var(--milk-dark);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-md);
+      margin-bottom: 0.75rem;
+    }
+    .gallery-main-img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: opacity var(--transition-base);
+      cursor: zoom-in;
+    }
+    .gallery-main-placeholder {
+      width: 100%; height: 100%;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 12px;
+      background: var(--forest-tint);
+    }
+    .gallery-main-placeholder i { font-size: 3rem; color: var(--forest-pale); }
+    .gallery-main-placeholder span { font-size: 0.875rem; color: var(--text-muted); }
+
+    /* Condition badge overlaid on image */
+    .gallery-condition-badge {
+      position: absolute; top: 14px; left: 14px;
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+      font-size: 0.75rem; font-weight: 700; letter-spacing: 0.03em;
+      background: var(--forest); color: var(--milk);
+      box-shadow: var(--shadow-sm);
+    }
+    .gallery-condition-badge.used { background: var(--bark-mid); }
+    .gallery-condition-badge.service { background: var(--orange); }
+
+    /* Negotiable badge */
+    .gallery-neg-badge {
+      position: absolute; top: 14px; right: 14px;
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+      font-size: 0.75rem; font-weight: 700;
+      background: var(--orange-pale); color: var(--orange);
+      border: 1px solid var(--orange-pale);
+      box-shadow: var(--shadow-xs);
+    }
+
+    /* Share / Save buttons on image */
+    .gallery-img-actions {
+      position: absolute; bottom: 14px; right: 14px;
+      display: flex; gap: 8px;
+    }
+    .gallery-icon-btn {
+      width: 36px; height: 36px;
+      border-radius: var(--radius-full);
+      background: rgba(250,247,240,0.92);
+      backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid rgba(255,255,255,0.6);
+      color: var(--text-secondary);
+      font-size: 14px;
+      transition: all var(--transition-fast);
+      box-shadow: var(--shadow-xs);
+    }
+    .gallery-icon-btn:hover { background: #fff; color: var(--forest); transform: scale(1.08); }
+    .gallery-icon-btn.saved { color: var(--orange); }
+    .gallery-icon-btn.saved i { font-weight: 900; }
+
+    /* Thumbnails */
+    .gallery-thumbs {
+      display: flex; gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding-bottom: 2px;
+    }
+    .gallery-thumbs::-webkit-scrollbar { display: none; }
+    .gallery-thumb {
+      flex-shrink: 0;
+      width: 72px; height: 72px;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 2px solid var(--border-color);
+      cursor: pointer;
+      transition: border-color var(--transition-fast);
+      background: var(--milk-dark);
+    }
+    @media (min-width: 640px) { .gallery-thumb { width: 80px; height: 80px; } }
+    .gallery-thumb.active { border-color: var(--forest); }
+    .gallery-thumb:hover { border-color: var(--forest-muted); }
+    .gallery-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* Lightbox */
+    .lightbox {
+      position: fixed; inset: 0; z-index: 600;
+      background: rgba(10,14,8,0.92);
+      backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity var(--transition-base);
+    }
+    .lightbox.open { opacity: 1; pointer-events: all; }
+    .lightbox img {
+      max-width: 92vw; max-height: 88vh;
+      object-fit: contain;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-xl);
+    }
+    .lightbox-close {
+      position: absolute; top: 1.5rem; right: 1.5rem;
+      width: 44px; height: 44px;
+      background: rgba(250,247,240,0.15);
+      border-radius: var(--radius-full);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--milk); font-size: 20px;
+      transition: background var(--transition-fast);
+    }
+    .lightbox-close:hover { background: rgba(250,247,240,0.25); }
+
+    /* ============================================================
+       PRODUCT INFO COL
+       ============================================================ */
+    .info-col { display: flex; flex-direction: column; gap: 1.5rem; }
+
+    /* Category tag */
+    .product-cat-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 5px 12px;
+      border-radius: var(--radius-full);
+      background: var(--forest-tint);
+      color: var(--forest);
+      font-size: 0.8125rem; font-weight: 600;
+      border: 1px solid var(--forest-pale);
+      width: fit-content;
+    }
+    .product-cat-tag i { font-size: 11px; }
+
+    /* Title */
+    .product-title {
+      font-family: var(--font-display);
+      font-weight: 800; font-size: 1.625rem;
+      color: var(--text-primary);
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+    }
+    @media (min-width: 640px) { .product-title { font-size: 1.875rem; } }
+
+    /* Price row */
+    .product-price-row {
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    }
+    .product-price {
+      font-family: var(--font-display);
+      font-weight: 800; font-size: 2rem;
+      color: var(--forest);
+      letter-spacing: -0.03em;
+    }
+    @media (min-width: 640px) { .product-price { font-size: 2.25rem; } }
+    .product-price .currency { font-size: 1.25rem; font-weight: 600; opacity: 0.75; }
+    .product-price-na {
+      font-family: var(--font-display);
+      font-weight: 700; font-size: 1.5rem;
+      color: var(--text-muted);
+    }
+    .product-neg-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 5px 12px;
+      border-radius: var(--radius-full);
+      background: var(--orange-tint);
+      color: var(--orange);
+      font-size: 0.8125rem; font-weight: 700;
+      border: 1px solid var(--orange-pale);
+    }
+    .product-neg-pill i { font-size: 11px; }
+
+    /* Meta chips */
+    .product-meta {
+      display: flex; gap: 8px; flex-wrap: wrap;
+    }
+    .product-meta-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 12px;
+      border-radius: var(--radius-full);
+      font-size: 0.8125rem; font-weight: 500;
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+    }
+    .product-meta-chip i { font-size: 11px; color: var(--text-light); }
+
+    /* Divider */
+    .divider {
+      height: 1px; background: var(--border-color);
+    }
+
+    /* Description */
+    .product-desc-label {
+      font-family: var(--font-display);
+      font-weight: 700; font-size: 1rem;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+    .product-desc {
+      font-size: 0.9375rem;
+      color: var(--text-secondary);
+      line-height: 1.75;
+      white-space: pre-wrap;
+    }
+    .product-desc-empty {
+      font-size: 0.875rem;
+      color: var(--text-light);
+      font-style: italic;
+    }
+
+    /* ============================================================
+       SELLER CARD
+       ============================================================ */
+    .seller-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      padding: 1.25rem;
+      display: flex; align-items: center; gap: 1rem;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow var(--transition-fast);
+      text-decoration: none;
+    }
+    .seller-card:hover { box-shadow: var(--shadow-md); }
+
+    .seller-card-avatar {
+      width: 52px; height: 52px;
+      border-radius: var(--radius-full);
+      background: var(--forest);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      overflow: hidden;
+      border: 2px solid var(--forest-pale);
+    }
+    .seller-card-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .seller-card-avatar span {
+      font-family: var(--font-display);
+      font-weight: 800; font-size: 1.25rem;
+      color: var(--milk);
+      line-height: 1;
+    }
+
+    .seller-card-info { flex: 1; min-width: 0; }
+    .seller-card-label { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; margin-bottom: 2px; }
+    .seller-card-name {
+      font-family: var(--font-display);
+      font-weight: 700; font-size: 1rem;
+      color: var(--text-primary);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .seller-card-meta { font-size: 0.8125rem; color: var(--text-muted); margin-top: 2px; }
+
+    .seller-card-arrow {
+      color: var(--text-light); font-size: 14px;
+      transition: transform var(--transition-fast), color var(--transition-fast);
+    }
+    .seller-card:hover .seller-card-arrow { transform: translateX(3px); color: var(--forest); }
+
+    /* ============================================================
+       CTA BUTTONS
+       ============================================================ */
+    .cta-group {
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    @media (min-width: 480px) {
+      .cta-group { flex-direction: row; }
+    }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: 8px;
+      padding: 14px 24px;
+      border-radius: var(--radius-full);
+      font-family: var(--font-body); font-size: 0.9375rem;
+      font-weight: 700; line-height: 1;
+      transition: all var(--transition-base);
+      white-space: nowrap; cursor: pointer; border: none;
+    }
+    .btn i { font-size: 15px; }
+    .btn-whatsapp {
+      background: #25D366; color: #fff; flex: 1;
+      box-shadow: 0 2px 12px rgba(37,211,102,0.3);
+    }
+    .btn-whatsapp:hover {
+      background: #20BA5A;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(37,211,102,0.4);
+    }
+    .btn-share {
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
+      border: 1.5px solid var(--border-color);
+    }
+    .btn-share:hover { background: var(--milk-border); color: var(--text-primary); }
+
+    /* ============================================================
+       SAFETY NOTE
+       ============================================================ */
+    .safety-note {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 12px 14px;
+      border-radius: var(--radius-md);
+      background: var(--orange-tint);
+      border: 1px solid var(--orange-pale);
+    }
+    .safety-note i { color: var(--orange); font-size: 14px; margin-top: 1px; flex-shrink: 0; }
+    .safety-note p { font-size: 0.8125rem; color: var(--bark-mid); line-height: 1.5; }
+    .safety-note strong { color: var(--orange); }
+
+    /* ============================================================
+       RELATED LISTINGS
+       ============================================================ */
+    .related-section {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 1rem 4rem;
+    }
+    @media (min-width: 640px) { .related-section { padding: 0 1.5rem 5rem; } }
+
+    .related-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1.25rem;
+    }
+    .related-title {
+      font-family: var(--font-display);
+      font-weight: 700; font-size: 1.25rem;
+      color: var(--text-primary);
+    }
+    .related-see-all {
+      font-size: 0.875rem; font-weight: 600;
+      color: var(--forest);
+      display: flex; align-items: center; gap: 5px;
+      transition: gap var(--transition-fast);
+    }
+    .related-see-all:hover { gap: 8px; }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+    @media (min-width: 640px) { .related-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (min-width: 900px) { .related-grid { grid-template-columns: repeat(4, 1fr); } }
+
+    /* Related card — reuses product-card style from marketplace */
+    .related-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      transition: all var(--transition-base);
+      cursor: pointer;
+      display: flex; flex-direction: column;
+      text-decoration: none;
+    }
+    .related-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--forest-pale);
+    }
+    .related-card-img {
+      position: relative;
+      aspect-ratio: 1/1;
+      overflow: hidden;
+      background: var(--milk-dark);
+    }
+    .related-card-img img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .related-card:hover .related-card-img img { transform: scale(1.06); }
+    .related-card-img-placeholder {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--forest-tint);
+    }
+    .related-card-img-placeholder i { font-size: 2rem; color: var(--forest-pale); }
+    .related-card-cat {
+      position: absolute; top: 8px; left: 8px;
+      padding: 3px 10px; border-radius: var(--radius-full);
+      font-size: 10px; font-weight: 700; letter-spacing: 0.04em;
+      background: var(--forest); color: var(--milk);
+      text-transform: uppercase;
+    }
+    .related-card-body {
+      padding: 12px;
+      display: flex; flex-direction: column; gap: 6px;
+      flex: 1;
+    }
+    .related-card-name {
+      font-family: var(--font-display);
+      font-weight: 700; font-size: 0.875rem;
+      color: var(--text-primary);
+      line-height: 1.3;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .related-card-price {
+      font-family: var(--font-display);
+      font-weight: 800; font-size: 1rem;
+      color: var(--forest);
+    }
+
+    /* ============================================================
+       NOT FOUND STATE
+       ============================================================ */
+    .not-found-wrap {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 5rem 1rem;
+      text-align: center;
+    }
+    .not-found-icon {
+      width: 80px; height: 80px;
+      background: var(--forest-tint);
+      border-radius: var(--radius-full);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1.5rem;
+    }
+    .not-found-icon i { font-size: 2rem; color: var(--forest-muted); }
+    .not-found-title {
+      font-family: var(--font-display);
+      font-weight: 800; font-size: 1.5rem;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+    .not-found-sub { font-size: 0.9375rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+    .btn-forest {
+      background: var(--forest); color: var(--milk);
+      padding: 12px 24px;
+    }
+    .btn-forest:hover { background: var(--forest-mid); }
+
+    /* ============================================================
+       SKELETON LOADERS
+       ============================================================ */
+    .skeleton {
+      background: linear-gradient(90deg, var(--milk-dark) 25%, var(--milk-border) 50%, var(--milk-dark) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: var(--radius-md);
+    }
+    @keyframes shimmer {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* ============================================================
+       SCROLL TO TOP
+       ============================================================ */
+    .scroll-top {
+      position: fixed; bottom: 1.5rem; right: 1.5rem;
+      width: 44px; height: 44px;
+      background: var(--forest); color: var(--milk);
+      border-radius: var(--radius-full);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: var(--shadow-lg);
+      opacity: 0; pointer-events: none;
+      transform: translateY(12px);
+      transition: all var(--transition-base);
+      z-index: 50; border: none; cursor: pointer;
+    }
+    .scroll-top.visible { opacity: 1; pointer-events: all; transform: translateY(0); }
+    .scroll-top:hover { background: var(--forest-mid); transform: translateY(-2px); }
+
+    /* ============================================================
+       TOAST
+       ============================================================ */
+    .toast-container {
+      position: fixed; top: calc(var(--nav-height) + 1rem);
+      right: 1rem; z-index: 300;
+      display: flex; flex-direction: column; gap: 8px;
+      pointer-events: none;
+    }
+    .toast {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 16px;
+      background: var(--text-primary); color: var(--milk);
+      border-radius: var(--radius-lg); box-shadow: var(--shadow-xl);
+      font-size: 0.875rem; font-weight: 500;
+      pointer-events: all;
+      transform: translateX(120%);
+      transition: transform 350ms cubic-bezier(0.34, 1.56, 0.64, 1);
+      max-width: 320px;
+    }
+    .toast.show { transform: translateX(0); }
+    .toast-success { border-left: 4px solid var(--forest-muted); }
+    .toast-info    { border-left: 4px solid var(--orange-light); }
+    .toast-error   { border-left: 4px solid #ef4444; }
+
+    /* ============================================================
+       FOOTER
+       ============================================================ */
+    .footer {
+      background: var(--forest); color: var(--milk);
+      padding: 2rem 0 1.5rem;
+    }
+    .footer-inner {
+      max-width: var(--max-width); margin: 0 auto;
+      padding: 0 1rem;
+      display: flex; flex-direction: column;
+      align-items: center; gap: 1rem;
+      text-align: center;
+    }
+    @media (min-width: 640px) { .footer-inner { padding: 0 1.5rem; } }
+    .footer-logo { display: flex; align-items: center; gap: 8px; }
+    .footer-logo-icon {
+      width: 36px; height: 36px;
+      background: rgba(255,255,255,0.1);
+      border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .footer-logo-icon i { color: var(--orange-light); font-size: 16px; }
+    .footer-logo-name {
+      font-family: var(--font-display); font-weight: 800;
+      font-size: 1.125rem; color: var(--milk);
+    }
+    .footer-copy { font-size: 0.875rem; color: rgba(250,247,240,0.5); }
+
+    /* ============================================================
+       ANIMATIONS
+       ============================================================ */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-up { animation: fadeUp 0.55s cubic-bezier(0.4,0,0.2,1) both; }
+    .delay-100 { animation-delay: 80ms; }
+    .delay-200 { animation-delay: 160ms; }
+    .delay-300 { animation-delay: 240ms; }
+
+    /* Accessibility */
+    :focus-visible { outline: 2px solid var(--forest-light); outline-offset: 3px; }
+    .sr-only {
+      position: absolute; width: 1px; height: 1px;
+      padding: 0; margin: -1px; overflow: hidden;
+      clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Page Loader -->
+  <div id="pageLoader">
+    <div class="loader-inner">
+      <div class="loader-logo"><i class="fas fa-store-alt"></i></div>
+      <div class="loader-text">Ludek</div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image zoom">
+    <img id="lightboxImg" src="" alt="" />
+    <button class="lightbox-close" id="lightboxClose" aria-label="Close zoom">
+      <i class="fas fa-xmark"></i>
+    </button>
+  </div>
+
+  <!-- ======================================================
+       NAVIGATION
+  ====================================================== -->
+  <nav class="nav" id="mainNav" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo" aria-label="Ludek Marketplace Home">
+        <div class="nav-logo-icon">
+          <i class="fas fa-store-alt" aria-hidden="true"></i>
+        </div>
+        <div class="nav-logo-text">
+          <span class="nav-logo-name">Ludek</span>
+          <span class="nav-logo-sub">CRUTECH Okuku</span>
+        </div>
+      </a>
+      <a href="marketplace.html" class="nav-back" aria-label="Back to Marketplace">
+        <i class="fas fa-arrow-left" aria-hidden="true"></i>
+        <span>Marketplace</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- ======================================================
+       PAGE WRAP
+  ====================================================== -->
+  <div class="page-wrap">
+
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb-bar" aria-label="Breadcrumb">
+      <ol class="breadcrumb" role="list">
+        <li><a href="index.html">Home</a></li>
+        <li><i class="fas fa-chevron-right" aria-hidden="true"></i></li>
+        <li><a href="marketplace.html">Marketplace</a></li>
+        <li><i class="fas fa-chevron-right" aria-hidden="true"></i></li>
+        <li class="breadcrumb-current" id="breadcrumbTitle" aria-current="page">Product</li>
+      </ol>
+    </nav>
+
+    <!-- ======================================================
+         MAIN CONTENT — injected by JS
+    ====================================================== -->
+    <div id="productContent"></div>
+
+  </div><!-- end .page-wrap -->
+
+  <!-- ======================================================
+       FOOTER
+  ====================================================== -->
+  <footer class="footer" role="contentinfo">
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <div class="footer-logo-icon">
+          <i class="fas fa-store-alt" aria-hidden="true"></i>
+        </div>
+        <span class="footer-logo-name">Ludek Marketplace</span>
+      </div>
+      <p class="footer-copy">
+        &copy; <span id="footerYear"></span> Ludek Marketplace — CRUTECH Okuku Campus. All rights reserved.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Scroll to Top -->
+  <button class="scroll-top" id="scrollTopBtn" aria-label="Scroll to top">
+    <i class="fas fa-arrow-up" aria-hidden="true"></i>
+  </button>
+
+  <!-- ======================================================
+       FIREBASE COMPAT SDK
+  ====================================================== -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="config.js"></script>
+
+  <script>
+    'use strict';
+
+    // ============================================================
+    // CONSTANTS
+    // ============================================================
+    var CAT_ICONS = {
+      electronics: 'fa-laptop',
+      fashion:     'fa-shirt',
+      food:        'fa-utensils',
+      books:       'fa-book-open',
+      hostel:      'fa-building',
+      services:    'fa-wrench',
+      tutoring:    'fa-chalkboard-user',
+      housing:     'fa-house-chimney'
+    };
+
+    var CONDITION_LABELS = {
+      'new':       'Brand New',
+      'like-new':  'Like New',
+      'used-good': 'Used – Good',
+      'used-fair': 'Used – Fair',
+      'service':   'Service'
+    };
+
+    // ============================================================
+    // STATE
+    // ============================================================
+    var state = {
+      listing:    null,
+      seller:     null,
+      activeImg:  0,
+      saved:      false
+    };
+
+    // ============================================================
+    // FIREBASE INIT
+    // ============================================================
+    function initFirebase() {
+      var cfg = window.LUDEK_FIREBASE_CONFIG;
+      if (!cfg || !cfg.apiKey) return false;
+      if (!firebase.apps.length) firebase.initializeApp(cfg);
+      return true;
+    }
+
+    // ============================================================
+    // HELPERS
+    // ============================================================
+    function getListingId() {
+      var params = new URLSearchParams(window.location.search);
+      return params.get('id') || null;
+    }
+
+    function formatPrice(price) {
+      if (price === null || price === undefined || price === '') return null;
+      var num = parseFloat(price);
+      if (isNaN(num)) return null;
+      return num.toLocaleString('en-NG');
+    }
+
+    function timeAgo(ts) {
+      if (!ts) return '';
+      var d = ts.toDate ? ts.toDate() : new Date(ts.seconds ? ts.seconds * 1000 : ts);
+      var diff = (Date.now() - d.getTime()) / 1000;
+      if (diff < 60)     return 'Just now';
+      if (diff < 3600)   return Math.floor(diff / 60) + 'm ago';
+      if (diff < 86400)  return Math.floor(diff / 3600) + 'h ago';
+      if (diff < 604800) return Math.floor(diff / 86400) + 'd ago';
+      return d.toLocaleDateString('en-NG', { day: 'numeric', month: 'short', year: 'numeric' });
+    }
+
+    function buildWaLink(phone, title, price, sellerName) {
+      var clean = (phone || '').replace(/\D/g, '');
+      var waNum = clean.startsWith('0') ? '234' + clean.slice(1) : clean;
+      var priceStr = price ? '₦' + price : 'Price on request';
+      var msg = encodeURIComponent(
+        'Hello' + (sellerName ? ' ' + sellerName : '') + ', I found your listing on Ludek Marketplace (CRUTECH Okuku Campus).\n\nProduct: ' + title + '\nPrice: ' + priceStr + '\n\nIs it still available?'
+      );
+      return waNum ? 'https://wa.me/' + waNum + '?text=' + msg : 'https://wa.me/?text=' + msg;
+    }
+
+    function getInitial(name) {
+      return name ? name.trim().charAt(0).toUpperCase() : '?';
+    }
+
+    function catIcon(cat) {
+      return CAT_ICONS[cat] || 'fa-tag';
+    }
+
+    function catLabel(cat) {
+      if (!cat) return 'Other';
+      return cat.charAt(0).toUpperCase() + cat.slice(1);
+    }
+
+    function conditionClass(cond) {
+      if (!cond || cond === 'new' || cond === 'like-new') return '';
+      if (cond === 'service') return 'service';
+      return 'used';
+    }
+
+    function esc(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    // ============================================================
+    // SAVED ITEMS (localStorage)
+    // ============================================================
+    function loadSaved() {
+      try {
+        var raw = localStorage.getItem('ludek_saved');
+        return raw ? JSON.parse(raw) : {};
+      } catch (e) { return {}; }
+    }
+
+    function toggleSave(id) {
+      var saved = loadSaved();
+      if (saved[id]) {
+        delete saved[id];
+        state.saved = false;
+      } else {
+        saved[id] = true;
+        state.saved = true;
+      }
+      try { localStorage.setItem('ludek_saved', JSON.stringify(saved)); } catch (e) {}
+      updateSaveBtn();
+    }
+
+    function updateSaveBtn() {
+      var btn = document.getElementById('saveBtn');
+      if (!btn) return;
+      btn.classList.toggle('saved', state.saved);
+      btn.setAttribute('aria-label', state.saved ? 'Unsave item' : 'Save item');
+      btn.querySelector('i').className = (state.saved ? 'fas' : 'far') + ' fa-heart';
+    }
+
+    // ============================================================
+    // GALLERY
+    // ============================================================
+    function setActiveImage(index) {
+      var images = state.listing ? (state.listing.images || (state.listing.coverImage ? [state.listing.coverImage] : [])) : [];
+      if (!images.length) return;
+      state.activeImg = index;
+      var mainImg = document.getElementById('galleryMainImg');
+      var mainPlaceholder = document.getElementById('galleryMainPlaceholder');
+      if (mainImg) {
+        mainImg.src = images[index];
+        mainImg.style.display = 'block';
+      }
+      if (mainPlaceholder) mainPlaceholder.style.display = 'none';
+
+      // Update thumb active state
+      document.querySelectorAll('.gallery-thumb').forEach(function(t, i) {
+        t.classList.toggle('active', i === index);
+      });
+    }
+
+    // ============================================================
+    // RENDER PRODUCT PAGE
+    // ============================================================
+    function renderProduct(listing, sellerData) {
+      state.listing = listing;
+      state.seller  = sellerData;
+
+      var images   = listing.images || (listing.coverImage ? [listing.coverImage] : []);
+      var title    = listing.title  || 'Untitled';
+      var price    = formatPrice(listing.price);
+      var cat      = listing.category  || '';
+      var cond     = listing.condition || '';
+      var condLabel = CONDITION_LABELS[cond] || '';
+      var desc     = listing.description || '';
+      var isNeg    = !!listing.negotiable;
+      var postedAt = timeAgo(listing.createdAt);
+      var icon     = catIcon(cat);
+      var phone    = listing.whatsapp || (sellerData && sellerData.whatsapp) || '';
+      var waLink   = buildWaLink(phone, title, price, sellerData && (sellerData.storeName || sellerData.firstName));
+      var sellerName = sellerData
+        ? (sellerData.storeName || [sellerData.firstName, sellerData.lastName].filter(Boolean).join(' ') || 'Campus Seller')
+        : (listing.sellerName || 'Campus Seller');
+      var sellerUid  = listing.sellerId || '';
+      var saved      = !!(loadSaved()[listing.id]);
+      state.saved    = saved;
+
+      // Update breadcrumb
+      var bc = document.getElementById('breadcrumbTitle');
+      if (bc) bc.textContent = title.length > 40 ? title.slice(0, 40) + '…' : title;
+
+      // Update page title
+      document.title = title + ' — Ludek Marketplace | CRUTECH Okuku';
+
+      var html = '';
+
+      // ── PRODUCT LAYOUT ──
+      html += '<div class="product-layout">';
+
+      // ── GALLERY COL ──
+      html += '<div class="gallery-col animate-fade-up">';
+
+      // Main image
+      html += '<div class="gallery-main" id="galleryMainWrap">';
+      if (images.length) {
+        html += '<img id="galleryMainImg" class="gallery-main-img" src="' + esc(images[0]) + '" alt="' + esc(title) + '" loading="eager" />';
+        html += '<div id="galleryMainPlaceholder" class="gallery-main-placeholder" style="display:none;">';
+        html += '<i class="fas ' + icon + '" aria-hidden="true"></i><span>' + esc(catLabel(cat)) + '</span></div>';
+      } else {
+        html += '<div id="galleryMainPlaceholder" class="gallery-main-placeholder">';
+        html += '<i class="fas ' + icon + '" aria-hidden="true"></i>';
+        html += '<span>No image available</span></div>';
+        html += '<img id="galleryMainImg" class="gallery-main-img" src="" alt="" style="display:none;" />';
+      }
+
+      // Condition badge
+      if (condLabel) {
+        html += '<span class="gallery-condition-badge ' + conditionClass(cond) + '">' + esc(condLabel) + '</span>';
+      }
+
+      // Negotiable badge
+      if (isNeg) {
+        html += '<span class="gallery-neg-badge"><i class="fas fa-handshake" style="margin-right:4px;"></i>Negotiable</span>';
+      }
+
+      // Image actions (save + share)
+      html += '<div class="gallery-img-actions">';
+      html += '<button class="gallery-icon-btn' + (saved ? ' saved' : '') + '" id="saveBtn" aria-label="' + (saved ? 'Unsave item' : 'Save item') + '" title="' + (saved ? 'Unsave' : 'Save') + '">';
+      html += '<i class="' + (saved ? 'fas' : 'far') + ' fa-heart"></i></button>';
+      if (images.length) {
+        html += '<button class="gallery-icon-btn" id="zoomBtn" aria-label="Zoom image" title="Zoom"><i class="fas fa-expand"></i></button>';
+      }
+      html += '</div>';
+      html += '</div>'; // gallery-main
+
+      // Thumbnails
+      if (images.length > 1) {
+        html += '<div class="gallery-thumbs" role="list" aria-label="Product images">';
+        images.forEach(function(src, i) {
+          html += '<button class="gallery-thumb' + (i === 0 ? ' active' : '') + '" data-index="' + i + '" role="listitem" aria-label="Image ' + (i+1) + '">';
+          html += '<img src="' + esc(src) + '" alt="Product image ' + (i+1) + '" loading="lazy" /></button>';
+        });
+        html += '</div>';
+      }
+
+      html += '</div>'; // gallery-col
+
+      // ── INFO COL ──
+      html += '<div class="info-col animate-fade-up delay-100">';
+
+      // Category tag
+      html += '<span class="product-cat-tag"><i class="fas ' + icon + '" aria-hidden="true"></i>' + esc(catLabel(cat)) + '</span>';
+
+      // Title
+      html += '<h1 class="product-title">' + esc(title) + '</h1>';
+
+      // Price row
+      html += '<div class="product-price-row">';
+      if (price) {
+        html += '<p class="product-price"><span class="currency">₦</span>' + price + '</p>';
+      } else {
+        html += '<p class="product-price-na">Price on request</p>';
+      }
+      if (isNeg) {
+        html += '<span class="product-neg-pill"><i class="fas fa-handshake"></i> Negotiable</span>';
+      }
+      html += '</div>';
+
+      // Meta chips
+      html += '<div class="product-meta">';
+      if (condLabel) {
+        html += '<span class="product-meta-chip"><i class="fas fa-tag"></i>' + esc(condLabel) + '</span>';
+      }
+      if (postedAt) {
+        html += '<span class="product-meta-chip"><i class="fas fa-clock"></i>' + esc(postedAt) + '</span>';
+      }
+      html += '</div>';
+
+      html += '<div class="divider"></div>';
+
+      // Description
+      html += '<div>';
+      html += '<p class="product-desc-label">Description</p>';
+      if (desc) {
+        html += '<p class="product-desc">' + esc(desc) + '</p>';
+      } else {
+        html += '<p class="product-desc-empty">No description provided.</p>';
+      }
+      html += '</div>';
+
+      html += '<div class="divider"></div>';
+
+      // Seller card
+      var avatarHtml = '';
+      if (sellerData && sellerData.photoURL) {
+        avatarHtml = '<img src="' + esc(sellerData.photoURL) + '" alt="' + esc(sellerName) + '" />';
+      } else {
+        avatarHtml = '<span>' + esc(getInitial(sellerName)) + '</span>';
+      }
+      var sellerHref = sellerUid ? 'seller.html?uid=' + encodeURIComponent(sellerUid) : '#';
+      html += '<a href="' + sellerHref + '" class="seller-card" aria-label="View ' + esc(sellerName) + '\'s store">';
+      html += '<div class="seller-card-avatar">' + avatarHtml + '</div>';
+      html += '<div class="seller-card-info">';
+      html += '<p class="seller-card-label">Sold by</p>';
+      html += '<p class="seller-card-name">' + esc(sellerName) + '</p>';
+      if (sellerData && sellerData.category) {
+        html += '<p class="seller-card-meta"><i class="fas fa-tag" style="margin-right:4px;opacity:0.6;font-size:10px;"></i>' + esc(sellerData.category) + '</p>';
+      }
+      html += '</div>';
+      html += '<i class="fas fa-chevron-right seller-card-arrow" aria-hidden="true"></i>';
+      html += '</a>';
+
+      // CTA buttons
+      html += '<div class="cta-group">';
+      html += '<a href="' + waLink + '" class="btn btn-whatsapp" target="_blank" rel="noopener noreferrer" aria-label="Chat seller on WhatsApp about ' + esc(title) + '">';
+      html += '<i class="fab fa-whatsapp"></i> Chat Seller on WhatsApp</a>';
+      html += '<button class="btn btn-share" id="shareProductBtn" aria-label="Share this listing">';
+      html += '<i class="fas fa-share-nodes"></i> Share</button>';
+      html += '</div>';
+
+      // Safety note
+      html += '<div class="safety-note" role="note">';
+      html += '<i class="fas fa-shield-halved" aria-hidden="true"></i>';
+      html += '<p><strong>Stay safe:</strong> Meet in a public place on campus. Inspect the item before payment. Never send money in advance.</p>';
+      html += '</div>';
+
+      html += '</div>'; // info-col
+      html += '</div>'; // product-layout
+
+      // Related section placeholder
+      html += '<div id="relatedSection" class="related-section"></div>';
+
+      // Inject
+      document.getElementById('productContent').innerHTML = html;
+
+      // Wire events
+      wireEvents(images, listing, waLink);
+    }
+
+    // ============================================================
+    // WIRE UI EVENTS
+    // ============================================================
+    function wireEvents(images, listing, waLink) {
+      // Save button
+      var saveBtn = document.getElementById('saveBtn');
+      if (saveBtn) {
+        saveBtn.addEventListener('click', function() {
+          toggleSave(listing.id);
+          showToast(state.saved ? 'Saved to your list!' : 'Removed from saved.', state.saved ? 'success' : 'info');
+        });
+      }
+
+      // Zoom button
+      var zoomBtn = document.getElementById('zoomBtn');
+      if (zoomBtn && images.length) {
+        zoomBtn.addEventListener('click', function() { openLightbox(images[state.activeImg]); });
+      }
+
+      // Main image click zoom
+      var mainImg = document.getElementById('galleryMainImg');
+      if (mainImg && images.length) {
+        mainImg.addEventListener('click', function() { openLightbox(images[state.activeImg]); });
+      }
+
+      // Thumbnails
+      document.querySelectorAll('.gallery-thumb').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          setActiveImage(parseInt(btn.dataset.index, 10));
+        });
+      });
+
+      // Share button
+      var shareBtn = document.getElementById('shareProductBtn');
+      if (shareBtn) {
+        shareBtn.addEventListener('click', function() {
+          var url  = window.location.href;
+          var title = state.listing ? (state.listing.title || 'Product') : 'Product';
+          if (navigator.share) {
+            navigator.share({ title: title + ' — Ludek Marketplace', url: url }).catch(function() {});
+          } else {
+            navigator.clipboard.writeText(url).then(function() {
+              showToast('Link copied to clipboard!', 'success');
+            }).catch(function() {
+              showToast('Could not copy link.', 'error');
+            });
+          }
+        });
+      }
+    }
+
+    // ============================================================
+    // LIGHTBOX
+    // ============================================================
+    function openLightbox(src) {
+      var lb  = document.getElementById('lightbox');
+      var img = document.getElementById('lightboxImg');
+      img.src = src;
+      lb.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+    document.getElementById('lightbox').addEventListener('click', function(e) {
+      if (e.target === e.currentTarget) closeLightbox();
+    });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeLightbox();
+    });
+
+    // ============================================================
+    // RENDER NOT FOUND
+    // ============================================================
+    function renderNotFound(msg) {
+      document.getElementById('productContent').innerHTML =
+        '<div class="not-found-wrap">' +
+        '<div class="not-found-icon"><i class="fas fa-box-open" aria-hidden="true"></i></div>' +
+        '<h1 class="not-found-title">Product Not Found</h1>' +
+        '<p class="not-found-sub">' + esc(msg || 'This listing may have been removed or the link is invalid.') + '</p>' +
+        '<a href="marketplace.html" class="btn btn-forest"><i class="fas fa-arrow-left"></i> Browse Marketplace</a>' +
+        '</div>';
+    }
+
+    // ============================================================
+    // LOAD RELATED LISTINGS
+    // ============================================================
+    function loadRelated(listing) {
+      if (!listing.category || !listing.sellerId) return;
+      firebase.firestore()
+        .collection('listings')
+        .where('category', '==', listing.category)
+        .where('status',   '==', 'active')
+        .limit(8)
+        .get()
+        .then(function(snap) {
+          var related = [];
+          snap.forEach(function(d) {
+            if (d.id !== listing.id) {
+              related.push({ id: d.id, ...d.data() });
+            }
+          });
+          if (!related.length) return;
+          renderRelated(related.slice(0, 4));
+        })
+        .catch(function() {});
+    }
+
+    function renderRelated(listings) {
+      var section = document.getElementById('relatedSection');
+      if (!section) return;
+
+      var html = '<div class="related-header">';
+      html += '<h2 class="related-title">Similar Listings</h2>';
+      html += '<a href="marketplace.html?category=' + esc(state.listing.category) + '" class="related-see-all">See all <i class="fas fa-arrow-right" aria-hidden="true"></i></a>';
+      html += '</div>';
+      html += '<div class="related-grid">';
+
+      listings.forEach(function(l, i) {
+        var imgSrc = l.coverImage || (l.images && l.images[0]) || '';
+        var lPrice = formatPrice(l.price);
+        var lIcon  = catIcon(l.category);
+        var lCat   = catLabel(l.category);
+        html += '<a href="product.html?id=' + encodeURIComponent(l.id) + '" class="related-card animate-fade-up" style="animation-delay:' + (i * 60) + 'ms" aria-label="' + esc(l.title || 'Listing') + '">';
+        html += '<div class="related-card-img">';
+        if (imgSrc) {
+          html += '<img src="' + esc(imgSrc) + '" alt="' + esc(l.title || '') + '" loading="lazy" />';
+        } else {
+          html += '<div class="related-card-img-placeholder"><i class="fas ' + lIcon + '" aria-hidden="true"></i></div>';
+        }
+        html += '<span class="related-card-cat" aria-hidden="true">' + esc(lCat) + '</span>';
+        html += '</div>';
+        html += '<div class="related-card-body">';
+        html += '<h3 class="related-card-name">' + esc(l.title || 'Untitled') + '</h3>';
+        if (lPrice) {
+          html += '<p class="related-card-price">₦' + lPrice + '</p>';
+        }
+        html += '</div></a>';
+      });
+
+      html += '</div>';
+      section.innerHTML = html;
+    }
+
+    // ============================================================
+    // MAIN LOAD
+    // ============================================================
+    function loadPage() {
+      var id = getListingId();
+
+      if (!id) {
+        renderNotFound('No product ID in the URL.');
+        hideLoader();
+        return;
+      }
+
+      var fbReady = initFirebase();
+      if (!fbReady) {
+        renderNotFound('Firebase is not configured. Please contact support.');
+        hideLoader();
+        return;
+      }
+
+      firebase.firestore()
+        .collection('listings')
+        .doc(id)
+        .get()
+        .then(function(snap) {
+          if (!snap.exists) {
+            renderNotFound('This listing does not exist or has been removed.');
+            hideLoader();
+            return;
+          }
+
+          var listing = { id: snap.id, ...snap.data() };
+
+          // Only show active listings publicly
+          if (listing.status && listing.status !== 'active') {
+            renderNotFound('This listing is no longer available.');
+            hideLoader();
+            return;
+          }
+
+          // Fetch seller data
+          var sellerPromise = listing.sellerId
+            ? firebase.firestore().collection('users').doc(listing.sellerId).get()
+            : Promise.resolve(null);
+
+          return sellerPromise.then(function(sellerSnap) {
+            var sellerData = sellerSnap && sellerSnap.exists ? sellerSnap.data() : null;
+            renderProduct(listing, sellerData);
+            loadRelated(listing);
+            hideLoader();
+          });
+        })
+        .catch(function(err) {
+          console.error('[Ludek] Product load error:', err);
+          renderNotFound('Could not load the product. Please refresh or try again later.');
+          hideLoader();
+        });
+    }
+
+    function hideLoader() {
+      var loader = document.getElementById('pageLoader');
+      if (loader) {
+        loader.classList.add('hidden');
+        setTimeout(function() { loader.remove(); }, 500);
+      }
+    }
+
+    // ============================================================
+    // TOAST
+    // ============================================================
+    function showToast(message, type, duration) {
+      type     = type || 'info';
+      duration = duration || 4000;
+      var icons = { success: 'fa-circle-check', error: 'fa-circle-xmark', info: 'fa-circle-info' };
+      var container = document.getElementById('toastContainer');
+      var toast = document.createElement('div');
+      toast.className = 'toast toast-' + type;
+      toast.innerHTML = '<i class="fas ' + (icons[type] || icons.info) + '" aria-hidden="true"></i><span>' + esc(message) + '</span>';
+      container.appendChild(toast);
+      requestAnimationFrame(function() {
+        requestAnimationFrame(function() { toast.classList.add('show'); });
+      });
+      setTimeout(function() {
+        toast.classList.remove('show');
+        setTimeout(function() { toast.remove(); }, 400);
+      }, duration);
+    }
+
+    // ============================================================
+    // NAV SCROLL
+    // ============================================================
+    var nav = document.getElementById('mainNav');
+    window.addEventListener('scroll', function() {
+      nav.classList.toggle('scrolled', window.scrollY > 20);
+    }, { passive: true });
+
+    // ============================================================
+    // SCROLL TO TOP
+    // ============================================================
+    var scrollBtn = document.getElementById('scrollTopBtn');
+    window.addEventListener('scroll', function() {
+      scrollBtn.classList.toggle('visible', window.scrollY > 400);
+    }, { passive: true });
+    scrollBtn.addEventListener('click', function() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // ============================================================
+    // FOOTER YEAR
+    // ============================================================
+    document.getElementById('footerYear').textContent = new Date().getFullYear();
+
+    // ============================================================
+    // BOOT
+    // ============================================================
+    document.addEventListener('DOMContentLoaded', loadPage);
+
+  </script>
+
+</body>
+</html>
