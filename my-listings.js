@@ -137,7 +137,7 @@
         </div>
         <div class="listing-card-price">${price}</div>
         <div class="listing-card-actions">
-          <a href="/seller/add-listing.html?edit=${l.id}"
+          <a href="add-listing.html?edit=${l.id}"
              class="listing-card-btn edit"
              aria-label="Edit ${escHtml(l.title)}">
             <i class="fas fa-pen"></i> Edit
