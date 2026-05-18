@@ -73,7 +73,8 @@
 
   function updatePublicLink(uid) {
     const link = document.getElementById('viewPublicProfileLink');
-    if (link) link.href = `/seller.html?id=${uid}`;
+    
+if (link) link.href = `seller.html?uid=${uid}`;  
   }
 
   // ── Banner Upload ─────────────────────────────────────────
