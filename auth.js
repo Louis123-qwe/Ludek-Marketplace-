@@ -353,50 +353,61 @@ function setupPasswordToggle(inputId, btnId) {
 // PASSWORD STRENGTH METER
 // IDs: signupPassword, passwordStrength
 // ============================================================
+// ============================================================
+// PASSWORD STRENGTH METER (FIXED)
+// IDs: signupPassword, passwordStrength
+// ============================================================
 function setupStrengthMeter() {
   var input = document.getElementById('signupPassword');
   var meter = document.getElementById('passwordStrength');
   if (!input || !meter) return;
 
-  var bars  = meter.querySelectorAll('.strength-bar');
-  var label = meter.querySelector('.strength-label');
-
   input.addEventListener('input', function () {
     var pw = input.value;
 
+    // Dynamically query bars on input to ensure they exist in active DOM
+    var bars = meter.querySelectorAll('.strength-bar');
+    var label = meter.querySelector('.strength-label');
+
     if (!pw) {
       meter.classList.remove('show');
-      bars.forEach(function (b) { b.className = 'strength-bar'; });
+      bars.forEach(function (b) { 
+        // Reset all classes back to clean slate
+        b.className = 'strength-bar'; 
+      });
       if (label) label.textContent = '';
       return;
     }
 
     meter.classList.add('show');
-    var score = passwordScore(pw);                     // 0–4
-    var levels = ['', 'weak', 'fair', 'good', 'strong'];
-    var names  = ['', 'Weak', 'Fair', 'Good', 'Strong'];
-    var colors = ['', '#E53E3E', '#F97316', '#EAB308', '#6BA33A'];
+    var score = passwordScore(pw);                     // Returns 0–4
+    
+    var levels = ['weak', 'weak', 'fair', 'good', 'strong'];
+    var names  = ['Too Short', 'Weak', 'Fair', 'Good', 'Strong'];
+    var colors = ['#E53E3E', '#E53E3E', '#F97316', '#EAB308', '#6BA33A'];
+
+    // Safe fallbacks for index checking
+    var currentLevel = levels[score] || 'weak';
+    var currentName  = names[score] || 'Weak';
+    var currentColor = colors[score] || '#E53E3E';
 
     bars.forEach(function (bar, i) {
+      // Clean previous utility fill classes
       bar.className = 'strength-bar';
-      if (i < score) bar.classList.add('filled-' + levels[score]);
+      
+      // Fill up to the current calculated score stage
+      if (i < score) {
+        bar.classList.add('filled-' + currentLevel);
+      }
     });
 
     if (label) {
-      label.textContent = 'Strength: ' + (names[score] || '');
-      label.style.color = colors[score] || '';
+      label.textContent = 'Strength: ' + currentName;
+      label.style.color = currentColor;
     }
   });
 }
 
-function passwordScore(pw) {
-  var score = 0;
-  if (pw.length >= 6)  score++;
-  if (pw.length >= 10) score++;
-  if (/[A-Z]/.test(pw) && /[a-z]/.test(pw)) score++;
-  if (/[0-9]/.test(pw) || /[^A-Za-z0-9]/.test(pw)) score++;
-  return Math.min(score, 4);
-}
 
 // ============================================================
 // FORGOT PASSWORD MODAL
