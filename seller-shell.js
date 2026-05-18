@@ -12,28 +12,47 @@
     // ── Wait for Firebase auth state & Initialization ─────────
 
 
+// seller-shell.js — replace waitForFirebase with a version that has a timeout
+
 function waitForFirebase(cb) {
+  var elapsed = 0;
+  var MAX_WAIT = 8000; // 8 seconds — generous for slow connections
+  var INTERVAL = 60;
+
   var check = setInterval(function () {
+    elapsed += INTERVAL;
+
     if (window.firebase && window.firebase.apps !== undefined) {
       clearInterval(check);
 
-      // Initialize if not already done (seller pages don't load auth.js)
       var cfg = window.LUDEK_FIREBASE_CONFIG;
       if (cfg && cfg.apiKey && !firebase.apps.length) {
         firebase.initializeApp(cfg);
       }
 
-      // Now check apps are ready
       if (firebase.apps && firebase.apps.length > 0) {
         cb();
       } else {
-        // Config missing — redirect to auth for safety
+        // Config is missing even after Firebase loaded — redirect to auth
         window.location.replace('/auth.html?mode=login');
       }
+      return;
     }
-  }, 60);
-}
 
+    // ✅ NEW: bail out after MAX_WAIT instead of hanging forever
+    if (elapsed >= MAX_WAIT) {
+      clearInterval(check);
+      // Hide the loader and show an error message instead of hanging
+      var loader = document.getElementById('pageLoader');
+      if (loader) {
+        loader.innerHTML = '<div style="text-align:center;padding:40px;font-family:sans-serif;">' +
+          '<p style="font-size:16px;color:#333;">Could not connect to the server.</p>' +
+          '<p style="font-size:13px;color:#666;margin-top:8px;">Check your connection and ' +
+          '<a href="" style="color:#2D5016;">refresh the page</a>.</p></div>';
+      }
+    }
+  }, INTERVAL);
+}
 
   // ── Auth Guard ────────────────────────────────────────────
   // Redirect unauthenticated users to auth page.
@@ -90,37 +109,34 @@ function initAuthGuard() {
 }
 
   // ── Hydrate Sidebar & Topbar ──────────────────────────────
-  function hydrateShell(user, data) {
-    const fullName = [data.firstName, data.lastName].filter(Boolean).join(' ') || user.email;
-    const storeName = data.storeName || fullName;
-
-    // Sidebar name
-    const sidebarName = document.getElementById('sidebarName');
-    if (sidebarName) sidebarName.textContent = storeName;
-
-    // Welcome name on dashboard
-    const welcomeName = document.getElementById('welcomeName');
-    if (welcomeName) welcomeName.textContent = data.firstName || 'Seller';
-
-    // Avatar — sidebar + topbar
-    if (data.photoURL) {
-      setAvatarImage('sidebarAvatar', data.photoURL);
-      setAvatarImage('topbarAvatar', data.photoURL);
-    }
-
-    // Store current user data globally so page scripts can access it
-    window._sellerUser = user;
-    window._sellerData = data;
+function hydrateShell(user, data) {
+  var fullName = [data.firstName, data.lastName].filter(Boolean).join(' ') || user.email;
+  var storeName = data.storeName || fullName;
+  
+  var sidebarName = document.getElementById('sidebarName');
+  if (sidebarName) sidebarName.textContent = storeName;
+  
+  var welcomeName = document.getElementById('welcomeName');
+  if (welcomeName) welcomeName.textContent = data.firstName || 'Seller';
+  
+  if (data.photoURL) {
+    setAvatarImage('sidebarAvatar', data.photoURL);
+    setAvatarImage('topbarAvatar', data.photoURL);
+  }
+  
+  window._sellerUser = user;
+  window._sellerData = data;
+  
+  // Reveal content only after auth is confirmed
+  var shell = document.getElementById('sellerShell');
+  if (shell) shell.style.visibility = '';
+  
   var loader = document.getElementById('pageLoader');
   if (loader) {
     loader.classList.add('hidden');
-    setTimeout(function () { loader.remove(); }, 500);
-    var shell = document.getElementById('sellerShell');
-  if (shell) shell.style.visibility = '';
-
-  
+    setTimeout(function() { loader.remove(); }, 500);
   }
-  }
+}
 
   function setAvatarImage(wrapperId, url) {
     const wrap = document.getElementById(wrapperId);
