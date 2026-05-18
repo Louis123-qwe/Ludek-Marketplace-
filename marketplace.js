@@ -151,45 +151,56 @@ function renderDemoMode() {
 // ============================================================
 
 
+// marketplace.js — replace startAuthWatch()
+
 function startAuthWatch() {
-  var authResolved = false; // guard against premature null
-
-  fbAuth().onAuthStateChanged(function (user) {
-    // On the very first call, Firebase may emit null before it has
-    // actually checked persistent storage. We skip redirecting on
-    // the first null and allow a short grace window.
+  var authResolved = false;
+  var GRACE_MS = 4000; // ✅ increased: 2G campus networks can take 3+ seconds
+  
+  fbAuth().onAuthStateChanged(function(user) {
     if (!user && !authResolved) {
-      // Give Firebase one tick to re-check persistence
-      setTimeout(function () {
+      setTimeout(function() {
         if (!authResolved) {
-          // Still no user after grace period — genuinely unauthenticated
-          window.location.href = '/auth.html?mode=login';
+          // ✅ Guard: only redirect if we haven't just come FROM auth.html
+          // This breaks the auth.html → marketplace → auth.html bounce
+          var referrer = document.referrer;
+          var comingFromAuth = referrer && referrer.indexOf('auth.html') !== -1;
+          if (!comingFromAuth) {
+            window.location.href = '/auth.html?mode=login&next=%2Fmarketplace.html';
+          } else {
+            // We came from auth and still have no user — token is truly gone
+            // Give one more second before final redirect
+            setTimeout(function() {
+              if (!authResolved) {
+                window.location.href = '/auth.html?mode=login';
+              }
+            }, 2000);
+          }
         }
-      }, 2000); // 2s covers all real network scenarios
+      }, GRACE_MS);
       return;
     }
-
+    
     authResolved = true;
-
+    
     if (!user) {
-      window.location.href = '/auth.html?mode=login';
+      window.location.href = '/auth.html?mode=login&next=%2Fmarketplace.html';
       return;
     }
-
+    
     state.currentUser = user;
-
     fbDB().collection('users').doc(user.uid).get()
-      .then(function (snap) {
+      .then(function(snap) {
         if (snap.exists) {
           var data = snap.data();
-          state.userRole   = data.role || 'customer';
-          state.userName   = data.fullName || user.displayName || 'Student';
+          state.userRole = data.role || 'customer';
+          state.userName = data.fullName || user.displayName || 'Student';
           state.savedItems = arrayToSet(data.savedItems || []);
         }
         updateNavUser(user);
         fetchListings(true);
       })
-      .catch(function () {
+      .catch(function() {
         updateNavUser(user);
         fetchListings(true);
       });
