@@ -38,44 +38,56 @@ function waitForFirebase(cb) {
   // ── Auth Guard ────────────────────────────────────────────
   // Redirect unauthenticated users to auth page.
   // Redirect non-sellers (customers) back to marketplace.
-  function initAuthGuard() {
-    firebase.auth().onAuthStateChanged(async (user) => {
-      if (!user) {
-        window.location.replace('/auth.html?mode=login&next=' + encodeURIComponent(window.location.pathname));
+  
+
+function initAuthGuard() {
+  var authResolved = false;
+
+  firebase.auth().onAuthStateChanged(async function (user) {
+    if (!user && !authResolved) {
+      setTimeout(function () {
+        if (!authResolved) {
+          window.location.replace(
+            '/auth.html?mode=login&next=' + encodeURIComponent(window.location.pathname)
+          );
+        }
+      }, 2000);
+      return;
+    }
+
+    authResolved = true;
+
+    if (!user) {
+      window.location.replace(
+        '/auth.html?mode=login&next=' + encodeURIComponent(window.location.pathname)
+      );
+      return;
+    }
+
+    try {
+      const doc = await firebase.firestore().collection('users').doc(user.uid).get();
+      if (!doc.exists) {
+        window.location.replace('/auth.html?mode=login');
         return;
       }
 
-      // Fetch user doc from Firestore
-      try {
-        const doc = await firebase.firestore().collection('users').doc(user.uid).get();
-        if (!doc.exists) {
-          window.location.replace('/auth.html?mode=login');
-          return;
-        }
+      const data = doc.data();
 
-        const data = doc.data();
-
-        // Allow sellers AND admins into the seller hub
-        if (data.role !== 'seller' && data.role !== 'admin') {
-          window.location.replace('/marketplace.html');
-          return;
-        }
-
-        // Hydrate sidebar with user info
-        hydrateShell(user, data);
-
-        // Load listing count badge
-        loadListingCount(user.uid);
-
-        // Fire a custom event so individual page scripts know auth is ready
-        window.dispatchEvent(new CustomEvent('seller:ready', { detail: { user, data } }));
-
-      } catch (err) {
-        console.error('[Shell] Firestore error:', err);
-        showToast('Could not load your profile. Please refresh.', 'error');
+      if (data.role !== 'seller' && data.role !== 'admin') {
+        window.location.replace('/marketplace.html');
+        return;
       }
-    });
-  }
+
+      hydrateShell(user, data);
+      loadListingCount(user.uid);
+      window.dispatchEvent(new CustomEvent('seller:ready', { detail: { user, data } }));
+
+    } catch (err) {
+      console.error('[Shell] Firestore error:', err);
+      showToast('Could not load your profile. Please refresh.', 'error');
+    }
+  });
+}
 
   // ── Hydrate Sidebar & Topbar ──────────────────────────────
   function hydrateShell(user, data) {
