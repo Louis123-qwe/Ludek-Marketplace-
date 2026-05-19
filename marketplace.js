@@ -302,7 +302,8 @@ function buildQuery() {
   } else if (state.sortBy === 'price_desc') {
     q = q.orderBy('price', 'desc').orderBy('createdAt', 'desc');
   } else {
-    q = q.orderBy('createdAt', 'desc');
+
+q = q.orderBy('createdAt', 'desc');
   }
 
   return q;
@@ -341,11 +342,16 @@ function fetchListings(reset) {
 
       var filtered = filterLocally(newItems);
 
-      if (reset) {
-        state.listings = filtered;
-      } else {
-        state.listings = state.listings.concat(filtered);
-      }
+// Shuffle on first page load only, when sort is default
+if (reset && state.sortBy === 'newest') {
+  filtered = seededShuffle(filtered, getSessionSeed());
+}
+
+if (reset) {
+  state.listings = filtered;
+} else {
+  state.listings = state.listings.concat(filtered);
+}
 
       hideSkeletons();
       renderGrid(state.listings, true);
@@ -890,6 +896,26 @@ function formatTimeAgo(createdAt) {
 function buildWAMessage(listing) {
   return 'Hello, I found your listing on Ludek Marketplace (CRUTECH Okuku Campus).\n\nProduct: ' +
     (listing.name || '') + '\nPrice: ₦' + formatPrice(listing.price) + '\n\nIs it still available?';
+}
+
+function getSessionSeed() {
+  var seed = sessionStorage.getItem('ludek_feed_seed');
+  if (!seed) {
+    seed = Math.floor(Math.random() * 1000000).toString();
+    sessionStorage.setItem('ludek_feed_seed', seed);
+  }
+  return parseInt(seed, 10);
+}
+
+function seededShuffle(arr, seed) {
+  var a = arr.slice();
+  var s = seed;
+  for (var i = a.length - 1; i > 0; i--) {
+    s = (s * 1664525 + 1013904223) & 0xffffffff;
+    var j = Math.abs(s) % (i + 1);
+    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+  }
+  return a;
 }
 
 // ============================================================
