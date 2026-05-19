@@ -1,9 +1,9 @@
 // Ludek Marketplace — Service Worker
 // Version: 1.0.0
 
-const CACHE_NAME = 'ludek-v2';
-const STATIC_CACHE = 'ludek-static-v2';
-const DYNAMIC_CACHE = 'ludek-dynamic-v2';
+const CACHE_NAME = 'ludek-v3';
+const STATIC_CACHE = 'ludek-static-v3';
+const DYNAMIC_CACHE = 'ludek-dynamic-v3';
 
 const STATIC_ASSETS = [
   '/',
