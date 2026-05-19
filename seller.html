@@ -1157,17 +1157,17 @@ Is it still available?`
       currentSeller = seller;
 
       // Banner
-      if (seller.bannerUrl) {
+      if (seller.bannerURL) {
         const bannerImg = document.getElementById('sellerBannerImg');
-        bannerImg.src = seller.bannerUrl;
+        bannerImg.src = seller.bannerURL;
         bannerImg.style.display = 'block';
       }
 
       // Avatar
-      if (seller.photoUrl) {
+      if (seller.photoURL) {
         const avatarImg = document.getElementById('sellerAvatarImg');
         const avatarFall = document.getElementById('avatarFallback');
-        avatarImg.src = seller.photoUrl;
+        avatarImg.src = seller.photoURL;
         avatarImg.style.display = 'block';
         avatarImg.style.position = 'relative';
         avatarFall.style.display = 'none';
