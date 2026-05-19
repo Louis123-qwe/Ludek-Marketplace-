@@ -1408,6 +1408,9 @@
           return sellerPromise.then(function(sellerSnap) {
             var sellerData = sellerSnap && sellerSnap.exists ? sellerSnap.data() : null;
             renderProduct(listing, sellerData);
+            firebase.firestore().collection('listings').doc(listing.id)
+  .update({ views: firebase.firestore.FieldValue.increment(1) })
+  .catch(function() {});
             loadRelated(listing);
             hideLoader();
           });
