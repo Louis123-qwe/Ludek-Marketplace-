@@ -35,6 +35,8 @@
       --blue-pale:     #DBEAFE;
       --amber:         #D97706;
       --amber-pale:    #FEF3C7;
+      --purple:        #7C3AED;
+      --purple-pale:   #EDE9FE;
 
       --bg:            #F4F0E8;
       --bg-card:       #FFFFFF;
@@ -65,9 +67,6 @@
       --transition:   200ms cubic-bezier(0.4,0,0.2,1);
     }
 
-    /* ============================================================
-       RESET
-       ============================================================ */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { font-size: 16px; }
     body {
@@ -84,9 +83,7 @@
     ul { list-style: none; }
     :focus-visible { outline: 2px solid var(--forest-light); outline-offset: 3px; }
 
-    /* ============================================================
-       PAGE LOADER
-       ============================================================ */
+    /* PAGE LOADER */
     #pageLoader {
       position: fixed; inset: 0; z-index: 9999;
       background: var(--sidebar-bg);
@@ -106,9 +103,7 @@
     @keyframes pulse { 0%,100% { transform:scale(1); } 50% { transform:scale(1.1); } }
     .loader-text { font-family: var(--font-display); font-weight: 700; color: var(--milk); font-size: 1rem; letter-spacing: 0.08em; text-transform: uppercase; }
 
-    /* ============================================================
-       AUTH SCREEN
-       ============================================================ */
+    /* AUTH SCREEN */
     #authScreen {
       position: fixed; inset: 0; z-index: 500;
       background: var(--sidebar-bg);
@@ -122,16 +117,8 @@
       width: 100%; max-width: 400px;
       box-shadow: var(--shadow-lg);
     }
-    .auth-logo {
-      display: flex; align-items: center; gap: 10px;
-      margin-bottom: 2rem;
-    }
-    .auth-logo-icon {
-      width: 44px; height: 44px;
-      background: var(--forest);
-      border-radius: var(--radius-md);
-      display: flex; align-items: center; justify-content: center;
-    }
+    .auth-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 2rem; }
+    .auth-logo-icon { width: 44px; height: 44px; background: var(--forest); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; }
     .auth-logo-icon i { color: var(--milk); font-size: 18px; }
     .auth-logo-text { display: flex; flex-direction: column; line-height: 1.2; }
     .auth-logo-name { font-family: var(--font-display); font-weight: 800; font-size: 1.125rem; color: var(--forest); }
@@ -142,8 +129,7 @@
     .auth-label { display: block; font-size: 0.8125rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; }
     .auth-input {
       width: 100%; padding: 11px 14px;
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-md);
+      border: 1.5px solid var(--border); border-radius: var(--radius-md);
       font-family: var(--font-body); font-size: 0.9375rem;
       color: var(--text-primary); background: var(--milk);
       outline: none; transition: border-color var(--transition);
@@ -159,22 +145,14 @@
       display: flex; align-items: center; justify-content: center; gap: 8px;
     }
     .auth-btn:hover { background: var(--forest-mid); transform: translateY(-1px); }
-    .auth-error {
-      font-size: 0.8125rem; color: var(--red);
-      margin-top: 10px; text-align: center;
-      display: none;
-    }
+    .auth-error { font-size: 0.8125rem; color: var(--red); margin-top: 10px; text-align: center; display: none; }
     .auth-error.show { display: block; }
 
-    /* ============================================================
-       APP SHELL
-       ============================================================ */
+    /* APP SHELL */
     #appShell { display: none; min-height: 100vh; }
     #appShell.visible { display: flex; }
 
-    /* ============================================================
-       SIDEBAR
-       ============================================================ */
+    /* SIDEBAR */
     .sidebar {
       width: var(--sidebar-w);
       background: var(--sidebar-bg);
@@ -188,126 +166,49 @@
       .sidebar { transform: translateX(-100%); }
       .sidebar.open { transform: translateX(0); box-shadow: 4px 0 32px rgba(0,0,0,0.3); }
     }
-
     .sidebar-header {
       padding: 1.25rem 1.25rem 1rem;
       border-bottom: 1px solid rgba(255,255,255,0.07);
       display: flex; align-items: center; justify-content: space-between;
     }
     .sidebar-brand { display: flex; align-items: center; gap: 10px; }
-    .sidebar-brand-icon {
-      width: 38px; height: 38px;
-      background: var(--forest);
-      border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-    }
+    .sidebar-brand-icon { width: 38px; height: 38px; background: var(--forest); border-radius: 10px; display: flex; align-items: center; justify-content: center; }
     .sidebar-brand-icon i { color: var(--milk); font-size: 16px; }
     .sidebar-brand-text { display: flex; flex-direction: column; line-height: 1.2; }
     .sidebar-brand-name { font-family: var(--font-display); font-weight: 800; font-size: 0.9375rem; color: var(--milk); }
     .sidebar-brand-sub { font-size: 0.6875rem; color: rgba(250,247,240,0.45); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
-    .sidebar-close-btn {
-      display: none; color: rgba(255,255,255,0.5); font-size: 18px;
-      width: 32px; height: 32px; border-radius: 8px;
-      align-items: center; justify-content: center;
-      transition: background var(--transition), color var(--transition);
-    }
+    .sidebar-close-btn { display: none; color: rgba(255,255,255,0.5); font-size: 18px; width: 32px; height: 32px; border-radius: 8px; align-items: center; justify-content: center; transition: background var(--transition), color var(--transition); }
     @media (max-width: 900px) { .sidebar-close-btn { display: flex; } }
     .sidebar-close-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
-
-    /* Admin badge */
-    .sidebar-admin-badge {
-      margin: 1rem 1.25rem 0.5rem;
-      padding: 8px 12px;
-      background: rgba(212,82,10,0.15);
-      border: 1px solid rgba(212,82,10,0.25);
-      border-radius: var(--radius-md);
-      display: flex; align-items: center; gap: 8px;
-    }
+    .sidebar-admin-badge { margin: 1rem 1.25rem 0.5rem; padding: 8px 12px; background: rgba(212,82,10,0.15); border: 1px solid rgba(212,82,10,0.25); border-radius: var(--radius-md); display: flex; align-items: center; gap: 8px; }
     .sidebar-admin-badge i { color: var(--orange-light); font-size: 12px; }
     .sidebar-admin-badge span { font-size: 0.75rem; font-weight: 700; color: var(--orange-light); letter-spacing: 0.04em; text-transform: uppercase; }
-
-    /* Nav */
     .sidebar-nav { flex: 1; overflow-y: auto; padding: 0.5rem 0; scrollbar-width: none; }
     .sidebar-nav::-webkit-scrollbar { display: none; }
-    .sidebar-section-label {
-      padding: 0.75rem 1.25rem 0.25rem;
-      font-size: 0.6875rem; font-weight: 700;
-      color: rgba(250,247,240,0.3);
-      letter-spacing: 0.08em; text-transform: uppercase;
-    }
-    .sidebar-link {
-      display: flex; align-items: center; gap: 10px;
-      padding: 9px 1.25rem;
-      color: var(--sidebar-text);
-      font-size: 0.875rem; font-weight: 500;
-      border-radius: 0;
-      transition: background var(--transition), color var(--transition);
-      cursor: pointer; position: relative;
-    }
+    .sidebar-section-label { padding: 0.75rem 1.25rem 0.25rem; font-size: 0.6875rem; font-weight: 700; color: rgba(250,247,240,0.3); letter-spacing: 0.08em; text-transform: uppercase; }
+    .sidebar-link { display: flex; align-items: center; gap: 10px; padding: 9px 1.25rem; color: var(--sidebar-text); font-size: 0.875rem; font-weight: 500; transition: background var(--transition), color var(--transition); cursor: pointer; position: relative; }
     .sidebar-link i { width: 18px; text-align: center; font-size: 14px; flex-shrink: 0; }
     .sidebar-link:hover { background: var(--sidebar-hover); color: var(--sidebar-text-active); }
-    .sidebar-link.active {
-      background: rgba(78,132,38,0.2);
-      color: var(--sidebar-text-active);
-      font-weight: 600;
-    }
-    .sidebar-link.active::before {
-      content: '';
-      position: absolute; left: 0; top: 4px; bottom: 4px;
-      width: 3px; background: var(--forest-muted);
-      border-radius: 0 3px 3px 0;
-    }
-    .sidebar-badge-count {
-      margin-left: auto;
-      background: var(--orange);
-      color: #fff;
-      font-size: 10px; font-weight: 700;
-      padding: 1px 7px; border-radius: 99px;
-      min-width: 20px; text-align: center;
-    }
-
-    /* Sidebar footer */
-    .sidebar-footer {
-      padding: 1rem 1.25rem;
-      border-top: 1px solid rgba(255,255,255,0.07);
-    }
-    .sidebar-admin-info {
-      display: flex; align-items: center; gap: 10px;
-    }
-    .sidebar-admin-avatar {
-      width: 34px; height: 34px;
-      background: var(--forest);
-      border-radius: var(--radius-full);
-      display: flex; align-items: center; justify-content: center;
-      font-family: var(--font-display); font-weight: 800; font-size: 0.875rem;
-      color: var(--milk); flex-shrink: 0; overflow: hidden;
-    }
+    .sidebar-link.active { background: rgba(78,132,38,0.2); color: var(--sidebar-text-active); font-weight: 600; }
+    .sidebar-link.active::before { content: ''; position: absolute; left: 0; top: 4px; bottom: 4px; width: 3px; background: var(--forest-muted); border-radius: 0 3px 3px 0; }
+    .sidebar-badge-count { margin-left: auto; background: var(--orange); color: #fff; font-size: 10px; font-weight: 700; padding: 1px 7px; border-radius: 99px; min-width: 20px; text-align: center; }
+    .sidebar-footer { padding: 1rem 1.25rem; border-top: 1px solid rgba(255,255,255,0.07); }
+    .sidebar-admin-info { display: flex; align-items: center; gap: 10px; }
+    .sidebar-admin-avatar { width: 34px; height: 34px; background: var(--forest); border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 800; font-size: 0.875rem; color: var(--milk); flex-shrink: 0; overflow: hidden; }
     .sidebar-admin-avatar img { width:100%; height:100%; object-fit:cover; }
     .sidebar-admin-name-wrap { flex: 1; min-width: 0; }
     .sidebar-admin-name { font-size: 0.8125rem; font-weight: 600; color: var(--milk); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .sidebar-admin-role { font-size: 0.6875rem; color: rgba(250,247,240,0.45); }
     .sidebar-logout-btn { color: rgba(255,255,255,0.4); font-size: 15px; transition: color var(--transition); }
     .sidebar-logout-btn:hover { color: #f87171; }
-
-    /* Overlay */
-    .sidebar-overlay {
-      display: none; position: fixed; inset: 0;
-      background: rgba(0,0,0,0.5); z-index: 150;
-    }
+    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 150; }
     @media (max-width: 900px) { .sidebar-overlay.show { display: block; } }
 
-    /* ============================================================
-       MAIN AREA
-       ============================================================ */
-    .main-area {
-      margin-left: var(--sidebar-w);
-      flex: 1;
-      min-height: 100vh;
-      display: flex; flex-direction: column;
-    }
+    /* MAIN AREA */
+    .main-area { margin-left: var(--sidebar-w); flex: 1; min-height: 100vh; display: flex; flex-direction: column; }
     @media (max-width: 900px) { .main-area { margin-left: 0; } }
 
-    /* Topbar */
+    /* TOPBAR */
     .topbar {
       position: sticky; top: 0; z-index: 100;
       height: var(--topbar-h);
@@ -317,166 +218,64 @@
       display: flex; align-items: center;
       padding: 0 1.5rem; gap: 1rem;
     }
-    .topbar-hamburger {
-      display: none; color: var(--text-secondary);
-      font-size: 18px; width: 36px; height: 36px;
-      border-radius: var(--radius-md);
-      align-items: center; justify-content: center;
-      transition: background var(--transition);
-    }
+    .topbar-hamburger { display: none; color: var(--text-secondary); font-size: 18px; width: 36px; height: 36px; border-radius: var(--radius-md); align-items: center; justify-content: center; transition: background var(--transition); }
     @media (max-width: 900px) { .topbar-hamburger { display: flex; } }
     .topbar-hamburger:hover { background: var(--milk-dark); }
-
-    .topbar-breadcrumb {
-      display: flex; align-items: center; gap: 6px;
-      font-size: 0.875rem; color: var(--text-muted);
-    }
+    .topbar-breadcrumb { display: flex; align-items: center; gap: 6px; font-size: 0.875rem; color: var(--text-muted); }
     .topbar-breadcrumb i { font-size: 9px; opacity: 0.5; }
     .topbar-page { font-weight: 700; color: var(--text-primary); font-family: var(--font-display); }
-
     .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
-    .topbar-time {
-      font-size: 0.8125rem; color: var(--text-muted);
-      font-variant-numeric: tabular-nums;
-    }
+    .topbar-time { font-size: 0.8125rem; color: var(--text-muted); font-variant-numeric: tabular-nums; }
     @media (max-width: 480px) { .topbar-time { display: none; } }
 
-    /* ============================================================
-       PAGE CONTENT
-       ============================================================ */
+    /* PAGE CONTENT */
     .page-content { flex: 1; padding: 1.5rem; }
     @media (min-width: 640px) { .page-content { padding: 2rem; } }
-
-    /* Section switching */
     .panel-section { display: none; }
     .panel-section.active { display: block; }
 
-    /* Page header */
+    /* PAGE HEADER */
     .section-header { margin-bottom: 1.5rem; }
-    .section-title {
-      font-family: var(--font-display); font-weight: 800;
-      font-size: 1.5rem; color: var(--text-primary);
-      letter-spacing: -0.02em;
-    }
+    .section-title { font-family: var(--font-display); font-weight: 800; font-size: 1.5rem; color: var(--text-primary); letter-spacing: -0.02em; }
     .section-subtitle { font-size: 0.875rem; color: var(--text-muted); margin-top: 3px; }
 
-    /* ============================================================
-       STAT CARDS
-       ============================================================ */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
-    @media (min-width: 640px)  { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (min-width: 900px)  { .stats-grid { grid-template-columns: repeat(4, 1fr); } }
-
-    .stat-card {
-      background: var(--bg-card);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      padding: 1.25rem;
-      box-shadow: var(--shadow-sm);
-      display: flex; flex-direction: column; gap: 10px;
-      animation: fadeUp 0.5s both;
-    }
+    /* STAT CARDS */
+    .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+    @media (min-width: 900px) { .stats-grid { grid-template-columns: repeat(4, 1fr); } }
+    .stat-card { background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border); padding: 1.25rem; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; gap: 10px; animation: fadeUp 0.5s both; }
     .stat-card-top { display: flex; align-items: center; justify-content: space-between; }
-    .stat-card-icon {
-      width: 40px; height: 40px;
-      border-radius: var(--radius-md);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 16px; flex-shrink: 0;
-    }
+    .stat-card-icon { width: 40px; height: 40px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
     .stat-card-icon.green  { background: var(--forest-tint); color: var(--forest); }
     .stat-card-icon.orange { background: var(--orange-tint); color: var(--orange); }
     .stat-card-icon.blue   { background: var(--blue-pale);   color: var(--blue); }
     .stat-card-icon.amber  { background: var(--amber-pale);  color: var(--amber); }
     .stat-card-icon.red    { background: var(--red-pale);    color: var(--red); }
-
-    .stat-card-value {
-      font-family: var(--font-display); font-weight: 800;
-      font-size: 1.875rem; color: var(--text-primary);
-      letter-spacing: -0.03em; line-height: 1;
-    }
+    .stat-card-icon.purple { background: var(--purple-pale); color: var(--purple); }
+    .stat-card-value { font-family: var(--font-display); font-weight: 800; font-size: 1.875rem; color: var(--text-primary); letter-spacing: -0.03em; line-height: 1; }
     .stat-card-label { font-size: 0.8125rem; color: var(--text-muted); font-weight: 500; }
 
-    /* ============================================================
-       CARD
-       ============================================================ */
-    .card {
-      background: var(--bg-card);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow-sm);
-      overflow: hidden;
-      margin-bottom: 1.25rem;
-    }
-    .card-header {
-      padding: 1rem 1.25rem;
-      border-bottom: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
-      flex-wrap: wrap;
-    }
-    .card-title {
-      font-family: var(--font-display); font-weight: 700;
-      font-size: 1rem; color: var(--text-primary);
-    }
+    /* CARD */
+    .card { background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border); box-shadow: var(--shadow-sm); overflow: hidden; margin-bottom: 1.25rem; }
+    .card-header { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+    .card-title { font-family: var(--font-display); font-weight: 700; font-size: 1rem; color: var(--text-primary); }
     .card-body { padding: 1.25rem; }
 
-    /* ============================================================
-       TABLE
-       ============================================================ */
+    /* TABLE */
     .table-wrap { overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
-    th {
-      text-align: left;
-      padding: 10px 14px;
-      font-size: 0.75rem; font-weight: 700;
-      color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;
-      background: var(--bg);
-      border-bottom: 1px solid var(--border);
-      white-space: nowrap;
-    }
-    td {
-      padding: 12px 14px;
-      color: var(--text-secondary);
-      border-bottom: 1px solid var(--border);
-      vertical-align: middle;
-    }
+    th { text-align: left; padding: 10px 14px; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; background: var(--bg); border-bottom: 1px solid var(--border); white-space: nowrap; }
+    td { padding: 12px 14px; color: var(--text-secondary); border-bottom: 1px solid var(--border); vertical-align: middle; }
     tr:last-child td { border-bottom: none; }
     tr:hover td { background: var(--milk); }
-
-    .table-avatar {
-      width: 32px; height: 32px;
-      border-radius: var(--radius-full);
-      background: var(--forest);
-      display: flex; align-items: center; justify-content: center;
-      font-family: var(--font-display); font-weight: 800; font-size: 0.75rem;
-      color: var(--milk); flex-shrink: 0; overflow: hidden;
-    }
+    .table-avatar { width: 32px; height: 32px; border-radius: var(--radius-full); background: var(--forest); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 800; font-size: 0.75rem; color: var(--milk); flex-shrink: 0; overflow: hidden; }
     .table-avatar img { width:100%; height:100%; object-fit:cover; }
-
     .table-user-cell { display: flex; align-items: center; gap: 10px; }
     .table-user-name { font-weight: 600; color: var(--text-primary); font-size: 0.875rem; }
     .table-user-email { font-size: 0.75rem; color: var(--text-muted); }
+    .table-img-thumb { width: 40px; height: 40px; border-radius: var(--radius-sm); object-fit: cover; background: var(--bg); border: 1px solid var(--border); }
 
-    .table-img-thumb {
-      width: 40px; height: 40px;
-      border-radius: var(--radius-sm);
-      object-fit: cover;
-      background: var(--bg);
-      border: 1px solid var(--border);
-    }
-
-    /* ============================================================
-       BADGES
-       ============================================================ */
-    .badge {
-      display: inline-flex; align-items: center; gap: 4px;
-      padding: 3px 10px; border-radius: var(--radius-full);
-      font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.03em;
-    }
+    /* BADGES */
+    .badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: var(--radius-full); font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.03em; }
     .badge i { font-size: 9px; }
     .badge-green  { background: var(--forest-tint); color: var(--forest); }
     .badge-orange { background: var(--orange-tint); color: var(--orange); }
@@ -484,17 +283,10 @@
     .badge-blue   { background: var(--blue-pale);   color: var(--blue); }
     .badge-amber  { background: var(--amber-pale);  color: var(--amber); }
     .badge-gray   { background: var(--milk-dark);   color: var(--text-muted); }
+    .badge-purple { background: var(--purple-pale); color: var(--purple); }
 
-    /* ============================================================
-       BUTTONS
-       ============================================================ */
-    .btn {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 7px 14px; border-radius: var(--radius-md);
-      font-family: var(--font-body); font-size: 0.8125rem; font-weight: 600;
-      transition: all var(--transition); cursor: pointer; border: none;
-      white-space: nowrap;
-    }
+    /* BUTTONS */
+    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: var(--radius-md); font-family: var(--font-body); font-size: 0.8125rem; font-weight: 600; transition: all var(--transition); cursor: pointer; border: none; white-space: nowrap; }
     .btn i { font-size: 12px; }
     .btn-sm { padding: 5px 10px; font-size: 0.75rem; }
     .btn-forest  { background: var(--forest); color: var(--milk); }
@@ -503,155 +295,79 @@
     .btn-orange:hover { background: var(--orange-mid); }
     .btn-red     { background: var(--red); color: #fff; }
     .btn-red:hover { background: #b91c1c; }
+    .btn-blue    { background: var(--blue); color: #fff; }
+    .btn-blue:hover { background: #1d4ed8; }
     .btn-ghost   { background: var(--milk-dark); color: var(--text-secondary); border: 1px solid var(--border); }
     .btn-ghost:hover { background: var(--milk-border); }
     .btn-icon { padding: 7px; border-radius: var(--radius-sm); }
+    .btn:disabled { opacity: 0.55; cursor: not-allowed; }
 
-    /* ============================================================
-       SEARCH / FILTER ROW
-       ============================================================ */
-    .filter-row {
-      display: flex; gap: 8px; flex-wrap: wrap;
-      align-items: center; margin-bottom: 1rem;
-    }
-    .search-box {
-      position: relative; flex: 1; min-width: 200px;
-    }
-    .search-box i {
-      position: absolute; left: 11px; top: 50%;
-      transform: translateY(-50%);
-      color: var(--text-light); font-size: 13px;
-      pointer-events: none;
-    }
-    .search-input {
-      width: 100%; padding: 8px 12px 8px 34px;
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-md);
-      font-family: var(--font-body); font-size: 0.875rem;
-      color: var(--text-primary); background: var(--bg-card);
-      outline: none; transition: border-color var(--transition);
-    }
+    /* SEARCH / FILTER ROW */
+    .filter-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 1rem; }
+    .search-box { position: relative; flex: 1; min-width: 200px; }
+    .search-box i { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--text-light); font-size: 13px; pointer-events: none; }
+    .search-input { width: 100%; padding: 8px 12px 8px 34px; border: 1.5px solid var(--border); border-radius: var(--radius-md); font-family: var(--font-body); font-size: 0.875rem; color: var(--text-primary); background: var(--bg-card); outline: none; transition: border-color var(--transition); }
     .search-input:focus { border-color: var(--forest-light); }
     .search-input::placeholder { color: var(--text-light); }
-
-    .filter-select {
-      padding: 8px 12px;
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-md);
-      font-family: var(--font-body); font-size: 0.875rem;
-      color: var(--text-primary); background: var(--bg-card);
-      outline: none; cursor: pointer;
-      transition: border-color var(--transition);
-    }
+    .filter-select { padding: 8px 12px; border: 1.5px solid var(--border); border-radius: var(--radius-md); font-family: var(--font-body); font-size: 0.875rem; color: var(--text-primary); background: var(--bg-card); outline: none; cursor: pointer; transition: border-color var(--transition); }
     .filter-select:focus { border-color: var(--forest-light); }
 
-    /* ============================================================
-       MODAL
-       ============================================================ */
-    .modal-backdrop {
-      position: fixed; inset: 0; z-index: 400;
-      background: rgba(10,14,8,0.6);
-      backdrop-filter: blur(4px);
-      display: flex; align-items: center; justify-content: center;
-      padding: 1rem;
-      opacity: 0; pointer-events: none;
-      transition: opacity var(--transition);
+    /* CHECKBOX */
+    input[type="checkbox"] { accent-color: var(--forest); width: 15px; height: 15px; cursor: pointer; }
+
+    /* BULK ACTION BAR */
+    .bulk-bar {
+      display: none;
+      align-items: center; gap: 10px;
+      background: var(--forest); color: var(--milk);
+      padding: 10px 16px; border-radius: var(--radius-md);
+      margin-bottom: 10px; font-size: 0.875rem; font-weight: 600;
+      animation: fadeUp 0.2s both;
     }
+    .bulk-bar.show { display: flex; }
+    .bulk-bar span { flex: 1; }
+    .bulk-bar .btn { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.2); }
+    .bulk-bar .btn:hover { background: rgba(255,255,255,0.25); }
+    .bulk-bar .btn-red { background: #b91c1c; border-color: #b91c1c; }
+
+    /* MODAL */
+    .modal-backdrop { position: fixed; inset: 0; z-index: 400; background: rgba(10,14,8,0.6); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; padding: 1rem; opacity: 0; pointer-events: none; transition: opacity var(--transition); }
     .modal-backdrop.open { opacity: 1; pointer-events: all; }
-    .modal {
-      background: var(--bg-card);
-      border-radius: var(--radius-lg);
-      width: 100%; max-width: 480px;
-      max-height: 90vh; overflow-y: auto;
-      box-shadow: var(--shadow-lg);
-      transform: scale(0.94) translateY(10px);
-      transition: transform var(--transition);
-    }
+    .modal { background: var(--bg-card); border-radius: var(--radius-lg); width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-lg); transform: scale(0.94) translateY(10px); transition: transform var(--transition); }
     .modal-backdrop.open .modal { transform: scale(1) translateY(0); }
-    .modal-header {
-      padding: 1.25rem 1.5rem;
-      border-bottom: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: space-between;
-    }
+    .modal-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
     .modal-title { font-family: var(--font-display); font-weight: 700; font-size: 1rem; }
     .modal-close { color: var(--text-muted); font-size: 16px; transition: color var(--transition); }
     .modal-close:hover { color: var(--text-primary); }
     .modal-body { padding: 1.5rem; }
     .modal-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border); display: flex; gap: 8px; justify-content: flex-end; }
-
-    /* Modal form */
     .form-field { margin-bottom: 1rem; }
     .form-label { display: block; font-size: 0.8125rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 5px; }
-    .form-input, .form-select, .form-textarea {
-      width: 100%; padding: 9px 12px;
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-md);
-      font-family: var(--font-body); font-size: 0.875rem;
-      color: var(--text-primary); background: var(--milk);
-      outline: none; transition: border-color var(--transition);
-    }
+    .form-input, .form-select, .form-textarea { width: 100%; padding: 9px 12px; border: 1.5px solid var(--border); border-radius: var(--radius-md); font-family: var(--font-body); font-size: 0.875rem; color: var(--text-primary); background: var(--milk); outline: none; transition: border-color var(--transition); }
     .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--forest-light); background: #fff; }
     .form-textarea { resize: vertical; min-height: 80px; }
 
-    /* ============================================================
-       EMPTY STATE
-       ============================================================ */
-    .empty-state {
-      text-align: center;
-      padding: 3rem 1rem;
-      color: var(--text-muted);
-    }
+    /* EMPTY STATE */
+    .empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-muted); }
     .empty-state i { font-size: 2.5rem; color: var(--milk-border); margin-bottom: 1rem; }
     .empty-state p { font-size: 0.9375rem; }
 
-    /* ============================================================
-       TOAST
-       ============================================================ */
-    .toast-container {
-      position: fixed; top: 1rem; right: 1rem; z-index: 9998;
-      display: flex; flex-direction: column; gap: 8px;
-      pointer-events: none;
-    }
-    .toast {
-      display: flex; align-items: center; gap: 10px;
-      padding: 11px 15px;
-      background: var(--text-primary); color: var(--milk);
-      border-radius: var(--radius-md);
-      font-size: 0.875rem; font-weight: 500;
-      box-shadow: var(--shadow-lg);
-      pointer-events: all;
-      transform: translateX(120%);
-      transition: transform 300ms cubic-bezier(0.34,1.56,0.64,1);
-      max-width: 320px;
-    }
+    /* TOAST */
+    .toast-container { position: fixed; top: 1rem; right: 1rem; z-index: 9998; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
+    .toast { display: flex; align-items: center; gap: 10px; padding: 11px 15px; background: var(--text-primary); color: var(--milk); border-radius: var(--radius-md); font-size: 0.875rem; font-weight: 500; box-shadow: var(--shadow-lg); pointer-events: all; transform: translateX(120%); transition: transform 300ms cubic-bezier(0.34,1.56,0.64,1); max-width: 320px; }
     .toast.show { transform: translateX(0); }
     .toast-success { border-left: 3px solid var(--forest-muted); }
     .toast-error   { border-left: 3px solid var(--red); }
     .toast-info    { border-left: 3px solid var(--orange-light); }
 
-    /* ============================================================
-       OVERVIEW GRID LAYOUT
-       ============================================================ */
-    .overview-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1.25rem;
-    }
-    @media (min-width: 1024px) {
-      .overview-grid { grid-template-columns: 1fr 340px; }
-    }
+    /* OVERVIEW GRID */
+    .overview-grid { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
+    @media (min-width: 1024px) { .overview-grid { grid-template-columns: 1fr 340px; } }
 
-    /* Activity feed */
-    .activity-item {
-      display: flex; align-items: flex-start; gap: 12px;
-      padding: 10px 0;
-      border-bottom: 1px solid var(--border);
-    }
+    /* ACTIVITY FEED */
+    .activity-item { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
     .activity-item:last-child { border-bottom: none; }
-    .activity-dot {
-      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
-      margin-top: 6px;
-    }
+    .activity-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
     .activity-dot.green  { background: var(--forest-muted); }
     .activity-dot.orange { background: var(--orange); }
     .activity-dot.red    { background: var(--red); }
@@ -660,39 +376,69 @@
     .activity-text strong { color: var(--text-primary); font-weight: 600; }
     .activity-time { font-size: 0.75rem; color: var(--text-light); white-space: nowrap; }
 
-    /* Quick actions */
+    /* QUICK ACTIONS */
     .quick-actions { display: flex; flex-direction: column; gap: 8px; }
-    .quick-action-btn {
-      display: flex; align-items: center; gap: 12px;
-      padding: 12px 14px;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      color: var(--text-primary);
-      font-size: 0.875rem; font-weight: 500;
-      transition: all var(--transition); cursor: pointer;
-      text-align: left; width: 100%;
-    }
+    .quick-action-btn { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-md); color: var(--text-primary); font-size: 0.875rem; font-weight: 500; transition: all var(--transition); cursor: pointer; text-align: left; width: 100%; }
     .quick-action-btn:hover { background: var(--forest-tint); border-color: var(--forest-pale); color: var(--forest); }
     .quick-action-btn i { width: 20px; text-align: center; color: var(--text-muted); font-size: 14px; flex-shrink: 0; }
     .quick-action-btn:hover i { color: var(--forest); }
 
-    /* ============================================================
-       ANIMATIONS
-       ============================================================ */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(16px); }
-      to   { opacity: 1; transform: translateY(0); }
+    /* PROGRESS BAR */
+    .progress-wrap { height: 8px; background: var(--milk-dark); border-radius: 99px; overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 99px; transition: width 0.8s ease; }
+    .progress-fill.green  { background: var(--forest-muted); }
+    .progress-fill.orange { background: var(--orange-light); }
+    .progress-fill.blue   { background: var(--blue); }
+    .progress-fill.red    { background: var(--red); }
+
+    /* CHART CANVAS */
+    .chart-container { position: relative; width: 100%; }
+    canvas { display: block; width: 100% !important; }
+
+    /* ANNOUNCEMENT PREVIEW */
+    .ann-preview {
+      background: var(--forest-tint);
+      border: 1px solid var(--forest-pale);
+      border-left: 4px solid var(--forest);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
     }
+    .ann-preview-title { font-family: var(--font-display); font-weight: 700; font-size: 0.9375rem; color: var(--forest); margin-bottom: 6px; }
+    .ann-preview-body { font-size: 0.875rem; color: var(--text-secondary); line-height: 1.6; }
+    .ann-preview-meta { font-size: 0.75rem; color: var(--text-muted); margin-top: 8px; }
+
+    /* CATEGORY MANAGEMENT */
+    .cat-list { display: flex; flex-direction: column; gap: 8px; }
+    .cat-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-md); }
+    .cat-item-icon { width: 32px; height: 32px; background: var(--forest-tint); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--forest); font-size: 14px; flex-shrink: 0; }
+    .cat-item-name { flex: 1; font-weight: 600; font-size: 0.875rem; }
+    .cat-item-count { font-size: 0.8125rem; color: var(--text-muted); }
+
+    /* LOG ITEMS */
+    .log-item { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+    .log-item:last-child { border-bottom: none; }
+    .log-icon { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; }
+    .log-icon.green  { background: var(--forest-tint); color: var(--forest); }
+    .log-icon.orange { background: var(--orange-tint); color: var(--orange); }
+    .log-icon.red    { background: var(--red-pale); color: var(--red); }
+    .log-icon.blue   { background: var(--blue-pale); color: var(--blue); }
+    .log-text { flex: 1; font-size: 0.8125rem; color: var(--text-secondary); line-height: 1.5; }
+    .log-text strong { color: var(--text-primary); }
+    .log-time { font-size: 0.75rem; color: var(--text-light); white-space: nowrap; }
+
+    /* REPORT SEVERITY */
+    .report-item { padding: 12px 14px; border-bottom: 1px solid var(--border); }
+    .report-item:last-child { border-bottom: none; }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
     .fade-up { animation: fadeUp 0.45s both; }
     .delay-1 { animation-delay: 60ms; }
     .delay-2 { animation-delay: 120ms; }
     .delay-3 { animation-delay: 180ms; }
     .delay-4 { animation-delay: 240ms; }
 
-    /* ============================================================
-       MISC UTILITIES
-       ============================================================ */
+    /* UTILITIES */
     .text-center { text-align: center; }
     .text-muted   { color: var(--text-muted); }
     .text-sm      { font-size: 0.875rem; }
@@ -704,38 +450,25 @@
     .mt-1         { margin-top: 4px; }
     .truncate     { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-    /* Scrollbar */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--milk-border); border-radius: 99px; }
     ::-webkit-scrollbar-thumb:hover { background: var(--text-light); }
 
-    /* Loading spinner */
-    .spinner {
-      width: 20px; height: 20px;
-      border: 2px solid rgba(255,255,255,0.3);
-      border-top-color: #fff;
-      border-radius: 50%;
-      animation: spin 0.6s linear infinite;
-      display: inline-block;
-    }
+    .spinner { width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.6s linear infinite; display: inline-block; }
     @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
 
-  <!-- Page Loader -->
   <div id="pageLoader">
     <div class="loader-logo-wrap"><i class="fas fa-store-alt"></i></div>
     <div class="loader-text">Admin Panel</div>
   </div>
 
-  <!-- Toast -->
   <div class="toast-container" id="toastContainer" aria-live="polite"></div>
 
-  <!-- ============================================================
-       AUTH SCREEN
-       ============================================================ -->
+  <!-- AUTH SCREEN -->
   <div id="authScreen">
     <div class="auth-card">
       <div class="auth-logo">
@@ -762,15 +495,11 @@
     </div>
   </div>
 
-  <!-- ============================================================
-       APP SHELL
-       ============================================================ -->
+  <!-- APP SHELL -->
   <div id="appShell">
-
-    <!-- Sidebar overlay (mobile) -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <!-- ── SIDEBAR ── -->
+    <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar" aria-label="Admin navigation">
       <div class="sidebar-header">
         <div class="sidebar-brand">
@@ -780,45 +509,28 @@
             <span class="sidebar-brand-sub">CRUTECH Okuku</span>
           </div>
         </div>
-        <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close menu">
-          <i class="fas fa-xmark"></i>
-        </button>
+        <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close menu"><i class="fas fa-xmark"></i></button>
       </div>
-
       <div class="sidebar-admin-badge">
         <i class="fas fa-shield-halved"></i>
         <span>Admin Access</span>
       </div>
-
       <nav class="sidebar-nav" role="navigation">
         <div class="sidebar-section-label">Overview</div>
-        <button class="sidebar-link active" data-section="overview">
-          <i class="fas fa-chart-pie"></i> Dashboard
-        </button>
+        <button class="sidebar-link active" data-section="overview"><i class="fas fa-chart-pie"></i> Dashboard</button>
 
         <div class="sidebar-section-label">Manage</div>
-        <button class="sidebar-link" data-section="users">
-          <i class="fas fa-users"></i> Users
-          <span class="sidebar-badge-count" id="badgeUsers">—</span>
-        </button>
-        <button class="sidebar-link" data-section="listings">
-          <i class="fas fa-store"></i> Listings
-          <span class="sidebar-badge-count" id="badgeListings">—</span>
-        </button>
-        <button class="sidebar-link" data-section="sellers">
-          <i class="fas fa-shop"></i> Sellers
-          <span class="sidebar-badge-count" id="badgeSellers">—</span>
-        </button>
+        <button class="sidebar-link" data-section="users"><i class="fas fa-users"></i> Users <span class="sidebar-badge-count" id="badgeUsers">—</span></button>
+        <button class="sidebar-link" data-section="listings"><i class="fas fa-store"></i> Listings <span class="sidebar-badge-count" id="badgeListings">—</span></button>
+        <button class="sidebar-link" data-section="sellers"><i class="fas fa-shop"></i> Sellers <span class="sidebar-badge-count" id="badgeSellers">—</span></button>
+        <button class="sidebar-link" data-section="reports"><i class="fas fa-flag"></i> Reports <span class="sidebar-badge-count" id="badgeReports" style="display:none;">0</span></button>
 
         <div class="sidebar-section-label">Tools</div>
-        <button class="sidebar-link" data-section="announcements">
-          <i class="fas fa-bullhorn"></i> Announcements
-        </button>
-        <button class="sidebar-link" data-section="settings">
-          <i class="fas fa-gear"></i> Settings
-        </button>
+        <button class="sidebar-link" data-section="announcements"><i class="fas fa-bullhorn"></i> Announcements</button>
+        <button class="sidebar-link" data-section="categories"><i class="fas fa-tags"></i> Categories</button>
+        <button class="sidebar-link" data-section="logs"><i class="fas fa-clock-rotate-left"></i> Audit Log</button>
+        <button class="sidebar-link" data-section="settings"><i class="fas fa-gear"></i> Settings</button>
       </nav>
-
       <div class="sidebar-footer">
         <div class="sidebar-admin-info">
           <div class="sidebar-admin-avatar" id="adminAvatar">A</div>
@@ -833,14 +545,10 @@
       </div>
     </aside>
 
-    <!-- ── MAIN AREA ── -->
+    <!-- MAIN AREA -->
     <div class="main-area">
-
-      <!-- Topbar -->
       <header class="topbar">
-        <button class="topbar-hamburger" id="topbarHamburger" aria-label="Open menu">
-          <i class="fas fa-bars"></i>
-        </button>
+        <button class="topbar-hamburger" id="topbarHamburger" aria-label="Open menu"><i class="fas fa-bars"></i></button>
         <div class="topbar-breadcrumb">
           <span>Ludek</span>
           <i class="fas fa-chevron-right"></i>
@@ -851,89 +559,97 @@
         </div>
       </header>
 
-      <!-- Page Content -->
       <div class="page-content">
 
-        <!-- ================================================
-             OVERVIEW SECTION
-             ================================================ -->
+        <!-- ===== OVERVIEW ===== -->
         <div class="panel-section active" id="section-overview">
-          <div class="section-header fade-up">
-            <h1 class="section-title">Dashboard</h1>
-            <p class="section-subtitle">Platform overview — CRUTECH Okuku Campus</p>
+          <div class="section-header fade-up" style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+            <div>
+              <h1 class="section-title">Dashboard</h1>
+              <p class="section-subtitle">Platform overview — CRUTECH Okuku Campus</p>
+            </div>
+            <button class="btn btn-ghost btn-sm" id="refreshDashboardBtn"><i class="fas fa-rotate-right"></i> Refresh</button>
           </div>
 
           <div class="stats-grid">
             <div class="stat-card fade-up delay-1">
-              <div class="stat-card-top">
-                <div class="stat-card-icon green"><i class="fas fa-users"></i></div>
-              </div>
+              <div class="stat-card-top"><div class="stat-card-icon green"><i class="fas fa-users"></i></div></div>
               <div class="stat-card-value" id="statTotalUsers">—</div>
               <div class="stat-card-label">Total Users</div>
             </div>
             <div class="stat-card fade-up delay-2">
-              <div class="stat-card-top">
-                <div class="stat-card-icon orange"><i class="fas fa-shop"></i></div>
-              </div>
+              <div class="stat-card-top"><div class="stat-card-icon orange"><i class="fas fa-shop"></i></div></div>
               <div class="stat-card-value" id="statTotalSellers">—</div>
               <div class="stat-card-label">Active Sellers</div>
             </div>
             <div class="stat-card fade-up delay-3">
-              <div class="stat-card-top">
-                <div class="stat-card-icon blue"><i class="fas fa-store"></i></div>
-              </div>
+              <div class="stat-card-top"><div class="stat-card-icon blue"><i class="fas fa-store"></i></div></div>
               <div class="stat-card-value" id="statTotalListings">—</div>
               <div class="stat-card-label">Total Listings</div>
             </div>
             <div class="stat-card fade-up delay-4">
-              <div class="stat-card-top">
-                <div class="stat-card-icon amber"><i class="fas fa-eye"></i></div>
-              </div>
+              <div class="stat-card-top"><div class="stat-card-icon amber"><i class="fas fa-eye"></i></div></div>
               <div class="stat-card-value" id="statTotalViews">—</div>
               <div class="stat-card-label">Total Views</div>
             </div>
           </div>
 
           <div class="overview-grid">
-            <!-- Recent activity -->
-            <div class="card fade-up">
-              <div class="card-header">
-                <span class="card-title">Recent Listings</span>
-                <button class="btn btn-ghost btn-sm" onclick="navigateTo('listings')">
-                  <i class="fas fa-arrow-right"></i> View all
-                </button>
-              </div>
-              <div class="card-body" id="overviewRecentListings">
-                <div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Loading…</p></div>
-              </div>
-            </div>
-
-            <!-- Quick actions -->
             <div>
-              <div class="card fade-up delay-1">
-                <div class="card-header"><span class="card-title">Quick Actions</span></div>
+              <!-- Registration Chart -->
+              <div class="card fade-up" style="margin-bottom:1.25rem;">
+                <div class="card-header">
+                  <span class="card-title">New User Registrations</span>
+                  <select class="filter-select" id="chartRangeSelect" style="font-size:0.8125rem;padding:5px 10px;">
+                    <option value="7">Last 7 days</option>
+                    <option value="30" selected>Last 30 days</option>
+                    <option value="90">Last 90 days</option>
+                  </select>
+                </div>
                 <div class="card-body">
-                  <div class="quick-actions">
-                    <button class="quick-action-btn" onclick="navigateTo('users')">
-                      <i class="fas fa-users"></i> Manage Users
-                    </button>
-                    <button class="quick-action-btn" onclick="navigateTo('listings')">
-                      <i class="fas fa-store"></i> Review Listings
-                    </button>
-                    <button class="quick-action-btn" onclick="navigateTo('sellers')">
-                      <i class="fas fa-shop"></i> View Sellers
-                    </button>
-                    <button class="quick-action-btn" onclick="navigateTo('announcements')">
-                      <i class="fas fa-bullhorn"></i> Post Announcement
-                    </button>
+                  <div class="chart-container" style="height:180px;">
+                    <canvas id="regChart"></canvas>
                   </div>
                 </div>
               </div>
 
-              <!-- Platform breakdown -->
+              <!-- Recent listings -->
+              <div class="card fade-up">
+                <div class="card-header">
+                  <span class="card-title">Recent Listings</span>
+                  <button class="btn btn-ghost btn-sm" onclick="navigateTo('listings')"><i class="fas fa-arrow-right"></i> View all</button>
+                </div>
+                <div class="card-body" id="overviewRecentListings">
+                  <div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Loading…</p></div>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <!-- Quick actions -->
+              <div class="card fade-up delay-1">
+                <div class="card-header"><span class="card-title">Quick Actions</span></div>
+                <div class="card-body">
+                  <div class="quick-actions">
+                    <button class="quick-action-btn" onclick="navigateTo('users')"><i class="fas fa-users"></i> Manage Users</button>
+                    <button class="quick-action-btn" onclick="navigateTo('listings')"><i class="fas fa-store"></i> Review Listings</button>
+                    <button class="quick-action-btn" onclick="navigateTo('sellers')"><i class="fas fa-shop"></i> View Sellers</button>
+                    <button class="quick-action-btn" onclick="navigateTo('announcements')"><i class="fas fa-bullhorn"></i> Post Announcement</button>
+                    <button class="quick-action-btn" onclick="navigateTo('reports')"><i class="fas fa-flag"></i> Check Reports</button>
+                  </div>
+                </div>
+              </div>
+              <!-- User breakdown -->
               <div class="card fade-up delay-2">
                 <div class="card-header"><span class="card-title">User Breakdown</span></div>
                 <div class="card-body" id="overviewUserBreakdown">
+                  <div class="empty-state"><i class="fas fa-spinner fa-spin"></i></div>
+                </div>
+              </div>
+              <!-- Most saved listings -->
+              <div class="card fade-up delay-3">
+                <div class="card-header"><span class="card-title">Most Saved Listings</span></div>
+                <div class="card-body" id="overviewMostSaved">
                   <div class="empty-state"><i class="fas fa-spinner fa-spin"></i></div>
                 </div>
               </div>
@@ -941,17 +657,15 @@
           </div>
         </div>
 
-        <!-- ================================================
-             USERS SECTION
-             ================================================ -->
+        <!-- ===== USERS ===== -->
         <div class="panel-section" id="section-users">
           <div class="section-header flex items-center gap-2 fade-up">
             <div style="flex:1;">
               <h1 class="section-title">Users</h1>
               <p class="section-subtitle" id="usersCount">All registered accounts</p>
             </div>
+            <button class="btn btn-ghost btn-sm" id="exportUsersBtn"><i class="fas fa-download"></i> Export CSV</button>
           </div>
-
           <div class="card fade-up">
             <div class="card-header">
               <div class="filter-row" style="margin-bottom:0; flex:1;">
@@ -971,11 +685,7 @@
               <table>
                 <thead>
                   <tr>
-                    <th>User</th>
-                    <th>Role</th>
-                    <th>Status</th>
-                    <th>Joined</th>
-                    <th>Actions</th>
+                    <th>User</th><th>Role</th><th>Status</th><th>Joined</th><th>Actions</th>
                   </tr>
                 </thead>
                 <tbody id="usersTableBody">
@@ -986,15 +696,15 @@
           </div>
         </div>
 
-        <!-- ================================================
-             LISTINGS SECTION
-             ================================================ -->
+        <!-- ===== LISTINGS ===== -->
         <div class="panel-section" id="section-listings">
-          <div class="section-header fade-up">
-            <h1 class="section-title">Listings</h1>
-            <p class="section-subtitle" id="listingsCount">All marketplace listings</p>
+          <div class="section-header fade-up" style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+            <div>
+              <h1 class="section-title">Listings</h1>
+              <p class="section-subtitle" id="listingsCount">All marketplace listings</p>
+            </div>
+            <button class="btn btn-ghost btn-sm" id="exportListingsBtn"><i class="fas fa-download"></i> Export CSV</button>
           </div>
-
           <div class="card fade-up">
             <div class="card-header">
               <div class="filter-row" style="margin-bottom:0; flex:1;">
@@ -1020,36 +730,38 @@
                 </select>
               </div>
             </div>
+            <!-- Bulk action bar -->
+            <div class="bulk-bar" id="listingsBulkBar" style="margin:8px 14px 0;">
+              <span id="bulkSelectedCount">0 selected</span>
+              <button class="btn btn-sm" onclick="bulkListingAction('activate')"><i class="fas fa-toggle-on"></i> Activate</button>
+              <button class="btn btn-sm" onclick="bulkListingAction('draft')"><i class="fas fa-toggle-off"></i> Draft</button>
+              <button class="btn btn-sm btn-red" onclick="bulkListingAction('delete')"><i class="fas fa-trash"></i> Delete</button>
+              <button class="btn btn-sm" onclick="clearBulkSelection()"><i class="fas fa-xmark"></i></button>
+            </div>
             <div class="table-wrap">
               <table>
                 <thead>
                   <tr>
-                    <th>Listing</th>
-                    <th>Seller</th>
-                    <th>Category</th>
-                    <th>Price</th>
-                    <th>Status</th>
-                    <th>Posted</th>
-                    <th>Actions</th>
+                    <th><input type="checkbox" id="selectAllListings" title="Select all" /></th>
+                    <th>Listing</th><th>Seller</th><th>Category</th><th>Price</th>
+                    <th>Condition</th><th>Views</th><th>Chats</th>
+                    <th>Status</th><th>Featured</th><th>Position</th><th>Posted</th><th>Actions</th>
                   </tr>
                 </thead>
                 <tbody id="listingsTableBody">
-                  <tr><td colspan="7" class="text-center text-muted" style="padding:2rem;">Loading listings…</td></tr>
+                  <tr><td colspan="13" class="text-center text-muted" style="padding:2rem;">Loading listings…</td></tr>
                 </tbody>
               </table>
             </div>
           </div>
         </div>
 
-        <!-- ================================================
-             SELLERS SECTION
-             ================================================ -->
+        <!-- ===== SELLERS ===== -->
         <div class="panel-section" id="section-sellers">
           <div class="section-header fade-up">
             <h1 class="section-title">Sellers</h1>
             <p class="section-subtitle" id="sellersCount">All registered sellers</p>
           </div>
-
           <div class="card fade-up">
             <div class="card-header">
               <div class="search-box" style="max-width:320px;">
@@ -1061,36 +773,56 @@
               <table>
                 <thead>
                   <tr>
-                    <th>Seller</th>
-                    <th>Store Name</th>
-                    <th>WhatsApp</th>
-                    <th>Listings</th>
-                    <th>Status</th>
-                    <th>Actions</th>
+                    <th>Seller</th><th>Store Name</th><th>WhatsApp</th><th>Listings</th>
+                    <th>Completeness</th><th>Verified</th><th>Status</th><th>Actions</th>
                   </tr>
                 </thead>
                 <tbody id="sellersTableBody">
-                  <tr><td colspan="6" class="text-center text-muted" style="padding:2rem;">Loading sellers…</td></tr>
+                  <tr><td colspan="8" class="text-center text-muted" style="padding:2rem;">Loading sellers…</td></tr>
                 </tbody>
               </table>
             </div>
           </div>
         </div>
 
-        <!-- ================================================
-             ANNOUNCEMENTS SECTION
-             ================================================ -->
+        <!-- ===== REPORTS ===== -->
+        <div class="panel-section" id="section-reports">
+          <div class="section-header fade-up">
+            <h1 class="section-title">Reports</h1>
+            <p class="section-subtitle" id="reportsCount">Flagged listings & users</p>
+          </div>
+          <div class="card fade-up">
+            <div class="card-header">
+              <span class="card-title">Pending Reports</span>
+              <select class="filter-select" id="reportsStatusFilter">
+                <option value="">All</option>
+                <option value="pending">Pending</option>
+                <option value="resolved">Resolved</option>
+                <option value="dismissed">Dismissed</option>
+              </select>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr><th>Target</th><th>Type</th><th>Reason</th><th>Reporter</th><th>Date</th><th>Status</th><th>Actions</th></tr>
+                </thead>
+                <tbody id="reportsTableBody">
+                  <tr><td colspan="7" class="text-center text-muted" style="padding:2rem;">Loading reports…</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== ANNOUNCEMENTS ===== -->
         <div class="panel-section" id="section-announcements">
           <div class="section-header flex items-center gap-2 fade-up">
             <div style="flex:1;">
               <h1 class="section-title">Announcements</h1>
               <p class="section-subtitle">Broadcast messages to all platform users</p>
             </div>
-            <button class="btn btn-forest" id="newAnnouncementBtn">
-              <i class="fas fa-plus"></i> New Announcement
-            </button>
+            <button class="btn btn-forest" id="newAnnouncementBtn"><i class="fas fa-plus"></i> New Announcement</button>
           </div>
-
           <div class="card fade-up">
             <div class="table-wrap">
               <table>
@@ -1105,22 +837,51 @@
           </div>
         </div>
 
-        <!-- ================================================
-             SETTINGS SECTION
-             ================================================ -->
+        <!-- ===== CATEGORIES ===== -->
+        <div class="panel-section" id="section-categories">
+          <div class="section-header fade-up" style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+            <div>
+              <h1 class="section-title">Categories</h1>
+              <p class="section-subtitle">Manage marketplace categories</p>
+            </div>
+            <button class="btn btn-forest" id="newCategoryBtn"><i class="fas fa-plus"></i> Add Category</button>
+          </div>
+          <div class="card fade-up">
+            <div class="card-body" id="categoriesBody">
+              <div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Loading…</p></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== AUDIT LOG ===== -->
+        <div class="panel-section" id="section-logs">
+          <div class="section-header fade-up">
+            <h1 class="section-title">Audit Log</h1>
+            <p class="section-subtitle">Record of all admin actions</p>
+          </div>
+          <div class="card fade-up">
+            <div class="card-header">
+              <span class="card-title">Recent Actions</span>
+              <button class="btn btn-ghost btn-sm" id="refreshLogsBtn"><i class="fas fa-rotate-right"></i> Refresh</button>
+            </div>
+            <div class="card-body" id="logsBody">
+              <div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Loading…</p></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== SETTINGS ===== -->
         <div class="panel-section" id="section-settings">
           <div class="section-header fade-up">
             <h1 class="section-title">Settings</h1>
             <p class="section-subtitle">Platform configuration</p>
           </div>
-
           <div class="card fade-up">
             <div class="card-header"><span class="card-title">Firebase Project</span></div>
             <div class="card-body">
               <div id="settingsFirebaseInfo" style="font-size:0.875rem; color:var(--text-secondary); line-height:1.8;"></div>
             </div>
           </div>
-
           <div class="card fade-up delay-1">
             <div class="card-header"><span class="card-title">Admin Account</span></div>
             <div class="card-body">
@@ -1128,19 +889,14 @@
                 <label class="form-label">Display Name</label>
                 <input class="form-input" id="settingsAdminName" placeholder="Your display name" />
               </div>
-              <button class="btn btn-forest" id="saveAdminNameBtn">
-                <i class="fas fa-floppy-disk"></i> Save Name
-              </button>
+              <button class="btn btn-forest" id="saveAdminNameBtn"><i class="fas fa-floppy-disk"></i> Save Name</button>
             </div>
           </div>
-
           <div class="card fade-up delay-2">
             <div class="card-header"><span class="card-title">Danger Zone</span></div>
             <div class="card-body" style="display:flex; flex-direction:column; gap:10px;">
               <p style="font-size:0.875rem; color:var(--text-muted);">Irreversible actions. Use with extreme caution.</p>
-              <button class="btn btn-red btn-sm" id="deleteAllDraftListingsBtn">
-                <i class="fas fa-trash"></i> Delete All Draft Listings
-              </button>
+              <button class="btn btn-red btn-sm" id="deleteAllDraftListingsBtn"><i class="fas fa-trash"></i> Delete All Draft Listings</button>
             </div>
           </div>
         </div>
@@ -1149,9 +905,7 @@
     </div><!-- /main-area -->
   </div><!-- /appShell -->
 
-  <!-- ============================================================
-       USER EDIT MODAL
-       ============================================================ -->
+  <!-- USER EDIT MODAL -->
   <div class="modal-backdrop" id="userModal">
     <div class="modal">
       <div class="modal-header">
@@ -1160,14 +914,8 @@
       </div>
       <div class="modal-body">
         <input type="hidden" id="editUserId" />
-        <div class="form-field">
-          <label class="form-label">First Name</label>
-          <input class="form-input" id="editUserFirst" placeholder="First name" />
-        </div>
-        <div class="form-field">
-          <label class="form-label">Last Name</label>
-          <input class="form-input" id="editUserLast" placeholder="Last name" />
-        </div>
+        <div class="form-field"><label class="form-label">First Name</label><input class="form-input" id="editUserFirst" placeholder="First name" /></div>
+        <div class="form-field"><label class="form-label">Last Name</label><input class="form-input" id="editUserLast" placeholder="Last name" /></div>
         <div class="form-field">
           <label class="form-label">Role</label>
           <select class="form-select" id="editUserRole">
@@ -1191,25 +939,17 @@
     </div>
   </div>
 
-  <!-- ============================================================
-       ANNOUNCEMENT MODAL
-       ============================================================ -->
+  <!-- ANNOUNCEMENT MODAL -->
   <div class="modal-backdrop" id="announcementModal">
-    <div class="modal">
+    <div class="modal" style="max-width:520px;">
       <div class="modal-header">
         <span class="modal-title" id="announcementModalTitle">New Announcement</span>
         <button class="modal-close" id="announcementModalClose"><i class="fas fa-xmark"></i></button>
       </div>
       <div class="modal-body">
         <input type="hidden" id="editAnnouncementId" />
-        <div class="form-field">
-          <label class="form-label">Title</label>
-          <input class="form-input" id="annTitle" placeholder="e.g. Platform Maintenance Notice" />
-        </div>
-        <div class="form-field">
-          <label class="form-label">Message</label>
-          <textarea class="form-textarea" id="annMessage" placeholder="Write your announcement…" rows="4"></textarea>
-        </div>
+        <div class="form-field"><label class="form-label">Title</label><input class="form-input" id="annTitle" placeholder="e.g. Platform Maintenance Notice" /></div>
+        <div class="form-field"><label class="form-label">Message</label><textarea class="form-textarea" id="annMessage" placeholder="Write your announcement…" rows="4"></textarea></div>
         <div class="form-field">
           <label class="form-label">Target Audience</label>
           <select class="form-select" id="annTarget">
@@ -1225,6 +965,15 @@
             <option value="draft">Draft (Hidden)</option>
           </select>
         </div>
+        <!-- Preview -->
+        <div id="annPreviewWrap" style="margin-top:4px;">
+          <div style="font-size:0.8125rem;font-weight:600;color:var(--text-muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">Preview</div>
+          <div class="ann-preview">
+            <div class="ann-preview-title" id="annPreviewTitle">Announcement Title</div>
+            <div class="ann-preview-body" id="annPreviewBody">Your message will appear here…</div>
+            <div class="ann-preview-meta" id="annPreviewMeta">Target: All Users · Active</div>
+          </div>
+        </div>
       </div>
       <div class="modal-footer">
         <button class="btn btn-ghost" id="announcementModalCancel">Cancel</button>
@@ -1233,9 +982,31 @@
     </div>
   </div>
 
-  <!-- ============================================================
-       CONFIRM DELETE MODAL
-       ============================================================ -->
+  <!-- CATEGORY MODAL -->
+  <div class="modal-backdrop" id="categoryModal">
+    <div class="modal" style="max-width:380px;">
+      <div class="modal-header">
+        <span class="modal-title" id="categoryModalTitle">Add Category</span>
+        <button class="modal-close" id="categoryModalClose"><i class="fas fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="editCategoryId" />
+        <div class="form-field"><label class="form-label">Category Name</label><input class="form-input" id="catName" placeholder="e.g. Stationery" /></div>
+        <div class="form-field">
+          <label class="form-label">Icon (Font Awesome class)</label>
+          <input class="form-input" id="catIcon" placeholder="e.g. fa-pencil" />
+          <div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">Find icons at fontawesome.com/icons</div>
+        </div>
+        <div class="form-field"><label class="form-label">Display Order</label><input class="form-input" type="number" id="catOrder" placeholder="1" min="1" /></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="categoryModalCancel">Cancel</button>
+        <button class="btn btn-forest" id="categoryModalSave"><i class="fas fa-floppy-disk"></i> Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONFIRM DELETE MODAL -->
   <div class="modal-backdrop" id="confirmModal">
     <div class="modal" style="max-width:380px;">
       <div class="modal-header">
@@ -1243,7 +1014,7 @@
         <button class="modal-close" id="confirmModalClose"><i class="fas fa-xmark"></i></button>
       </div>
       <div class="modal-body">
-        <p style="font-size:0.9375rem; color:var(--text-secondary); line-height:1.6;" id="confirmModalMsg">Are you sure you want to delete this item? This cannot be undone.</p>
+        <p style="font-size:0.9375rem; color:var(--text-secondary); line-height:1.6;" id="confirmModalMsg">Are you sure? This cannot be undone.</p>
       </div>
       <div class="modal-footer">
         <button class="btn btn-ghost" id="confirmModalCancel">Cancel</button>
@@ -1252,827 +1023,9 @@
     </div>
   </div>
 
-  <!-- ============================================================
-       FIREBASE COMPAT SDK
-       ============================================================ -->
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-
-  <script>
-  'use strict';
-
-  // ============================================================
-  // FIREBASE CONFIG — paste your real config here
-  // ============================================================
-  var FIREBASE_CONFIG = {
-    apiKey:            "AIzaSyAvhaV4JR59o2lW7tniMu1GyrEte6ZjvQ8",
-    authDomain:        "dmb-5b8e2.firebaseapp.com",
-    projectId:         "dmb-5b8e2",
-    storageBucket:     "dmb-5b8e2.firebasestorage.app",
-    messagingSenderId: "225510920822",
-    appId:             "1:225510920822:web:89cc6d0f27ec97d90ac557"
-  };
-
-  // ============================================================
-  // STATE
-  // ============================================================
-  var state = {
-    adminUser:    null,
-    adminData:    null,
-    allUsers:     [],
-    allListings:  [],
-    allSellers:   [],
-    allAnnouncements: [],
-    sellerListingCounts: {},
-    currentSection: 'overview',
-    pendingDeleteFn: null
-  };
-
-  // ============================================================
-  // FIREBASE INIT
-  // ============================================================
-  if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
-  var db   = firebase.firestore();
-  var auth = firebase.auth();
-
-  // ============================================================
-  // HELPERS
-  // ============================================================
-  function esc(str) {
-    return String(str || '')
-      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-
-  function formatDate(ts) {
-    if (!ts) return '—';
-    var d = ts.toDate ? ts.toDate() : new Date(ts.seconds ? ts.seconds*1000 : ts);
-    return d.toLocaleDateString('en-NG', { day:'numeric', month:'short', year:'numeric' });
-  }
-
-  function timeAgo(ts) {
-    if (!ts) return '';
-    var d = ts.toDate ? ts.toDate() : new Date(ts.seconds ? ts.seconds*1000 : ts);
-    var diff = (Date.now() - d.getTime()) / 1000;
-    if (diff < 60)     return 'Just now';
-    if (diff < 3600)   return Math.floor(diff/60)+'m ago';
-    if (diff < 86400)  return Math.floor(diff/3600)+'h ago';
-    if (diff < 604800) return Math.floor(diff/86400)+'d ago';
-    return formatDate(ts);
-  }
-
-  function formatPrice(p) {
-    if (p === null || p === undefined) return '—';
-    return '₦' + Number(p).toLocaleString('en-NG');
-  }
-
-  function initial(name) {
-    return (name || '?').trim().charAt(0).toUpperCase();
-  }
-
-  function animateCount(id, target) {
-    var el = document.getElementById(id);
-    if (!el) return;
-    if (!target) { el.textContent = '0'; return; }
-    var steps = 25, count = 0, step = target / steps;
-    var t = setInterval(function() {
-      count++;
-      el.textContent = Math.min(Math.round(step * count), target).toLocaleString();
-      if (count >= steps) { clearInterval(t); el.textContent = target.toLocaleString(); }
-    }, 600 / steps);
-  }
-
-  // ============================================================
-  // TOAST
-  // ============================================================
-  function showToast(msg, type) {
-    type = type || 'info';
-    var icons = { success:'fa-circle-check', error:'fa-circle-xmark', info:'fa-circle-info' };
-    var c = document.getElementById('toastContainer');
-    var t = document.createElement('div');
-    t.className = 'toast toast-' + type;
-    t.innerHTML = '<i class="fas ' + (icons[type]||icons.info) + '"></i><span>' + esc(msg) + '</span>';
-    c.appendChild(t);
-    requestAnimationFrame(function(){ requestAnimationFrame(function(){ t.classList.add('show'); }); });
-    setTimeout(function(){ t.classList.remove('show'); setTimeout(function(){ t.remove(); }, 350); }, 4000);
-  }
-
-  // ============================================================
-  // MODAL HELPERS
-  // ============================================================
-  function openModal(id)  { document.getElementById(id).classList.add('open'); }
-  function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-
-  function confirmDelete(msg, onConfirm) {
-    document.getElementById('confirmModalMsg').textContent = msg;
-    state.pendingDeleteFn = onConfirm;
-    openModal('confirmModal');
-  }
-
-  // ============================================================
-  // CLOCK
-  // ============================================================
-  function updateClock() {
-    var el = document.getElementById('topbarTime');
-    if (!el) return;
-    el.textContent = new Date().toLocaleTimeString('en-NG', { hour:'2-digit', minute:'2-digit' });
-  }
-  updateClock();
-  setInterval(updateClock, 30000);
-
-  // ============================================================
-  // SIDEBAR NAVIGATION
-  // ============================================================
-  function navigateTo(section) {
-    state.currentSection = section;
-
-    // Update links
-    document.querySelectorAll('.sidebar-link').forEach(function(l) {
-      l.classList.toggle('active', l.dataset.section === section);
-    });
-
-    // Update sections
-    document.querySelectorAll('.panel-section').forEach(function(s) {
-      s.classList.toggle('active', s.id === 'section-' + section);
-    });
-
-    // Update topbar
-    var labels = {
-      overview:'Dashboard', users:'Users', listings:'Listings',
-      sellers:'Sellers', announcements:'Announcements', settings:'Settings'
-    };
-    var el = document.getElementById('topbarPage');
-    if (el) el.textContent = labels[section] || section;
-
-    // Close mobile sidebar
-    closeSidebar();
-
-    // Load section data
-    if (section === 'users')         renderUsersTable();
-    if (section === 'listings')      renderListingsTable();
-    if (section === 'sellers')       renderSellersTable();
-    if (section === 'announcements') renderAnnouncementsTable();
-    if (section === 'settings')      renderSettings();
-  }
-
-  window.navigateTo = navigateTo;
-
-  // Sidebar buttons
-  document.querySelectorAll('.sidebar-link[data-section]').forEach(function(btn) {
-    btn.addEventListener('click', function() { navigateTo(btn.dataset.section); });
-  });
-
-  // Mobile sidebar
-  function openSidebar()  { document.getElementById('sidebar').classList.add('open'); document.getElementById('sidebarOverlay').classList.add('show'); }
-  function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').classList.remove('show'); }
-  document.getElementById('topbarHamburger').addEventListener('click', openSidebar);
-  document.getElementById('sidebarCloseBtn').addEventListener('click', closeSidebar);
-  document.getElementById('sidebarOverlay').addEventListener('click', closeSidebar);
-
-  // ============================================================
-  // AUTH
-  // ============================================================
-  auth.onAuthStateChanged(function(user) {
-    if (!user) {
-      hideLoader();
-      showAuthScreen();
-      return;
-    }
-
-    // Verify admin role
-    db.collection('users').doc(user.uid).get().then(function(snap) {
-      if (!snap.exists || snap.data().role !== 'admin') {
-        auth.signOut();
-        showToast('Access denied. Admin only.', 'error');
-        hideLoader();
-        showAuthScreen();
-        return;
-      }
-      state.adminUser = user;
-      state.adminData = snap.data();
-      hideLoader();
-      hideAuthScreen();
-      bootAdmin();
-    }).catch(function(err) {
-      console.error(err);
-      hideLoader();
-      showAuthScreen();
-    });
-  });
-
-  // Sign in
-  document.getElementById('authSignInBtn').addEventListener('click', function() {
-    var email = document.getElementById('authEmail').value.trim();
-    var pass  = document.getElementById('authPassword').value;
-    var errEl = document.getElementById('authError');
-    errEl.classList.remove('show');
-
-    if (!email || !pass) {
-      errEl.textContent = 'Please enter email and password.';
-      errEl.classList.add('show');
-      return;
-    }
-
-    var btn = document.getElementById('authSignInBtn');
-    btn.innerHTML = '<span class="spinner"></span> Signing in…';
-    btn.disabled = true;
-
-    auth.signInWithEmailAndPassword(email, pass).catch(function(err) {
-      btn.innerHTML = '<i class="fas fa-arrow-right-to-bracket"></i> Sign In';
-      btn.disabled = false;
-      var msgs = {
-        'auth/user-not-found':  'No account found with this email.',
-        'auth/wrong-password':  'Incorrect password.',
-        'auth/invalid-email':   'Invalid email address.',
-        'auth/too-many-requests': 'Too many attempts. Try again later.'
-      };
-      errEl.textContent = msgs[err.code] || 'Sign-in failed. Please try again.';
-      errEl.classList.add('show');
-    });
-  });
-
-  // Enter key on password
-  document.getElementById('authPassword').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') document.getElementById('authSignInBtn').click();
-  });
-
-  // Logout
-  document.getElementById('logoutBtn').addEventListener('click', function() {
-    auth.signOut().then(function() { location.reload(); });
-  });
-
-  function showAuthScreen() {
-    document.getElementById('authScreen').style.display = 'flex';
-    document.getElementById('appShell').classList.remove('visible');
-  }
-  function hideAuthScreen() {
-    document.getElementById('authScreen').style.display = 'none';
-    document.getElementById('appShell').classList.add('visible');
-  }
-  function hideLoader() {
-    var l = document.getElementById('pageLoader');
-    if (!l) return;
-    l.classList.add('hidden');
-    setTimeout(function(){ if (l.parentNode) l.remove(); }, 450);
-  }
-
-  // ============================================================
-  // BOOT ADMIN
-  // ============================================================
-  function bootAdmin() {
-    // Hydrate sidebar admin info
-    var data = state.adminData;
-    var user = state.adminUser;
-    var name = (data.firstName || '') + ' ' + (data.lastName || '');
-    name = name.trim() || user.email;
-    document.getElementById('adminName').textContent = name;
-    var avatarEl = document.getElementById('adminAvatar');
-    if (data.photoURL) {
-      avatarEl.innerHTML = '<img src="' + esc(data.photoURL) + '" alt="avatar" />';
-    } else {
-      avatarEl.textContent = initial(name);
-    }
-
-    // Prefill settings
-    var sn = document.getElementById('settingsAdminName');
-    if (sn) sn.value = name;
-
-    // Load all data
-    loadAllData();
-  }
-
-  // ============================================================
-  // LOAD ALL DATA
-  // ============================================================
-  function loadAllData() {
-    // Users
-    db.collection('users').orderBy('createdAt', 'desc').get().then(function(snap) {
-      state.allUsers = [];
-      snap.forEach(function(d) { state.allUsers.push({ id: d.id, ...d.data() }); });
-
-      var sellers   = state.allUsers.filter(function(u){ return u.role === 'seller'; });
-      var customers = state.allUsers.filter(function(u){ return u.role === 'customer'; });
-      state.allSellers = sellers;
-
-      animateCount('statTotalUsers',   state.allUsers.length);
-      animateCount('statTotalSellers', sellers.length);
-
-      document.getElementById('badgeUsers').textContent   = state.allUsers.length;
-      document.getElementById('badgeSellers').textContent = sellers.length;
-
-      renderUserBreakdown(sellers.length, customers.length);
-    }).catch(function(err){ console.error(err); });
-
-    // Listings
-    db.collection('listings').orderBy('createdAt', 'desc').get().then(function(snap) {
-      state.allListings = [];
-      var totalViews = 0;
-      snap.forEach(function(d) {
-        var l = { id: d.id, ...d.data() };
-        state.allListings.push(l);
-        totalViews += (l.views || 0);
-        // Count per seller
-        if (l.sellerId) {
-          state.sellerListingCounts[l.sellerId] = (state.sellerListingCounts[l.sellerId] || 0) + 1;
-        }
-      });
-
-      animateCount('statTotalListings', state.allListings.length);
-      animateCount('statTotalViews', totalViews);
-      document.getElementById('badgeListings').textContent = state.allListings.length;
-
-      renderOverviewRecentListings();
-    }).catch(function(err){ console.error(err); });
-
-    // Announcements
-    db.collection('announcements').orderBy('createdAt', 'desc').get().then(function(snap) {
-      state.allAnnouncements = [];
-      snap.forEach(function(d) { state.allAnnouncements.push({ id: d.id, ...d.data() }); });
-    }).catch(function(){});
-  }
-
-  // ============================================================
-  // OVERVIEW — Recent listings
-  // ============================================================
-  function renderOverviewRecentListings() {
-    var container = document.getElementById('overviewRecentListings');
-    if (!container) return;
-    var recent = state.allListings.slice(0, 8);
-    if (!recent.length) {
-      container.innerHTML = '<div class="empty-state"><i class="fas fa-box-open"></i><p>No listings yet.</p></div>';
-      return;
-    }
-
-    var html = '';
-    recent.forEach(function(l) {
-      var dot = l.status === 'active' ? 'green' : 'orange';
-      html += '<div class="activity-item">';
-      html += '<div class="activity-dot ' + dot + '"></div>';
-      html += '<div class="activity-text"><strong>' + esc(l.title || 'Untitled') + '</strong> — ' + esc(l.sellerName || 'Unknown seller') + ' · ' + esc(formatPrice(l.price)) + '</div>';
-      html += '<div class="activity-time">' + timeAgo(l.createdAt) + '</div>';
-      html += '</div>';
-    });
-    container.innerHTML = html;
-  }
-
-  function renderUserBreakdown(sellers, customers) {
-    var container = document.getElementById('overviewUserBreakdown');
-    if (!container) return;
-    var total = sellers + customers;
-    var sellerPct   = total ? Math.round(sellers/total*100) : 0;
-    var customerPct = total ? Math.round(customers/total*100) : 0;
-
-    container.innerHTML =
-      '<div style="display:flex;flex-direction:column;gap:12px;">' +
-        '<div>' +
-          '<div style="display:flex;justify-content:space-between;margin-bottom:5px;font-size:0.8125rem;">' +
-            '<span style="font-weight:600;color:var(--text-secondary);">Sellers</span>' +
-            '<span style="font-weight:700;color:var(--forest);">' + sellers + ' (' + sellerPct + '%)</span>' +
-          '</div>' +
-          '<div style="height:8px;background:var(--milk-dark);border-radius:99px;overflow:hidden;">' +
-            '<div style="height:100%;width:' + sellerPct + '%;background:var(--forest-muted);border-radius:99px;transition:width 0.8s ease;"></div>' +
-          '</div>' +
-        '</div>' +
-        '<div>' +
-          '<div style="display:flex;justify-content:space-between;margin-bottom:5px;font-size:0.8125rem;">' +
-            '<span style="font-weight:600;color:var(--text-secondary);">Customers</span>' +
-            '<span style="font-weight:700;color:var(--orange);">' + customers + ' (' + customerPct + '%)</span>' +
-          '</div>' +
-          '<div style="height:8px;background:var(--milk-dark);border-radius:99px;overflow:hidden;">' +
-            '<div style="height:100%;width:' + customerPct + '%;background:var(--orange-light);border-radius:99px;transition:width 0.8s ease;"></div>' +
-          '</div>' +
-        '</div>' +
-      '</div>';
-  }
-
-  // ============================================================
-  // USERS TABLE
-  // ============================================================
-  var usersSearchQuery = '';
-  var usersRoleFilter  = '';
-
-  function renderUsersTable() {
-    var filtered = state.allUsers.filter(function(u) {
-      var matchSearch = !usersSearchQuery ||
-        (u.fullName || '').toLowerCase().includes(usersSearchQuery) ||
-        (u.email    || '').toLowerCase().includes(usersSearchQuery);
-      var matchRole = !usersRoleFilter || u.role === usersRoleFilter;
-      return matchSearch && matchRole;
-    });
-
-    document.getElementById('usersCount').textContent = filtered.length + ' user' + (filtered.length !== 1 ? 's' : '');
-
-    var tbody = document.getElementById('usersTableBody');
-    if (!filtered.length) {
-      tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted" style="padding:2rem;">No users found.</td></tr>';
-      return;
-    }
-
-    tbody.innerHTML = filtered.map(function(u) {
-      var name = ((u.firstName || '') + ' ' + (u.lastName || '')).trim() || u.email || 'Unknown';
-      var roleBadge = u.role === 'admin' ? 'badge-red' : u.role === 'seller' ? 'badge-green' : 'badge-blue';
-      var statusBadge = u.status === 'suspended' ? 'badge-red' : 'badge-green';
-      return '<tr>' +
-        '<td><div class="table-user-cell">' +
-          '<div class="table-avatar">' + (u.photoURL ? '<img src="'+esc(u.photoURL)+'" alt="'+esc(name)+'" />' : initial(name)) + '</div>' +
-          '<div><div class="table-user-name">' + esc(name) + '</div><div class="table-user-email">' + esc(u.email || '—') + '</div></div>' +
-        '</div></td>' +
-        '<td><span class="badge ' + roleBadge + '">' + esc(u.role || 'customer') + '</span></td>' +
-        '<td><span class="badge ' + statusBadge + '">' + esc(u.status || 'active') + '</span></td>' +
-        '<td style="white-space:nowrap;">' + formatDate(u.createdAt) + '</td>' +
-        '<td><div style="display:flex;gap:6px;">' +
-          '<button class="btn btn-ghost btn-sm btn-icon" onclick="openUserEdit(\'' + u.id + '\')" title="Edit"><i class="fas fa-pen"></i></button>' +
-          (u.id !== state.adminUser.uid ? '<button class="btn btn-ghost btn-sm btn-icon" onclick="toggleUserStatus(\'' + u.id + '\',\'' + (u.status||'active') + '\')" title="Toggle status"><i class="fas fa-toggle-' + (u.status === 'suspended' ? 'on' : 'off') + '"></i></button>' : '') +
-        '</div></td>' +
-      '</tr>';
-    }).join('');
-  }
-
-  document.getElementById('usersSearch').addEventListener('input', function() {
-    usersSearchQuery = this.value.trim().toLowerCase();
-    renderUsersTable();
-  });
-  document.getElementById('usersRoleFilter').addEventListener('change', function() {
-    usersRoleFilter = this.value;
-    renderUsersTable();
-  });
-
-  function openUserEdit(uid) {
-    var u = state.allUsers.find(function(x){ return x.id === uid; });
-    if (!u) return;
-    document.getElementById('editUserId').value    = uid;
-    document.getElementById('editUserFirst').value = u.firstName || '';
-    document.getElementById('editUserLast').value  = u.lastName  || '';
-    document.getElementById('editUserRole').value  = u.role      || 'customer';
-    document.getElementById('editUserStatus').value= u.status    || 'active';
-    openModal('userModal');
-  }
-  window.openUserEdit = openUserEdit;
-
-  function toggleUserStatus(uid, currentStatus) {
-    var newStatus = currentStatus === 'suspended' ? 'active' : 'suspended';
-    db.collection('users').doc(uid).update({
-      status: newStatus,
-      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-    }).then(function() {
-      var u = state.allUsers.find(function(x){ return x.id === uid; });
-      if (u) u.status = newStatus;
-      renderUsersTable();
-      showToast('User ' + (newStatus === 'suspended' ? 'suspended' : 'reactivated') + '.', 'success');
-    }).catch(function(){ showToast('Failed to update user.', 'error'); });
-  }
-  window.toggleUserStatus = toggleUserStatus;
-
-  // User modal save
-  document.getElementById('userModalSave').addEventListener('click', function() {
-    var uid   = document.getElementById('editUserId').value;
-    var first = document.getElementById('editUserFirst').value.trim();
-    var last  = document.getElementById('editUserLast').value.trim();
-    var role  = document.getElementById('editUserRole').value;
-    var status= document.getElementById('editUserStatus').value;
-
-    db.collection('users').doc(uid).update({
-      firstName: first, lastName: last,
-      fullName: (first + ' ' + last).trim(),
-      role: role, status: status,
-      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-    }).then(function() {
-      var u = state.allUsers.find(function(x){ return x.id === uid; });
-      if (u) { u.firstName=first; u.lastName=last; u.fullName=(first+' '+last).trim(); u.role=role; u.status=status; }
-      renderUsersTable();
-      // Refresh sellers list
-      state.allSellers = state.allUsers.filter(function(x){ return x.role === 'seller'; });
-      closeModal('userModal');
-      showToast('User updated.', 'success');
-    }).catch(function(){ showToast('Failed to save user.', 'error'); });
-  });
-
-  ['userModalClose','userModalCancel'].forEach(function(id) {
-    document.getElementById(id).addEventListener('click', function(){ closeModal('userModal'); });
-  });
-
-  // ============================================================
-  // LISTINGS TABLE
-  // ============================================================
-  var listingsSearchQuery   = '';
-  var listingsStatusFilter  = '';
-  var listingsCategoryFilter= '';
-
-  function renderListingsTable() {
-    var filtered = state.allListings.filter(function(l) {
-      var matchSearch = !listingsSearchQuery ||
-        (l.title      || '').toLowerCase().includes(listingsSearchQuery) ||
-        (l.sellerName || '').toLowerCase().includes(listingsSearchQuery);
-      var matchStatus   = !listingsStatusFilter   || l.status   === listingsStatusFilter;
-      var matchCategory = !listingsCategoryFilter || l.category === listingsCategoryFilter;
-      return matchSearch && matchStatus && matchCategory;
-    });
-
-    document.getElementById('listingsCount').textContent = filtered.length + ' listing' + (filtered.length !== 1 ? 's' : '');
-
-    var tbody = document.getElementById('listingsTableBody');
-    if (!filtered.length) {
-      tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted" style="padding:2rem;">No listings found.</td></tr>';
-      return;
-    }
-
-    tbody.innerHTML = filtered.map(function(l) {
-      var imgSrc   = l.coverImage || (l.images && l.images[0]) || '';
-      var statusBadge = l.status === 'active' ? 'badge-green' : 'badge-amber';
-      return '<tr>' +
-        '<td><div style="display:flex;align-items:center;gap:10px;">' +
-          (imgSrc ? '<img class="table-img-thumb" src="'+esc(imgSrc)+'" alt="" loading="lazy" />' : '<div class="table-img-thumb" style="display:flex;align-items:center;justify-content:center;"><i class="fas fa-image" style="color:var(--text-light);font-size:14px;"></i></div>') +
-          '<div style="min-width:0;"><div style="font-weight:600;font-size:0.875rem;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px;">' + esc(l.title||'Untitled') + '</div></div>' +
-        '</div></td>' +
-        '<td style="font-size:0.8125rem;">' + esc(l.sellerName || '—') + '</td>' +
-        '<td><span class="badge badge-gray">' + esc(l.category || '—') + '</span></td>' +
-        '<td style="font-weight:600;color:var(--forest);white-space:nowrap;">' + formatPrice(l.price) + '</td>' +
-        '<td><span class="badge ' + statusBadge + '">' + esc(l.status || 'draft') + '</span></td>' +
-        '<td style="white-space:nowrap;font-size:0.8125rem;">' + timeAgo(l.createdAt) + '</td>' +
-        '<td><div style="display:flex;gap:6px;">' +
-        '<input type="number" min="1" value="' + (l.position || 999) + '" ' +
-'style="width:58px;padding:4px 7px;border:1.5px solid var(--border);border-radius:6px;font-size:0.8125rem;font-family:var(--font-body);" ' +
-'onchange="setListingPosition(\'' + l.id + '\', this.value)" title="Position" />' +
-          '<button class="btn btn-ghost btn-sm btn-icon" onclick="toggleListingStatus(\'' + l.id + '\',\'' + (l.status||'draft') + '\')" title="Toggle status"><i class="fas fa-toggle-' + (l.status==='active'?'on':'off') + '"></i></button>' +
-          '<button class="btn btn-ghost btn-sm btn-icon" onclick="adminDeleteListing(\'' + l.id + '\')" title="Delete" style="color:var(--red);"><i class="fas fa-trash"></i></button>' +
-        '</div></td>' +
-      '</tr>';
-    }).join('');
-  }
-
-  document.getElementById('listingsSearch').addEventListener('input', function() {
-    listingsSearchQuery = this.value.trim().toLowerCase();
-    renderListingsTable();
-  });
-  document.getElementById('listingsStatusFilter').addEventListener('change', function() {
-    listingsStatusFilter = this.value;
-    renderListingsTable();
-  });
-  document.getElementById('listingsCategoryFilter').addEventListener('change', function() {
-    listingsCategoryFilter = this.value;
-    renderListingsTable();
-  });
-
-  function toggleListingStatus(id, current) {
-    var newStatus = current === 'active' ? 'draft' : 'active';
-    db.collection('listings').doc(id).update({
-      status: newStatus, updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-    }).then(function() {
-      var l = state.allListings.find(function(x){ return x.id === id; });
-      if (l) l.status = newStatus;
-      renderListingsTable();
-      showToast('Listing ' + (newStatus === 'active' ? 'activated' : 'set to draft') + '.', 'success');
-    }).catch(function(){ showToast('Failed to update listing.', 'error'); });
-  }
-  window.toggleListingStatus = toggleListingStatus;
-
-  function adminDeleteListing(id) {
-    var l = state.allListings.find(function(x){ return x.id===id; });
-    var title = l ? l.title : 'this listing';
-    confirmDelete('Delete "' + title + '"? This cannot be undone.', function() {
-      db.collection('listings').doc(id).delete().then(function() {
-        state.allListings = state.allListings.filter(function(x){ return x.id !== id; });
-        document.getElementById('badgeListings').textContent = state.allListings.length;
-        renderListingsTable();
-        showToast('Listing deleted.', 'success');
-      }).catch(function(){ showToast('Failed to delete listing.', 'error'); });
-    });
-  }
-  window.adminDeleteListing = adminDeleteListing;
-function setListingPosition(id, val) {
-  var pos = parseInt(val, 10);
-  if (isNaN(pos) || pos < 1) return;
-  db.collection('listings').doc(id).update({ position: pos })
-    .then(function() {
-      var l = state.allListings.find(function(x){ return x.id === id; });
-      if (l) l.position = pos;
-      showToast('Position updated to ' + pos + '.', 'success');
-    })
-    .catch(function(){ showToast('Failed to update position.', 'error'); });
-}
-window.setListingPosition = setListingPosition;
-  // ============================================================
-  // SELLERS TABLE
-  // ============================================================
-  var sellersSearchQuery = '';
-
-  function renderSellersTable() {
-    var filtered = state.allSellers.filter(function(s) {
-      return !sellersSearchQuery ||
-        ((s.firstName||'')+' '+(s.lastName||'')).toLowerCase().includes(sellersSearchQuery) ||
-        (s.storeName || '').toLowerCase().includes(sellersSearchQuery) ||
-        (s.email     || '').toLowerCase().includes(sellersSearchQuery);
-    });
-
-    document.getElementById('sellersCount').textContent = filtered.length + ' seller' + (filtered.length !== 1 ? 's' : '');
-
-    var tbody = document.getElementById('sellersTableBody');
-    if (!filtered.length) {
-      tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted" style="padding:2rem;">No sellers found.</td></tr>';
-      return;
-    }
-
-    tbody.innerHTML = filtered.map(function(s) {
-      var name = ((s.firstName||'')+' '+(s.lastName||'')).trim() || s.email || 'Unknown';
-      var count = state.sellerListingCounts[s.id] || 0;
-      var statusBadge = s.status === 'suspended' ? 'badge-red' : 'badge-green';
-      return '<tr>' +
-        '<td><div class="table-user-cell">' +
-          '<div class="table-avatar">' + (s.photoURL ? '<img src="'+esc(s.photoURL)+'" alt="'+esc(name)+'" />' : initial(name)) + '</div>' +
-          '<div><div class="table-user-name">' + esc(name) + '</div><div class="table-user-email">' + esc(s.email||'—') + '</div></div>' +
-        '</div></td>' +
-        '<td style="font-weight:500;">' + esc(s.storeName || '—') + '</td>' +
-        '<td style="font-size:0.8125rem;">' + esc(s.whatsapp || '—') + '</td>' +
-        '<td style="font-weight:700;color:var(--forest);">' + count + '</td>' +
-        '<td><span class="badge ' + statusBadge + '">' + esc(s.status||'active') + '</span></td>' +
-        '<td><div style="display:flex;gap:6px;">' +
-          '<button class="btn btn-ghost btn-sm btn-icon" onclick="openUserEdit(\'' + s.id + '\')" title="Edit"><i class="fas fa-pen"></i></button>' +
-          '<button class="btn btn-ghost btn-sm btn-icon" onclick="toggleUserStatus(\'' + s.id + '\',\'' + (s.status||'active') + '\')" title="Suspend/Activate"><i class="fas fa-toggle-' + (s.status==='suspended'?'on':'off') + '"></i></button>' +
-        '</div></td>' +
-      '</tr>';
-    }).join('');
-  }
-
-  document.getElementById('sellersSearch').addEventListener('input', function() {
-    sellersSearchQuery = this.value.trim().toLowerCase();
-    renderSellersTable();
-  });
-
-  // ============================================================
-  // ANNOUNCEMENTS
-  // ============================================================
-  document.getElementById('newAnnouncementBtn').addEventListener('click', function() {
-    document.getElementById('editAnnouncementId').value = '';
-    document.getElementById('annTitle').value   = '';
-    document.getElementById('annMessage').value = '';
-    document.getElementById('annTarget').value  = 'all';
-    document.getElementById('annStatus').value  = 'active';
-    document.getElementById('announcementModalTitle').textContent = 'New Announcement';
-    document.getElementById('announcementModalSave').innerHTML = '<i class="fas fa-paper-plane"></i> Publish';
-    openModal('announcementModal');
-  });
-
-  function renderAnnouncementsTable() {
-    var tbody = document.getElementById('announcementsTableBody');
-    if (!state.allAnnouncements.length) {
-      tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted" style="padding:2rem;">No announcements yet.</td></tr>';
-      return;
-    }
-    tbody.innerHTML = state.allAnnouncements.map(function(a) {
-      var statusBadge = a.status === 'active' ? 'badge-green' : 'badge-amber';
-      var targetBadge = a.target === 'seller' ? 'badge-orange' : a.target === 'customer' ? 'badge-blue' : 'badge-gray';
-      return '<tr>' +
-        '<td style="font-weight:600;">' + esc(a.title || '—') + '</td>' +
-        '<td><span class="badge ' + targetBadge + '">' + esc(a.target || 'all') + '</span></td>' +
-        '<td style="font-size:0.8125rem;white-space:nowrap;">' + formatDate(a.createdAt) + '</td>' +
-        '<td><span class="badge ' + statusBadge + '">' + esc(a.status || 'draft') + '</span></td>' +
-        '<td><div style="display:flex;gap:6px;">' +
-          '<button class="btn btn-ghost btn-sm btn-icon" onclick="editAnnouncement(\'' + a.id + '\')" title="Edit"><i class="fas fa-pen"></i></button>' +
-          '<button class="btn btn-ghost btn-sm btn-icon" onclick="deleteAnnouncement(\'' + a.id + '\')" title="Delete" style="color:var(--red);"><i class="fas fa-trash"></i></button>' +
-        '</div></td>' +
-      '</tr>';
-    }).join('');
-  }
-
-  function editAnnouncement(id) {
-    var a = state.allAnnouncements.find(function(x){ return x.id === id; });
-    if (!a) return;
-    document.getElementById('editAnnouncementId').value = id;
-    document.getElementById('annTitle').value   = a.title   || '';
-    document.getElementById('annMessage').value = a.message || '';
-    document.getElementById('annTarget').value  = a.target  || 'all';
-    document.getElementById('annStatus').value  = a.status  || 'active';
-    document.getElementById('announcementModalTitle').textContent = 'Edit Announcement';
-    document.getElementById('announcementModalSave').innerHTML = '<i class="fas fa-floppy-disk"></i> Save';
-    openModal('announcementModal');
-  }
-  window.editAnnouncement = editAnnouncement;
-
-  function deleteAnnouncement(id) {
-    confirmDelete('Delete this announcement? This cannot be undone.', function() {
-      db.collection('announcements').doc(id).delete().then(function() {
-        state.allAnnouncements = state.allAnnouncements.filter(function(x){ return x.id !== id; });
-        renderAnnouncementsTable();
-        showToast('Announcement deleted.', 'success');
-      }).catch(function(){ showToast('Failed to delete.', 'error'); });
-    });
-  }
-  window.deleteAnnouncement = deleteAnnouncement;
-
-  document.getElementById('announcementModalSave').addEventListener('click', function() {
-    var id      = document.getElementById('editAnnouncementId').value;
-    var title   = document.getElementById('annTitle').value.trim();
-    var message = document.getElementById('annMessage').value.trim();
-    var target  = document.getElementById('annTarget').value;
-    var status  = document.getElementById('annStatus').value;
-
-    if (!title || !message) { showToast('Title and message are required.', 'error'); return; }
-
-    var payload = { title, message, target, status, updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
-
-    if (id) {
-      db.collection('announcements').doc(id).update(payload).then(function() {
-        var a = state.allAnnouncements.find(function(x){ return x.id===id; });
-        if (a) Object.assign(a, payload);
-        renderAnnouncementsTable();
-        closeModal('announcementModal');
-        showToast('Announcement updated.', 'success');
-      }).catch(function(){ showToast('Failed to save.', 'error'); });
-    } else {
-      payload.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-      payload.authorId  = state.adminUser.uid;
-      db.collection('announcements').add(payload).then(function(ref) {
-        state.allAnnouncements.unshift({ id: ref.id, ...payload });
-        renderAnnouncementsTable();
-        closeModal('announcementModal');
-        showToast('Announcement published!', 'success');
-      }).catch(function(){ showToast('Failed to publish.', 'error'); });
-    }
-  });
-
-  ['announcementModalClose','announcementModalCancel'].forEach(function(id) {
-    document.getElementById(id).addEventListener('click', function(){ closeModal('announcementModal'); });
-  });
-
-  // ============================================================
-  // CONFIRM MODAL
-  // ============================================================
-  document.getElementById('confirmModalOk').addEventListener('click', function() {
-    if (state.pendingDeleteFn) { state.pendingDeleteFn(); state.pendingDeleteFn = null; }
-    closeModal('confirmModal');
-  });
-  ['confirmModalClose','confirmModalCancel'].forEach(function(id) {
-    document.getElementById(id).addEventListener('click', function(){ state.pendingDeleteFn=null; closeModal('confirmModal'); });
-  });
-
-  // Close modals on backdrop click
-  ['userModal','announcementModal','confirmModal'].forEach(function(id) {
-    document.getElementById(id).addEventListener('click', function(e) {
-      if (e.target === e.currentTarget) { state.pendingDeleteFn=null; closeModal(id); }
-    });
-  });
-
-  // ============================================================
-  // SETTINGS
-  // ============================================================
-  function renderSettings() {
-    var cfg = FIREBASE_CONFIG;
-    var infoEl = document.getElementById('settingsFirebaseInfo');
-    if (infoEl) {
-      infoEl.innerHTML =
-        '<div><strong>Project ID:</strong> ' + esc(cfg.projectId) + '</div>' +
-        '<div><strong>Auth Domain:</strong> ' + esc(cfg.authDomain) + '</div>' +
-        '<div><strong>Storage Bucket:</strong> ' + esc(cfg.storageBucket) + '</div>' +
-        '<div style="margin-top:8px;padding:8px 12px;background:var(--forest-tint);border-radius:8px;font-size:0.8125rem;color:var(--forest);">' +
-        '<i class="fas fa-circle-check" style="margin-right:6px;"></i>Firebase connected successfully.</div>';
-    }
-  }
-
-  document.getElementById('saveAdminNameBtn').addEventListener('click', function() {
-    if (!state.adminUser) return;
-    var name = document.getElementById('settingsAdminName').value.trim();
-    if (!name) { showToast('Please enter a name.', 'error'); return; }
-    var parts = name.split(' ');
-    db.collection('users').doc(state.adminUser.uid).update({
-      firstName: parts[0], lastName: parts.slice(1).join(' '),
-      fullName: name,
-      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-    }).then(function() {
-      document.getElementById('adminName').textContent = name;
-      showToast('Name updated.', 'success');
-    }).catch(function(){ showToast('Failed to update.', 'error'); });
-  });
-
-  document.getElementById('deleteAllDraftListingsBtn').addEventListener('click', function() {
-    var drafts = state.allListings.filter(function(l){ return l.status === 'draft'; });
-    if (!drafts.length) { showToast('No draft listings to delete.', 'info'); return; }
-    confirmDelete('Delete ALL ' + drafts.length + ' draft listings? This cannot be undone.', function() {
-      var batch = db.batch();
-      drafts.forEach(function(l) {
-        batch.delete(db.collection('listings').doc(l.id));
-      });
-      batch.commit().then(function() {
-        state.allListings = state.allListings.filter(function(l){ return l.status !== 'draft'; });
-        document.getElementById('badgeListings').textContent = state.allListings.length;
-        showToast('All draft listings deleted.', 'success');
-      }).catch(function(){ showToast('Failed to delete drafts.', 'error'); });
-    });
-  });
-
-  // ============================================================
-  // ESC KEY — close any open modal
-  // ============================================================
-  document.addEventListener('keydown', function(e) {
-    if (e.key !== 'Escape') return;
-    ['userModal','announcementModal','confirmModal'].forEach(function(id) {
-      if (document.getElementById(id).classList.contains('open')) {
-        state.pendingDeleteFn = null;
-        closeModal(id);
-      }
-    });
-  });
-
-  </script>
+  <script src="admin.js"></script>
 </body>
-</html>
