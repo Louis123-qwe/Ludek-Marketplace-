@@ -14,13 +14,7 @@
     loadRecentListings(user.uid);
     renderCompleteness(data);
     const storefrontBtn = document.getElementById('viewStorefrontBtn');
-  if (storefrontBtn) storefrontBtn.href = `seller.html?uid=${user.uid}`;
-  if (window._sellerUser && window._sellerData) {
-  const storefrontBtn = document.getElementById('viewStorefrontBtn');
-  if (storefrontBtn) storefrontBtn.href = `seller.html?uid=${window._sellerUser.uid}`;
-  loadStats(window._sellerUser.uid);
-  loadRecentListings(window._sellerUser.uid);
-}
+    if (storefrontBtn) storefrontBtn.href = `seller.html?uid=${user.uid}`;
 });
   
 
