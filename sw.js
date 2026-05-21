@@ -1,6 +1,15 @@
 // Ludek Marketplace — Service Worker
 // Version: 1.0.0
 
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('sw.js')
+      .then(function(reg) { console.log('[Ludek] SW registered:', reg.scope); })
+      .catch(function(err) { console.warn('[Ludek] SW failed:', err); });
+  });
+}
+
 const CACHE_NAME = 'ludek-v8';
 const STATIC_CACHE = 'ludek-static-v8';
 const DYNAMIC_CACHE = 'ludek-dynamic-v8';
