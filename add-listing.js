@@ -143,15 +143,13 @@ function runInit() {
       const input = document.getElementById(`imgInput${i}`);
       if (!slot || !input) continue;
 
-      // Click on placeholder → open file picker
-      slot.addEventListener('click', (e) => {
-        // If remove button was clicked, do not re-open picker
-        if (e.target.closest('.img-slot-remove')) return;
-        // Only open if no image uploaded yet
-        if (!uploadedImages[i]) {
-          input.click();
-        }
-      });
+slot.addEventListener('click', (e) => {
+  if (e.target.closest('.img-slot-remove')) return;
+  if (uploadedImages[i]) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+});
 
       // File selected
       input.addEventListener('change', (e) => {
