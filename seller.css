@@ -1245,8 +1245,8 @@
   animation: fadeUp 0.25s both;
 }
 
-.lf-error-msg.show { display: flex; }
-.lf-error-msg i { font-size: 11px; }
+.lf-error-msg.show, .lf-error-msg.visible { display: flex; }
+lf-error-msg i { font-size: 11px; }
 
 /* Toggle */
 .lf-toggle-field { flex-direction: row; align-items: center; }
