@@ -812,6 +812,7 @@
         '</td>' +
         '<td style="white-space:nowrap;font-size:0.8125rem;">' + timeAgo(l.createdAt) + '</td>' +
         '<td><div style="display:flex;gap:5px;">' +
+          '<button class="btn btn-ghost btn-sm btn-icon" onclick="openAdminEditListing(\'' + l.id + '\')" title="Edit listing"><i class="fas fa-pen"></i></button>' +
           '<button class="btn btn-ghost btn-sm btn-icon" onclick="toggleListingStatus(\'' + l.id + '\',\'' + (l.status||'draft') + '\')" title="Toggle status"><i class="fas ' + toggleIcon + '"></i></button>' +
           '<button class="btn btn-ghost btn-sm btn-icon" onclick="adminDeleteListing(\'' + l.id + '\')" title="Delete" style="color:var(--red);"><i class="fas fa-trash"></i></button>' +
         '</div></td>' +
@@ -1037,8 +1038,10 @@
         '</td>' +
         '<td><span class="badge ' + statusBadge + '">' + esc(s.status||'active') + '</span></td>' +
         '<td><div style="display:flex;gap:5px;">' +
-          '<button class="btn btn-ghost btn-sm btn-icon" onclick="openUserEdit(\'' + s.id + '\')" title="Edit"><i class="fas fa-pen"></i></button>' +
-          '<button class="btn btn-ghost btn-sm btn-icon" onclick="toggleUserStatus(\'' + s.id + '\',\'' + (s.status||'active') + '\')" title="Suspend/Activate"><i class="fas ' + toggleIcon + '"></i></button>' +
+          '<button class="btn btn-ghost btn-sm btn-icon" onclick="openStoreOverview(\'' + s.id + '\')" title="View Store"><i class="fas fa-shop"></i></button>' +
+          '<button class="btn btn-ghost btn-sm btn-icon" onclick="openAdminAddListing(\'' + s.id + '\')" title="Add Listing"><i class="fas fa-plus"></i></button>' +
+          '<button class="btn btn-ghost btn-sm btn-icon" onclick="openUserEdit(\'' + s.id + '\')" title="Edit User"><i class="fas fa-pen"></i></button>' +
+          '<button class="btn btn-ghost btn-sm btn-icon" onclick="suspendStore(\'' + s.id + '\',\'' + (s.status||'active') + '\')" title="' + (s.status==='suspended' ? 'Restore Store' : 'Suspend Store') + '" style="color:' + (s.status==='suspended' ? 'var(--forest)' : 'var(--red)') + ';"><i class="fas fa-' + (s.status==='suspended' ? 'shop' : 'ban') + '"></i></button>' +
         '</div></td>' +
       '</tr>';
     }).join('');
@@ -1482,4 +1485,468 @@
   window.addEventListener('resize', function() {
     if (state.currentSection === 'overview') drawRegChart();
   });
+
+
+  // ============================================================
+  // STORE SUSPENSION — Suspend/Restore entire seller store
+  // Blocks all listings from appearing, flags seller as suspended
+  // ============================================================
+  function suspendStore(sellerId, currentStatus) {
+    var s = state.allSellers.find(function(x){ return x.id === sellerId; });
+    var name = s ? (s.storeName || s.firstName || sellerId) : sellerId;
+    var isSuspended = currentStatus === 'suspended';
+    var action = isSuspended ? 'restore' : 'suspend';
+    var msg = isSuspended
+      ? 'Restore "' + name + '"\'s store? Their listings will go back to active.'
+      : 'Suspend "' + name + '"\'s store? ALL their listings will be hidden from the marketplace.';
+
+    confirmDelete(msg, function() {
+      var newStatus = isSuspended ? 'active' : 'suspended';
+      var batch = db.batch();
+
+      // Update seller user status
+      batch.update(db.collection('users').doc(sellerId), {
+        status: newStatus,
+        storeSuspended: !isSuspended,
+        storeSuspendedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+
+      // Update ALL listings belonging to this seller
+      var sellerListings = state.allListings.filter(function(l){ return l.sellerId === sellerId; });
+      sellerListings.forEach(function(l) {
+        batch.update(db.collection('listings').doc(l.id), {
+          status: isSuspended ? 'active' : 'suspended',
+          suspendedByAdmin: !isSuspended,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      });
+
+      batch.commit().then(function() {
+        // Update local state
+        var u = state.allUsers.find(function(x){ return x.id === sellerId; });
+        if (u) { u.status = newStatus; u.storeSuspended = !isSuspended; }
+        if (s) { s.status = newStatus; s.storeSuspended = !isSuspended; }
+        sellerListings.forEach(function(l){
+          l.status = isSuspended ? 'active' : 'suspended';
+          l.suspendedByAdmin = !isSuspended;
+        });
+        renderSellersTable();
+        renderListingsTable();
+        var count = sellerListings.length;
+        showToast('Store ' + (isSuspended ? 'restored' : 'suspended') + '. ' + count + ' listing(s) affected.', isSuspended ? 'success' : 'info');
+        writeLog('Store ' + action + 'd', name + ' — ' + count + ' listing(s)', isSuspended ? 'green' : 'red');
+      }).catch(function(){ showToast('Failed to ' + action + ' store.', 'error'); });
+    });
+  }
+  window.suspendStore = suspendStore;
+
+  // ============================================================
+  // ADMIN ADD LISTING — Add a listing on behalf of any seller
+  // ============================================================
+  var adminAddListingModal = null;
+  var adminEditListingId   = null;
+
+  function openAdminAddListing(sellerId) {
+    adminEditListingId = null;
+    var seller = state.allSellers.find(function(x){ return x.id === sellerId; }) || null;
+    renderAdminListingModal(seller, null);
+  }
+  window.openAdminAddListing = openAdminAddListing;
+
+  function openAdminEditListing(listingId) {
+    var l = state.allListings.find(function(x){ return x.id === listingId; });
+    if (!l) { showToast('Listing not found.', 'error'); return; }
+    adminEditListingId = listingId;
+    var seller = state.allSellers.find(function(x){ return x.id === l.sellerId; }) || null;
+    renderAdminListingModal(seller, l);
+  }
+  window.openAdminEditListing = openAdminEditListing;
+
+  // ============================================================
+  // ADMIN LISTING PANEL — Full-screen side panel, file picker images
+  // ============================================================
+  var alUploadedImages = [null, null, null, null]; // Cloudinary URLs after upload
+
+  var AL_CLOUD_NAME   = 'dataktghg';
+  var AL_UPLOAD_PRESET = 'Ludek Marketplace';
+
+  function closeAdminListingPanel() {
+    var panel = document.getElementById('alPanel');
+    if (!panel) return;
+    panel.style.transform = 'translateX(100%)';
+    setTimeout(function(){ if (panel.parentNode) panel.remove(); }, 320);
+    document.body.style.overflow = '';
+  }
+
+  function renderAdminListingModal(seller, listing) {
+    var existing = document.getElementById('alPanel');
+    if (existing) existing.remove();
+
+    alUploadedImages = listing && listing.images
+      ? listing.images.concat([null,null,null,null]).slice(0,4)
+      : [null, null, null, null];
+
+    var sellerOptions = state.allSellers.map(function(s) {
+      var name = ((s.firstName||'')+' '+(s.lastName||'')).trim() || s.email || s.id;
+      var selected = seller && s.id === seller.id ? ' selected' : '';
+      return '<option value="' + s.id + '"' + selected + '>' + esc(name) + (s.storeName ? ' — ' + esc(s.storeName) : '') + '</option>';
+    }).join('');
+
+    var categories = ['electronics','fashion','food','books','hostel','services','tutoring','housing'];
+    var catOptions = categories.map(function(c) {
+      var sel = listing && listing.category === c ? ' selected' : '';
+      return '<option value="' + c + '"' + sel + '>' + c.charAt(0).toUpperCase() + c.slice(1) + '</option>';
+    }).join('');
+
+    var isEdit = !!listing;
+
+    var panel = document.createElement('div');
+    panel.id = 'alPanel';
+    panel.style.cssText = [
+      'position:fixed','top:0','right:0','bottom:0','z-index:600',
+      'width:100%','max-width:520px',
+      'background:var(--bg-card)',
+      'box-shadow:-8px 0 40px rgba(0,0,0,0.18)',
+      'display:flex','flex-direction:column',
+      'transform:translateX(100%)',
+      'transition:transform 320ms cubic-bezier(0.4,0,0.2,1)',
+      'font-family:var(--font-body)'
+    ].join(';');
+
+    // Image slots HTML
+    var slotsHtml = '';
+    for (var si = 0; si < 4; si++) {
+      var hasImg = !!alUploadedImages[si];
+      var imgStyle = hasImg ? 'background:url('+esc(alUploadedImages[si])+') center/cover no-repeat;' : '';
+      slotsHtml +=
+        '<div id="alSlot'+si+'" style="position:relative;aspect-ratio:1;border-radius:10px;border:2px dashed var(--border);overflow:hidden;cursor:pointer;background:var(--bg);' + imgStyle + (si===0?'grid-column:span 2;aspect-ratio:2/1;':'') + '" onclick="alSlotClick('+si+')">' +
+          '<input type="file" id="alInput'+si+'" accept="image/*" style="display:none;" />' +
+          (hasImg
+            ? '<button onclick="alRemoveImg(event,'+si+')" style="position:absolute;top:5px;right:5px;width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,0.55);border:none;color:#fff;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2;"><i class="fas fa-xmark"></i></button>'
+            : '<div id="alSlotPlaceholder'+si+'" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;pointer-events:none;">' +
+                '<i class="fas fa-' + (si===0?'image':'plus') + '" style="font-size:'+(si===0?'22':'16')+'px;color:var(--text-light);"></i>' +
+                (si===0?'<span style="font-size:0.75rem;color:var(--text-light);font-weight:500;">Cover photo</span>':'') +
+              '</div>'
+          ) +
+          '<div id="alSlotSpinner'+si+'" style="display:none;position:absolute;inset:0;background:rgba(255,255,255,0.82);align-items:center;justify-content:center;">' +
+            '<span class="spinner" style="border-color:var(--milk-border);border-top-color:var(--forest);"></span>' +
+          '</div>' +
+        '</div>';
+    }
+
+    panel.innerHTML =
+      // Header
+      '<div style="display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--border);background:var(--bg-card);flex-shrink:0;">' +
+        '<button onclick="closeAdminListingPanel()" style="width:34px;height:34px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text-secondary);cursor:pointer;display:flex;align-items:center;justify-content:center;">' +
+          '<i class="fas fa-arrow-left" style="font-size:14px;"></i>' +
+        '</button>' +
+        '<div style="flex:1;">' +
+          '<div style="font-family:var(--font-display);font-weight:800;font-size:1rem;color:var(--text-primary);">' + (isEdit ? 'Edit Listing' : 'Add Listing') + '</div>' +
+          '<div style="font-size:0.75rem;color:var(--text-muted);margin-top:1px;">' + (isEdit ? 'Update listing details' : 'Add on behalf of a seller') + '</div>' +
+        '</div>' +
+        '<button id="alSaveBtn" style="padding:9px 18px;border-radius:8px;background:var(--forest);color:var(--milk);border:none;font-family:var(--font-body);font-size:0.875rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:7px;">' +
+          '<i class="fas fa-' + (isEdit ? 'floppy-disk' : 'plus') + '"></i>' + (isEdit ? 'Save' : 'Publish') +
+        '</button>' +
+      '</div>' +
+
+      // Scrollable body
+      '<div style="flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:18px;">' +
+
+        // Seller
+        '<div>' +
+          '<label style="display:block;font-size:0.8rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">Seller</label>' +
+          '<select id="alSeller" style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--font-body);font-size:0.9rem;color:var(--text-primary);background:var(--milk);outline:none;">' +
+            sellerOptions +
+          '</select>' +
+        '</div>' +
+
+        // Images
+        '<div>' +
+          '<label style="display:block;font-size:0.8rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">Photos <span style="font-weight:400;text-transform:none;color:var(--text-light);">(tap to upload, max 4)</span></label>' +
+          '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">' + slotsHtml + '</div>' +
+        '</div>' +
+
+        // Title
+        '<div>' +
+          '<label style="display:block;font-size:0.8rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">Title <span style="color:var(--red);">*</span></label>' +
+          '<input id="alTitle" style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--font-body);font-size:0.9rem;color:var(--text-primary);background:var(--milk);outline:none;" placeholder="e.g. iPhone 13 Pro Max" maxlength="80" value="' + esc(listing ? listing.title||'' : '') + '" />' +
+        '</div>' +
+
+        // Price + Category
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">' +
+          '<div>' +
+            '<label style="display:block;font-size:0.8rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">Price (₦) <span style="color:var(--red);">*</span></label>' +
+            '<input id="alPrice" type="number" min="0" style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--font-body);font-size:0.9rem;color:var(--text-primary);background:var(--milk);outline:none;" placeholder="5000" value="' + (listing ? listing.price||'' : '') + '" />' +
+          '</div>' +
+          '<div>' +
+            '<label style="display:block;font-size:0.8rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">Category <span style="color:var(--red);">*</span></label>' +
+            '<select id="alCategory" style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--font-body);font-size:0.9rem;color:var(--text-primary);background:var(--milk);outline:none;">' + catOptions + '</select>' +
+          '</div>' +
+        '</div>' +
+
+        // Condition + Status
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">' +
+          '<div>' +
+            '<label style="display:block;font-size:0.8rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">Condition</label>' +
+            '<select id="alCondition" style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--font-body);font-size:0.9rem;color:var(--text-primary);background:var(--milk);outline:none;">' +
+              '<option value="new"'+(listing&&listing.condition==='new'?' selected':'')+'>New</option>' +
+              '<option value="used"'+(listing&&listing.condition==='used'?' selected':'')+'>Used</option>' +
+              '<option value="refurbished"'+(listing&&listing.condition==='refurbished'?' selected':'')+'>Refurbished</option>' +
+            '</select>' +
+          '</div>' +
+          '<div>' +
+            '<label style="display:block;font-size:0.8rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">Status</label>' +
+            '<select id="alStatus" style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--font-body);font-size:0.9rem;color:var(--text-primary);background:var(--milk);outline:none;">' +
+              '<option value="active"'+(!listing||listing.status==='active'?' selected':'')+'>Active</option>' +
+              '<option value="draft"'+(listing&&listing.status==='draft'?' selected':'')+'>Draft</option>' +
+            '</select>' +
+          '</div>' +
+        '</div>' +
+
+        // Description
+        '<div>' +
+          '<label style="display:block;font-size:0.8rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">Description</label>' +
+          '<textarea id="alDesc" style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--font-body);font-size:0.9rem;color:var(--text-primary);background:var(--milk);outline:none;resize:vertical;min-height:100px;" placeholder="Describe the product…">' + esc(listing ? listing.description||'' : '') + '</textarea>' +
+        '</div>' +
+
+        // WhatsApp
+        '<div>' +
+          '<label style="display:block;font-size:0.8rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">WhatsApp Override <span style="font-weight:400;text-transform:none;color:var(--text-light);">(optional)</span></label>' +
+          '<input id="alWhatsapp" style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--font-body);font-size:0.9rem;color:var(--text-primary);background:var(--milk);outline:none;" placeholder="2348012345678" value="' + esc(listing ? listing.whatsapp||'' : '') + '" />' +
+        '</div>' +
+
+      '</div>'; // end scroll body
+
+    document.body.appendChild(panel);
+    document.body.style.overflow = 'hidden';
+
+    // Animate in
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){
+        panel.style.transform = 'translateX(0)';
+      });
+    });
+
+    // Save button
+    document.getElementById('alSaveBtn').addEventListener('click', function(){
+      saveAdminListing(listing ? listing.id : null);
+    });
+
+    // Wire file inputs
+    for (var fi = 0; fi < 4; fi++) {
+      (function(idx){
+        var input = document.getElementById('alInput'+idx);
+        input.addEventListener('change', function(){
+          if (input.files && input.files[0]) alUploadFile(idx, input.files[0]);
+        });
+      })(fi);
+    }
+  }
+
+  function alSlotClick(idx) {
+    if (alUploadedImages[idx]) return; // already has image, only remove btn works
+    document.getElementById('alInput'+idx).click();
+  }
+  window.alSlotClick = alSlotClick;
+
+  function alRemoveImg(e, idx) {
+    e.stopPropagation();
+    alUploadedImages[idx] = null;
+    var slot = document.getElementById('alSlot'+idx);
+    slot.style.background = 'var(--bg)';
+    slot.style.backgroundImage = '';
+    // Rebuild slot inner without image
+    var removeBtn = slot.querySelector('button');
+    if (removeBtn) removeBtn.remove();
+    var ph = document.getElementById('alSlotPlaceholder'+idx);
+    if (!ph) {
+      ph = document.createElement('div');
+      ph.id = 'alSlotPlaceholder'+idx;
+      ph.style.cssText = 'position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;pointer-events:none;';
+      ph.innerHTML = '<i class="fas fa-'+(idx===0?'image':'plus')+'" style="font-size:'+(idx===0?'22':'16')+'px;color:var(--text-light);"></i>'+(idx===0?'<span style="font-size:0.75rem;color:var(--text-light);font-weight:500;">Cover photo</span>':'');
+      slot.appendChild(ph);
+    }
+  }
+  window.alRemoveImg = alRemoveImg;
+
+  function alUploadFile(idx, file) {
+    var spinner = document.getElementById('alSlotSpinner'+idx);
+    spinner.style.display = 'flex';
+
+    var formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', AL_UPLOAD_PRESET);
+
+    fetch('https://api.cloudinary.com/v1_1/' + AL_CLOUD_NAME + '/image/upload', {
+      method: 'POST',
+      body: formData
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(data) {
+      spinner.style.display = 'none';
+      if (data.secure_url) {
+        alUploadedImages[idx] = data.secure_url;
+        var slot = document.getElementById('alSlot'+idx);
+        slot.style.backgroundImage = 'url('+data.secure_url+')';
+        slot.style.backgroundSize  = 'cover';
+        slot.style.backgroundPosition = 'center';
+        // Add remove button
+        var ph = document.getElementById('alSlotPlaceholder'+idx);
+        if (ph) ph.remove();
+        var existing = slot.querySelector('button');
+        if (!existing) {
+          var rmBtn = document.createElement('button');
+          rmBtn.style.cssText = 'position:absolute;top:5px;right:5px;width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,0.55);border:none;color:#fff;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2;';
+          rmBtn.innerHTML = '<i class="fas fa-xmark"></i>';
+          rmBtn.onclick = function(e){ alRemoveImg(e, idx); };
+          slot.appendChild(rmBtn);
+        }
+        showToast('Image uploaded!', 'success');
+      } else {
+        showToast('Upload failed: ' + (data.error && data.error.message || 'Unknown error'), 'error');
+      }
+    })
+    .catch(function(){ spinner.style.display='none'; showToast('Upload failed. Check connection.', 'error'); });
+  }
+
+  function saveAdminListing(existingId) {
+    var sellerId  = document.getElementById('alSeller').value;
+    var title     = document.getElementById('alTitle').value.trim();
+    var price     = parseFloat(document.getElementById('alPrice').value);
+    var category  = document.getElementById('alCategory').value;
+    var condition = document.getElementById('alCondition').value;
+    var desc      = document.getElementById('alDesc').value.trim();
+    var status    = document.getElementById('alStatus').value;
+    var whatsapp  = document.getElementById('alWhatsapp').value.trim();
+    var images    = alUploadedImages.filter(Boolean);
+
+    if (!sellerId) { showToast('Select a seller.', 'error'); return; }
+    if (!title)    { showToast('Title is required.', 'error'); return; }
+    if (isNaN(price) || price < 0) { showToast('Enter a valid price.', 'error'); return; }
+
+    var seller     = state.allSellers.find(function(x){ return x.id === sellerId; });
+    var sellerName = seller ? ((seller.firstName||'')+' '+(seller.lastName||'')).trim() || seller.email : '';
+    var storeName  = seller ? (seller.storeName || sellerName) : '';
+
+    var payload = {
+      sellerId:     sellerId,
+      sellerName:   sellerName,
+      storeName:    storeName,
+      whatsapp:     whatsapp || (seller ? seller.whatsapp||'' : ''),
+      title:        title,
+      price:        price,
+      category:     category,
+      condition:    condition,
+      description:  desc,
+      status:       status,
+      images:       images,
+      coverImage:   images[0] || '',
+      addedByAdmin: true,
+      updatedAt:    firebase.firestore.FieldValue.serverTimestamp()
+    };
+
+    var btn = document.getElementById('alSaveBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner" style="width:16px;height:16px;border-width:2px;"></span> Saving…';
+
+    if (existingId) {
+      db.collection('listings').doc(existingId).update(payload).then(function() {
+        var l = state.allListings.find(function(x){ return x.id === existingId; });
+        if (l) Object.assign(l, payload);
+        renderListingsTable();
+        closeAdminListingPanel();
+        showToast('Listing updated.', 'success');
+        writeLog('Admin edited listing', title + ' (for ' + sellerName + ')', 'blue');
+      }).catch(function(e){
+        showToast('Failed: ' + e.message, 'error');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-floppy-disk"></i> Save';
+      });
+    } else {
+      payload.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+      payload.views     = 0;
+      payload.chatTaps  = 0;
+      db.collection('listings').add(payload).then(function(ref) {
+        state.allListings.unshift(Object.assign({ id: ref.id }, payload, { createdAt: new Date() }));
+        state.sellerListingCounts[sellerId] = (state.sellerListingCounts[sellerId]||0) + 1;
+        updateListingStats();
+        renderListingsTable();
+        closeAdminListingPanel();
+        showToast('Listing added to ' + (storeName||sellerName) + '\'s store!', 'success');
+        writeLog('Admin added listing', title + ' → ' + (storeName||sellerName), 'green');
+      }).catch(function(e){
+        showToast('Failed: ' + e.message, 'error');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-plus"></i> Publish';
+      });
+    }
+  }
+
+  window.closeAdminListingPanel = closeAdminListingPanel;
+
+  // ============================================================
+  // STORE OVERVIEW MODAL — See all of a seller's listings at once
+  // ============================================================
+  function openStoreOverview(sellerId) {
+    var seller = state.allSellers.find(function(x){ return x.id === sellerId; });
+    if (!seller) return;
+    var name = ((seller.firstName||'')+' '+(seller.lastName||'')).trim() || seller.email;
+    var storeName = seller.storeName || name;
+    var listings  = state.allListings.filter(function(l){ return l.sellerId === sellerId; });
+
+    var existing = document.getElementById('storeOverviewModal');
+    if (existing) existing.remove();
+
+    var listingsHtml = listings.length ? listings.map(function(l) {
+      var statusBadge = l.status === 'active' ? 'badge-green' : l.status === 'suspended' ? 'badge-red' : 'badge-amber';
+      var img = l.coverImage || (l.images && l.images[0]) || '';
+      return '<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);">' +
+        (img ? '<img src="'+esc(img)+'" style="width:44px;height:44px;border-radius:8px;object-fit:cover;flex-shrink:0;" />'
+             : '<div style="width:44px;height:44px;border-radius:8px;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="fas fa-image" style="color:var(--text-light);"></i></div>') +
+        '<div style="flex:1;min-width:0;">' +
+          '<div style="font-weight:600;font-size:0.875rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(l.title||'Untitled') + '</div>' +
+          '<div style="font-size:0.8125rem;color:var(--text-muted);">₦' + Number(l.price||0).toLocaleString() + ' · <span class="badge ' + statusBadge + '" style="font-size:0.65rem;">' + esc(l.status||'draft') + '</span></div>' +
+        '</div>' +
+        '<div style="display:flex;gap:5px;flex-shrink:0;">' +
+          '<button class="btn btn-ghost btn-sm btn-icon" onclick="openAdminEditListing(\''+l.id+'\')" title="Edit"><i class="fas fa-pen"></i></button>' +
+          '<button class="btn btn-ghost btn-sm btn-icon" onclick="toggleListingStatus(\''+l.id+'\',\''+(l.status||'draft')+'\')" title="Toggle status"><i class="fas fa-toggle-'+(l.status==='active'?'on':'off')+'"></i></button>' +
+          '<button class="btn btn-ghost btn-sm btn-icon" onclick="adminDeleteListing(\''+l.id+'\')" title="Delete" style="color:var(--red);"><i class="fas fa-trash"></i></button>' +
+        '</div>' +
+      '</div>';
+    }).join('') : '<div style="text-align:center;padding:2rem;color:var(--text-muted);font-size:0.875rem;">No listings yet.</div>';
+
+    var isSuspended = seller.status === 'suspended';
+    var modal = document.createElement('div');
+    modal.id = 'storeOverviewModal';
+    modal.className = 'modal-backdrop open';
+    modal.innerHTML =
+      '<div class="modal" style="max-width:560px;">' +
+        '<div class="modal-header">' +
+          '<div>' +
+            '<span class="modal-title">' + esc(storeName) + '</span>' +
+            '<div style="font-size:0.8125rem;color:var(--text-muted);margin-top:2px;">' + esc(name) + ' · ' + listings.length + ' listing(s)</div>' +
+          '</div>' +
+          '<button class="modal-close" id="storeOverviewClose"><i class="fas fa-xmark"></i></button>' +
+        '</div>' +
+        '<div class="modal-body" style="padding-bottom:0;">' +
+          '<div style="display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap;">' +
+            '<button class="btn btn-forest btn-sm" onclick="openAdminAddListing(\''+sellerId+'\')">' +
+              '<i class="fas fa-plus"></i> Add Listing' +
+            '</button>' +
+            '<button class="btn btn-sm ' + (isSuspended ? 'btn-orange' : 'btn-red') + '" onclick="suspendStore(\''+sellerId+'\',\''+(seller.status||'active')+'\')">' +
+              '<i class="fas fa-' + (isSuspended ? 'shop' : 'ban') + '"></i> ' + (isSuspended ? 'Restore Store' : 'Suspend Store') +
+            '</button>' +
+          '</div>' +
+          '<div style="max-height:400px;overflow-y:auto;">' + listingsHtml + '</div>' +
+        '</div>' +
+        '<div class="modal-footer"><button class="btn btn-ghost" id="storeOverviewCancel">Close</button></div>' +
+      '</div>';
+
+    document.body.appendChild(modal);
+    document.getElementById('storeOverviewClose').addEventListener('click', function(){ modal.remove(); });
+    document.getElementById('storeOverviewCancel').addEventListener('click', function(){ modal.remove(); });
+    modal.addEventListener('click', function(e){ if (e.target === modal) modal.remove(); });
+  }
+  window.openStoreOverview = openStoreOverview;
 
