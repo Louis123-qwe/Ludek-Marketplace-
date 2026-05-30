@@ -7,7 +7,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="google-site-verification" content="n5vIY-IvixGxpRbiKNQcaXKp1B5iqeTHZUUgY374EhQ" />
 
   <!-- Primary SEO -->
   <title>Ludek Marketplace — CRUTECH Okuku Campus Buy &amp; Sell Platform</title>
@@ -20,8 +19,7 @@
 
   <!-- Open Graph (Facebook, WhatsApp previews) -->
   <meta property="og:type"        content="website" />
-  <meta property="og:url"         content="
-https://ludek-marketplace.vercel.app/index.html" />
+  <meta property="og:url"         content="https://ludek.marketplace/" />
   <meta property="og:title"       content="Ludek Marketplace — CRUTECH Okuku Campus" />
   <meta property="og:description" content="Buy and sell products, services, tutoring, and housing within CRUTECH Okuku Campus." />
   <meta property="og:image"       content="https://ludek.marketplace/assets/og-image.jpg" />
@@ -81,7 +79,7 @@ https://ludek-marketplace.vercel.app/index.html" />
 
 <body>
 
-
+ 
   <!-- ============================================================
        ANNOUNCEMENT BAR
        ============================================================ -->
@@ -157,6 +155,12 @@ https://ludek-marketplace.vercel.app/index.html" />
 
     </div>
   </nav>
+
+  <!-- LIVE LISTING TICKER -->
+  <div class="ticker-bar" id="tickerBar" aria-label="Live listings ticker">
+    <div class="ticker-label"><i class="fas fa-circle-dot"></i><span>LIVE</span></div>
+    <div class="ticker-track-wrapper"><div class="ticker-track" id="tickerTrack"></div></div>
+  </div>
 
   <!-- Mobile Menu -->
   <div class="nav-mobile" id="navMobile" role="dialog" aria-label="Mobile navigation" aria-modal="true">
@@ -834,7 +838,235 @@ https://ludek-marketplace.vercel.app/index.html" />
       transform: translateY(0);
     }
   </style>
+<!-- Install Banner -->
+<div id="installBanner" class="install-banner" role="complementary" aria-label="Install app">
+  <p>Install Ludek for a faster experience</p>
+  <button id="installYes" type="button">Install</button>
+  <button id="installNo" type="button">Not now</button>
+</div>
 
-  
-</body>
 </html>
+<!-- TICKER STYLES & SCRIPT -->
+<style>
+  .ticker-bar {
+    position: sticky;
+    top: 64px;
+    z-index: 90;
+    display: flex;
+    align-items: center;
+    background: #0f2d1c;
+    height: 72px;
+    overflow: hidden;
+    border-bottom: 2px solid #1B5E3B;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+  }
+  .ticker-label {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 0 16px;
+    background: #1B5E3B;
+    height: 100%;
+    color: #fff;
+    white-space: nowrap;
+    min-width: 64px;
+  }
+  .ticker-label i {
+    color: #4ade80;
+    font-size: 0.6rem;
+    animation: tickerPulse 1.2s ease-in-out infinite;
+  }
+  .ticker-label span {
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    color: #fff;
+  }
+  @keyframes tickerPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.3; transform: scale(0.8); }
+  }
+  .ticker-track-wrapper {
+    flex: 1;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
+  .ticker-track {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    white-space: nowrap;
+    animation: tickerScroll 55s linear infinite;
+    will-change: transform;
+  }
+  .ticker-track:hover { animation-play-state: paused; }
+  @keyframes tickerScroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .ticker-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 20px;
+    cursor: pointer;
+    text-decoration: none;
+    border-right: 1px solid rgba(255,255,255,0.1);
+    height: 72px;
+    transition: background 0.2s;
+  }
+  .ticker-item:hover { background: rgba(255,255,255,0.05); }
+  .ticker-item-img {
+    width: 46px;
+    height: 46px;
+    border-radius: 8px;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 1.5px solid rgba(255,255,255,0.15);
+    background: #1a3a26;
+  }
+  .ticker-item-img-placeholder {
+    width: 46px;
+    height: 46px;
+    border-radius: 8px;
+    flex-shrink: 0;
+    background: #1B5E3B;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.4);
+    font-size: 16px;
+  }
+  .ticker-item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .ticker-item-title {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #e2e8f0;
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .ticker-item-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .ticker-item-price {
+    background: #1B5E3B;
+    color: #86efac;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 20px;
+  }
+  .ticker-item-cat {
+    font-size: 0.68rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+</style>
+
+<script>
+(function() {
+  function initTicker() {
+    if (typeof firebase === 'undefined' || !window.LUDEK_FIREBASE_CONFIG) {
+      setTimeout(initTicker, 400);
+      return;
+    }
+    var app = firebase.apps.length
+      ? firebase.app()
+      : firebase.initializeApp(window.LUDEK_FIREBASE_CONFIG);
+    var db = firebase.firestore(app);
+
+    db.collection('listings')
+      .where('status', '==', 'active')
+      .orderBy('createdAt', 'desc')
+      .limit(30)
+      .get()
+      .then(function(snap) {
+        var items = [];
+        snap.forEach(function(doc) {
+          var d = doc.data();
+          items.push({
+            id:       doc.id,
+            title:    d.title      || 'Untitled',
+            price:    d.price      || 0,
+            category: d.category   || '',
+            image:    d.coverImage || (d.images && d.images[0]) || '',
+          });
+        });
+        if (!items.length) {
+          document.getElementById('tickerBar').style.display = 'none';
+          return;
+        }
+        renderTicker(items);
+      })
+      .catch(function() {
+        document.getElementById('tickerBar').style.display = 'none';
+      });
+  }
+
+  function renderTicker(items) {
+    var track = document.getElementById('tickerTrack');
+    if (!track) return;
+
+    function makeItem(item) {
+      var el = document.createElement('a');
+      el.className = 'ticker-item';
+      el.href = 'product.html?id=' + item.id;
+
+      var imgHtml = item.image
+        ? '<img class="ticker-item-img" src="' + escT(item.image) + '" alt="' + escT(item.title) + '" loading="lazy" />'
+        : '<div class="ticker-item-img-placeholder"><i class="fas fa-image"></i></div>';
+
+      el.innerHTML =
+        imgHtml +
+        '<div class="ticker-item-info">' +
+          '<div class="ticker-item-title">' + escT(item.title) + '</div>' +
+          '<div class="ticker-item-meta">' +
+            '<span class="ticker-item-price">₦' + Number(item.price).toLocaleString() + '</span>' +
+            (item.category ? '<span class="ticker-item-cat">' + escT(item.category) + '</span>' : '') +
+          '</div>' +
+        '</div>';
+      return el;
+    }
+
+    // Two copies for seamless infinite loop
+    items.concat(items).forEach(function(item) {
+      track.appendChild(makeItem(item));
+    });
+
+    // Scale speed with number of items
+    track.style.animationDuration = Math.max(40, items.length * 2.5) + 's';
+  }
+
+  function escT(str) {
+    return String(str)
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;');
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(initTicker, 600);
+  });
+})();
+</script>
+
+  <!-- Firebase for ticker -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="config.js"></script>
+</body>
