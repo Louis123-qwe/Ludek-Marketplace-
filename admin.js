@@ -166,7 +166,7 @@
     var labels = {
       overview:'Dashboard', users:'Users', listings:'Listings',
       sellers:'Sellers', reports:'Reports', announcements:'Announcements',
-      categories:'Categories', logs:'Audit Log', settings:'Settings'
+      ticker:'Ticker Strip', categories:'Categories', logs:'Audit Log', settings:'Settings'
     };
     var el = document.getElementById('topbarPage');
     if (el) el.textContent = labels[section] || section;
@@ -177,6 +177,7 @@
     if (section === 'sellers')       renderSellersTable();
     if (section === 'reports')       renderReportsTable();
     if (section === 'announcements') renderAnnouncementsTable();
+    if (section === 'ticker')        renderTickerSection();
     if (section === 'categories')    renderCategories();
     if (section === 'logs')          renderLogs();
     if (section === 'settings')      renderSettings();
@@ -1243,6 +1244,237 @@
   });
 
   // ============================================================
+  // TICKER STRIP MESSAGES
+  // ============================================================
+  state.allTickerMsgs = [];
+
+  /* Load from Firestore */
+  function loadTickerMsgs() {
+    db.collection('ticker_messages').orderBy('createdAt', 'desc').get()
+      .then(function(snap) {
+        state.allTickerMsgs = [];
+        snap.forEach(function(doc) {
+          var d = doc.data();
+          d.id = doc.id;
+          state.allTickerMsgs.push(d);
+        });
+        if (state.currentSection === 'ticker') renderTickerMsgsTable();
+      })
+      .catch(function() { /* silent — collection may not exist yet */ });
+  }
+  loadTickerMsgs();
+
+  /* Navigate hook */
+  var _origNavigateTo = navigateTo;
+  // We patch navigateTo after its definition via direct check inside renderTickerSection
+  function renderTickerSection() {
+    renderTickerMsgsTable();
+    updateTickerActiveBanner();
+  }
+
+  /* Render table */
+  function renderTickerMsgsTable() {
+    var tbody = document.getElementById('tickerMsgsTableBody');
+    if (!tbody) return;
+    if (!state.allTickerMsgs.length) {
+      tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted" style="padding:2rem;">No ticker messages yet. Create one above to override the default developer messages.</td></tr>';
+      updateTickerActiveBanner();
+      return;
+    }
+    var now = Date.now();
+    tbody.innerHTML = state.allTickerMsgs.map(function(m) {
+      var isActive  = m.active === true;
+      var start     = m.startAt ? m.startAt.toMillis() : 0;
+      var end       = m.endAt   ? m.endAt.toMillis()   : Infinity;
+      var live      = isActive && now >= start && now <= end;
+      var statusBadge = live
+        ? '<span class="badge badge-green"><i class="fas fa-circle-dot" style="font-size:0.5rem;"></i> LIVE</span>'
+        : (isActive ? '<span class="badge badge-amber">Scheduled</span>' : '<span class="badge badge-gray">Inactive</span>');
+      return '<tr>' +
+        '<td style="font-weight:600; max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="' + esc(m.text||'') + '">' + esc(m.text||'—') + '</td>' +
+        '<td style="font-size:0.8125rem; color:var(--text-muted); max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">' + esc(m.sub||'—') + '</td>' +
+        '<td style="font-size:0.8125rem; white-space:nowrap;">' + (m.startAt ? formatDate(m.startAt) : '<span style="color:var(--text-muted);">Immediately</span>') + '</td>' +
+        '<td style="font-size:0.8125rem; white-space:nowrap;">' + (m.endAt   ? formatDate(m.endAt)   : '<span style="color:var(--text-muted);">No expiry</span>') + '</td>' +
+        '<td>' + statusBadge + '</td>' +
+        '<td><div style="display:flex;gap:5px;">' +
+          '<button class="btn btn-ghost btn-sm btn-icon" onclick="editTickerMsg(\'' + m.id + '\')" title="Edit"><i class="fas fa-pen"></i></button>' +
+          '<button class="btn btn-ghost btn-sm btn-icon" onclick="toggleTickerMsg(\'' + m.id + '\')" title="' + (isActive ? 'Deactivate' : 'Activate') + '" style="color:' + (isActive ? 'var(--amber)' : 'var(--forest)') + ';"><i class="fas fa-' + (isActive ? 'eye-slash' : 'eye') + '"></i></button>' +
+          '<button class="btn btn-ghost btn-sm btn-icon" onclick="deleteTickerMsg(\'' + m.id + '\')" title="Delete" style="color:var(--red);"><i class="fas fa-trash"></i></button>' +
+        '</div></td>' +
+      '</tr>';
+    }).join('');
+    updateTickerActiveBanner();
+  }
+
+  function updateTickerActiveBanner() {
+    var banner = document.getElementById('tickerActiveBanner');
+    var bannerText = document.getElementById('tickerActiveBannerText');
+    if (!banner || !bannerText) return;
+    var now = Date.now();
+    var live = state.allTickerMsgs.filter(function(m) {
+      var start = m.startAt ? m.startAt.toMillis() : 0;
+      var end   = m.endAt   ? m.endAt.toMillis()   : Infinity;
+      return m.active === true && now >= start && now <= end;
+    });
+    var badgeTicker = document.getElementById('badgeTicker');
+    if (live.length) {
+      banner.style.display = '';
+      bannerText.textContent = live.length + ' message' + (live.length > 1 ? 's' : '') + ' currently LIVE on the homepage ticker strip.';
+      if (badgeTicker) { badgeTicker.textContent = live.length; badgeTicker.style.display = ''; }
+    } else {
+      banner.style.display = 'none';
+      if (badgeTicker) badgeTicker.style.display = 'none';
+    }
+  }
+
+  /* Live preview updater */
+  function updateTickerMsgPreview() {
+    var txt = document.getElementById('tickerMsgText').value.trim() || 'Your message here…';
+    var sub = document.getElementById('tickerMsgSub').value.trim();
+    var prevText = document.getElementById('tickerMsgPreviewText');
+    var prevSub  = document.getElementById('tickerMsgPreviewSub');
+    if (prevText) prevText.textContent = txt;
+    if (prevSub)  prevSub.textContent  = sub;
+  }
+
+  /* Open create form */
+  document.getElementById('newTickerMsgBtn').addEventListener('click', function() {
+    document.getElementById('editTickerMsgId').value = '';
+    document.getElementById('tickerMsgText').value   = '';
+    document.getElementById('tickerMsgSub').value    = '';
+    document.getElementById('tickerMsgStart').value  = '';
+    document.getElementById('tickerMsgEnd').value    = '';
+    document.getElementById('tickerMsgActive').value = 'true';
+    document.getElementById('tickerMsgModalTitle').textContent = 'New Ticker Message';
+    document.getElementById('tickerMsgModalSave').innerHTML = '<i class="fas fa-paper-plane"></i> Publish';
+    updateTickerMsgPreview();
+    openModal('tickerMsgModal');
+  });
+
+  /* Live preview input listeners */
+  ['tickerMsgText','tickerMsgSub'].forEach(function(id) {
+    document.getElementById(id).addEventListener('input', updateTickerMsgPreview);
+  });
+
+  /* Save */
+  document.getElementById('tickerMsgModalSave').addEventListener('click', function() {
+    var id     = document.getElementById('editTickerMsgId').value;
+    var text   = document.getElementById('tickerMsgText').value.trim();
+    var sub    = document.getElementById('tickerMsgSub').value.trim();
+    var start  = document.getElementById('tickerMsgStart').value;
+    var end    = document.getElementById('tickerMsgEnd').value;
+    var active = document.getElementById('tickerMsgActive').value === 'true';
+
+    if (!text) { showToast('Message text is required.', 'error'); return; }
+
+    var payload = {
+      text:   text,
+      sub:    sub,
+      active: active,
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+    if (start) payload.startAt = firebase.firestore.Timestamp.fromDate(new Date(start));
+    else        payload.startAt = firebase.firestore.FieldValue.delete();
+    if (end)   payload.endAt   = firebase.firestore.Timestamp.fromDate(new Date(end));
+    else        payload.endAt   = firebase.firestore.FieldValue.delete();
+
+    var nowDate = new Date();
+
+    if (id) {
+      db.collection('ticker_messages').doc(id).update(payload).then(function() {
+        var m = state.allTickerMsgs.find(function(x){ return x.id===id; });
+        if (m) {
+          m.text = text; m.sub = sub; m.active = active;
+          m.startAt = start ? firebase.firestore.Timestamp.fromDate(new Date(start)) : null;
+          m.endAt   = end   ? firebase.firestore.Timestamp.fromDate(new Date(end))   : null;
+          m.updatedAt = nowDate;
+        }
+        renderTickerMsgsTable();
+        closeModal('tickerMsgModal');
+        showToast('Ticker message updated.', 'success');
+        writeLog('Ticker message updated', text.substring(0,40), 'blue');
+      }).catch(function(e){ showToast('Failed to save: ' + e.message, 'error'); });
+    } else {
+      var createPayload = Object.assign({}, payload, {
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        authorId:  state.adminUser ? state.adminUser.uid : ''
+      });
+      /* Remove FieldValue.delete() on new doc */
+      if (!start) delete createPayload.startAt;
+      if (!end)   delete createPayload.endAt;
+      db.collection('ticker_messages').add(createPayload).then(function(ref) {
+        var local = Object.assign({ id: ref.id }, payload, {
+          createdAt: nowDate,
+          startAt: start ? firebase.firestore.Timestamp.fromDate(new Date(start)) : null,
+          endAt:   end   ? firebase.firestore.Timestamp.fromDate(new Date(end))   : null,
+        });
+        state.allTickerMsgs.unshift(local);
+        renderTickerMsgsTable();
+        closeModal('tickerMsgModal');
+        showToast('Ticker message published!', 'success');
+        writeLog('Ticker message created', text.substring(0,40), 'green');
+      }).catch(function(e){ showToast('Failed to publish: ' + e.message, 'error'); });
+    }
+  });
+
+  /* Edit */
+  function editTickerMsg(id) {
+    var m = state.allTickerMsgs.find(function(x){ return x.id===id; });
+    if (!m) return;
+    document.getElementById('editTickerMsgId').value = id;
+    document.getElementById('tickerMsgText').value   = m.text   || '';
+    document.getElementById('tickerMsgSub').value    = m.sub    || '';
+    document.getElementById('tickerMsgActive').value = m.active ? 'true' : 'false';
+    document.getElementById('tickerMsgStart').value  = m.startAt ? toDatetimeLocal(m.startAt.toDate()) : '';
+    document.getElementById('tickerMsgEnd').value    = m.endAt   ? toDatetimeLocal(m.endAt.toDate())   : '';
+    document.getElementById('tickerMsgModalTitle').textContent = 'Edit Ticker Message';
+    document.getElementById('tickerMsgModalSave').innerHTML = '<i class="fas fa-floppy-disk"></i> Save';
+    updateTickerMsgPreview();
+    openModal('tickerMsgModal');
+  }
+  window.editTickerMsg = editTickerMsg;
+
+  /* Toggle active */
+  function toggleTickerMsg(id) {
+    var m = state.allTickerMsgs.find(function(x){ return x.id===id; });
+    if (!m) return;
+    var newActive = !m.active;
+    db.collection('ticker_messages').doc(id).update({ active: newActive, updatedAt: firebase.firestore.FieldValue.serverTimestamp() })
+      .then(function() {
+        m.active = newActive;
+        renderTickerMsgsTable();
+        showToast('Message ' + (newActive ? 'activated' : 'deactivated') + '.', 'success');
+        writeLog('Ticker message ' + (newActive ? 'activated' : 'deactivated'), (m.text||'').substring(0,40), newActive ? 'green' : 'amber');
+      }).catch(function(){ showToast('Failed to update.', 'error'); });
+  }
+  window.toggleTickerMsg = toggleTickerMsg;
+
+  /* Delete */
+  function deleteTickerMsg(id) {
+    confirmDelete('Delete this ticker message? It will be removed from the strip immediately.', function() {
+      db.collection('ticker_messages').doc(id).delete().then(function() {
+        state.allTickerMsgs = state.allTickerMsgs.filter(function(x){ return x.id!==id; });
+        renderTickerMsgsTable();
+        showToast('Ticker message deleted.', 'success');
+        writeLog('Ticker message deleted', id, 'red');
+      }).catch(function(){ showToast('Failed to delete.', 'error'); });
+    });
+  }
+  window.deleteTickerMsg = deleteTickerMsg;
+
+  /* Modal close */
+  ['tickerMsgModalClose','tickerMsgModalCancel'].forEach(function(id) {
+    document.getElementById(id).addEventListener('click', function(){ closeModal('tickerMsgModal'); });
+  });
+
+  /* Date → datetime-local string helper */
+  function toDatetimeLocal(d) {
+    var pad = function(n){ return n < 10 ? '0'+n : n; };
+    return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()) +
+           'T' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+  }
+
+  // ============================================================
   // CATEGORIES
   // ============================================================
   document.getElementById('newCategoryBtn').addEventListener('click', function() {
@@ -1949,4 +2181,3 @@
     modal.addEventListener('click', function(e){ if (e.target === modal) modal.remove(); });
   }
   window.openStoreOverview = openStoreOverview;
-
