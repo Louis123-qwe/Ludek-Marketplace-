@@ -975,21 +975,274 @@
     text-transform: uppercase;
     letter-spacing: 0.05em;
   }
+
+  /* ── Developer greeting / encouragement messages ─── */
+  .ticker-msg-item {
+    background: linear-gradient(90deg, rgba(27,94,59,0.35) 0%, rgba(15,45,28,0.15) 100%);
+    min-width: 320px;
+    gap: 12px;
+    cursor: default;
+  }
+  .ticker-msg-item:hover { background: rgba(27,94,59,0.45); }
+  .ticker-msg-icon {
+    font-size: 1.6rem;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+  .ticker-msg-headline {
+    max-width: 260px !important;
+    color: #86efac !important;
+    font-weight: 700 !important;
+    font-size: 0.82rem !important;
+  }
+  .ticker-msg-sub {
+    font-size: 0.68rem;
+    color: #94a3b8;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 280px;
+    font-style: italic;
+  }
+
+  /* ── Admin broadcast messages ────────────────────── */
+  .ticker-broadcast-item {
+    background: linear-gradient(90deg, rgba(180,130,0,0.25) 0%, rgba(15,45,28,0.1) 100%);
+    border-left: 3px solid #f59e0b;
+    min-width: 340px;
+    gap: 12px;
+    cursor: default;
+  }
+  .ticker-broadcast-item:hover { background: rgba(180,130,0,0.35); }
+  .ticker-broadcast-icon {
+    flex-shrink: 0;
+    color: #f59e0b;
+    font-size: 1.1rem;
+  }
+  .ticker-broadcast-text {
+    color: #fde68a !important;
+    font-weight: 700 !important;
+    max-width: 300px !important;
+  }
+  .ticker-broadcast-sub {
+    color: #fbbf24 !important;
+    font-style: normal !important;
+  }
 </style>
 
 <script>
+/* ============================================================
+   LUDEK TICKER — Smart Strip v2
+   • Interleaves developer greetings + product listings
+   • New-week (Monday) & new-month messages from Louis Ekemini
+   • Admin custom broadcast messages from Firestore (ticker_messages)
+   • Falls back gracefully if Firebase is unconfigured
+   ============================================================ */
 (function() {
+
+  /* ── Helpers ─────────────────────────────────────────── */
+  function escT(s) {
+    return String(s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  var MONTHS = ['January','February','March','April','May','June',
+                'July','August','September','October','November','December'];
+
+  function isMonday(d)   { return d.getDay() === 1; }
+  function isFirstDay(d) { return d.getDate() === 1; }
+
+  /* ── Message banks ───────────────────────────────────── */
+  function buildGreetingMessages(now) {
+    var month = MONTHS[now.getMonth()];
+    var msgs  = [];
+
+    /* Always-on warm greetings from Louis */
+    msgs.push({
+      icon: '👋',
+      headline: 'Welcome to Ludek Marketplace!',
+      sub: 'From Louis Ekemini — your campus, your market.'
+    });
+    msgs.push({
+      icon: '🌟',
+      headline: 'You\'re doing great!',
+      sub: 'Keep pushing — Louis Ekemini believes in you.'
+    });
+    msgs.push({
+      icon: '💡',
+      headline: 'Every listing is a step forward.',
+      sub: 'List smart, buy smart — Ludek has your back.'
+    });
+    msgs.push({
+      icon: '🙌',
+      headline: 'The best deals are posted daily.',
+      sub: 'Stay sharp, stay connected — Louis Ekemini.'
+    });
+    msgs.push({
+      icon: '🔥',
+      headline: 'Your hustle is your superpower.',
+      sub: 'Make today count — Louis Ekemini, Ludek Dev.'
+    });
+
+    /* New week (Monday) messages */
+    if (isMonday(now)) {
+      msgs.push({
+        icon: '📅',
+        headline: 'Happy New Week! 🎉',
+        sub: 'A fresh week, fresh opportunities. Let\'s go! — Louis Ekemini'
+      });
+      msgs.push({
+        icon: '🚀',
+        headline: 'Monday Motivation!',
+        sub: 'Start the week strong — your next great deal awaits on Ludek.'
+      });
+      msgs.push({
+        icon: '💪',
+        headline: 'New week, new wins!',
+        sub: 'You\'ve got this. Ludek is rooting for you — Louis Ekemini.'
+      });
+    }
+
+    /* New month messages */
+    if (isFirstDay(now)) {
+      msgs.push({
+        icon: '🗓️',
+        headline: 'Welcome to ' + month + '! 🎊',
+        sub: 'A brand-new month of possibilities. Make it legendary — Louis Ekemini.'
+      });
+      msgs.push({
+        icon: '✨',
+        headline: month + ' is YOUR month!',
+        sub: 'Fresh goals, fresh listings, fresh energy. Let\'s build! — Ludek Dev.'
+      });
+      msgs.push({
+        icon: '🥂',
+        headline: 'Happy New Month! 🎉',
+        sub: 'Wishing you abundance, deals, and breakthroughs in ' + month + ' — Louis Ekemini.'
+      });
+    }
+
+    return msgs;
+  }
+
+  /* ── Build a message DOM element ────────────────────── */
+  function makeMsgEl(msg) {
+    var el = document.createElement('div');
+    el.className = 'ticker-item ticker-msg-item';
+    el.innerHTML =
+      '<div class="ticker-msg-icon">' + msg.icon + '</div>' +
+      '<div class="ticker-item-info">' +
+        '<div class="ticker-item-title ticker-msg-headline">' + escT(msg.headline) + '</div>' +
+        '<div class="ticker-msg-sub">' + escT(msg.sub) + '</div>' +
+      '</div>';
+    return el;
+  }
+
+  /* ── Build a product DOM element ────────────────────── */
+  function makeProductEl(item) {
+    var el = document.createElement('a');
+    el.className = 'ticker-item';
+    el.href = 'product.html?id=' + item.id;
+    var imgHtml = item.image
+      ? '<img class="ticker-item-img" src="' + escT(item.image) + '" alt="' + escT(item.title) + '" loading="lazy" />'
+      : '<div class="ticker-item-img-placeholder"><i class="fas fa-image"></i></div>';
+    el.innerHTML =
+      imgHtml +
+      '<div class="ticker-item-info">' +
+        '<div class="ticker-item-title">' + escT(item.title) + '</div>' +
+        '<div class="ticker-item-meta">' +
+          '<span class="ticker-item-price">₦' + Number(item.price).toLocaleString() + '</span>' +
+          (item.category ? '<span class="ticker-item-cat">' + escT(item.category) + '</span>' : '') +
+        '</div>' +
+      '</div>';
+    return el;
+  }
+
+  /* ── Build an admin broadcast element ───────────────── */
+  function makeBroadcastEl(msg) {
+    var el = document.createElement('div');
+    el.className = 'ticker-item ticker-broadcast-item';
+    el.innerHTML =
+      '<div class="ticker-broadcast-icon"><i class="fas fa-bullhorn"></i></div>' +
+      '<div class="ticker-item-info">' +
+        '<div class="ticker-item-title ticker-broadcast-text">' + escT(msg.text) + '</div>' +
+        (msg.sub ? '<div class="ticker-msg-sub ticker-broadcast-sub">' + escT(msg.sub) + '</div>' : '') +
+      '</div>';
+    return el;
+  }
+
+  /* ── Weave messages + products ───────────────────────
+     Pattern: MSG MSG MSG · PRODUCTS PRODUCTS ... (repeat)
+     3 rounds of messages, then products flow, repeat          */
+  function buildTrack(greetings, broadcasts, products, track) {
+    var allMsgs = [];
+
+    /* Admin broadcast messages come FIRST with priority */
+    broadcasts.forEach(function(b) { allMsgs.push({ type: 'broadcast', data: b }); });
+
+    /* Then developer greetings */
+    greetings.forEach(function(g) { allMsgs.push({ type: 'msg', data: g }); });
+
+    /* Sequence: 3 msg rounds, then N products, then repeat */
+    var sequence = [];
+    var msgRounds = 3;
+    for (var r = 0; r < msgRounds; r++) {
+      allMsgs.forEach(function(m) { sequence.push(m); });
+    }
+    products.forEach(function(p) { sequence.push({ type: 'product', data: p }); });
+
+    /* Double for seamless loop */
+    var full = sequence.concat(sequence);
+    full.forEach(function(entry) {
+      if (entry.type === 'broadcast') {
+        track.appendChild(makeBroadcastEl(entry.data));
+      } else if (entry.type === 'msg') {
+        track.appendChild(makeMsgEl(entry.data));
+      } else {
+        track.appendChild(makeProductEl(entry.data));
+      }
+    });
+
+    /* Speed: base + extra per item */
+    var total = full.length;
+    track.style.animationDuration = Math.max(60, total * 3) + 's';
+  }
+
+  /* ── Render with products-only fallback ─────────────── */
+  function renderTicker(greetings, broadcasts, products) {
+    var track = document.getElementById('tickerTrack');
+    if (!track) return;
+
+    if (!products.length && !greetings.length && !broadcasts.length) {
+      document.getElementById('tickerBar').style.display = 'none';
+      return;
+    }
+
+    /* Update LIVE label: show ADMIN tag if broadcast active */
+    if (broadcasts.length) {
+      var label = document.querySelector('.ticker-label span');
+      if (label) label.textContent = 'NEWS';
+    }
+
+    buildTrack(greetings, broadcasts, products, track);
+  }
+
+  /* ── Init: load products + admin messages ────────────── */
   function initTicker() {
     if (typeof firebase === 'undefined' || !window.LUDEK_FIREBASE_CONFIG) {
       setTimeout(initTicker, 400);
       return;
     }
+
     var app = firebase.apps.length
       ? firebase.app()
       : firebase.initializeApp(window.LUDEK_FIREBASE_CONFIG);
-    var db = firebase.firestore(app);
+    var db  = firebase.firestore(app);
+    var now = new Date();
+    var greetings = buildGreetingMessages(now);
 
-    db.collection('listings')
+    var productsPromise = db.collection('listings')
       .where('status', '==', 'active')
       .orderBy('createdAt', 'desc')
       .limit(30)
@@ -1006,57 +1259,35 @@
             image:    d.coverImage || (d.images && d.images[0]) || '',
           });
         });
-        if (!items.length) {
-          document.getElementById('tickerBar').style.display = 'none';
-          return;
-        }
-        renderTicker(items);
+        return items;
       })
-      .catch(function() {
-        document.getElementById('tickerBar').style.display = 'none';
+      .catch(function() { return []; });
+
+    /* Admin ticker_messages collection:
+       Each doc: { text, sub, active: true, startAt: Timestamp, endAt: Timestamp } */
+    var broadcastPromise = db.collection('ticker_messages')
+      .where('active', '==', true)
+      .get()
+      .then(function(snap) {
+        var msgs = [];
+        var nowMs = now.getTime();
+        snap.forEach(function(doc) {
+          var d = doc.data();
+          /* Respect optional time window */
+          var start = d.startAt ? d.startAt.toMillis() : 0;
+          var end   = d.endAt   ? d.endAt.toMillis()   : Infinity;
+          if (nowMs >= start && nowMs <= end) {
+            msgs.push({ text: d.text || '', sub: d.sub || '' });
+          }
+        });
+        return msgs;
+      })
+      .catch(function() { return []; });
+
+    Promise.all([productsPromise, broadcastPromise])
+      .then(function(results) {
+        renderTicker(greetings, results[1], results[0]);
       });
-  }
-
-  function renderTicker(items) {
-    var track = document.getElementById('tickerTrack');
-    if (!track) return;
-
-    function makeItem(item) {
-      var el = document.createElement('a');
-      el.className = 'ticker-item';
-      el.href = 'product.html?id=' + item.id;
-
-      var imgHtml = item.image
-        ? '<img class="ticker-item-img" src="' + escT(item.image) + '" alt="' + escT(item.title) + '" loading="lazy" />'
-        : '<div class="ticker-item-img-placeholder"><i class="fas fa-image"></i></div>';
-
-      el.innerHTML =
-        imgHtml +
-        '<div class="ticker-item-info">' +
-          '<div class="ticker-item-title">' + escT(item.title) + '</div>' +
-          '<div class="ticker-item-meta">' +
-            '<span class="ticker-item-price">₦' + Number(item.price).toLocaleString() + '</span>' +
-            (item.category ? '<span class="ticker-item-cat">' + escT(item.category) + '</span>' : '') +
-          '</div>' +
-        '</div>';
-      return el;
-    }
-
-    // Two copies for seamless infinite loop
-    items.concat(items).forEach(function(item) {
-      track.appendChild(makeItem(item));
-    });
-
-    // Scale speed with number of items
-    track.style.animationDuration = Math.max(40, items.length * 2.5) + 's';
-  }
-
-  function escT(str) {
-    return String(str)
-      .replace(/&/g,'&amp;')
-      .replace(/</g,'&lt;')
-      .replace(/>/g,'&gt;')
-      .replace(/"/g,'&quot;');
   }
 
   document.addEventListener('DOMContentLoaded', function() {
