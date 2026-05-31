@@ -457,6 +457,18 @@
 
     .spinner { width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.6s linear infinite; display: inline-block; }
     @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Ticker Strip section styles ── */
+    .ticker-default-preview {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 14px; border-radius: 8px;
+      background: var(--milk-bg); border: 1px solid var(--milk-border);
+    }
+    .ticker-default-icon { font-size: 1.3rem; flex-shrink: 0; }
+    @keyframes tickerPulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.3; transform: scale(0.8); }
+    }
   </style>
 </head>
 <body>
@@ -527,6 +539,7 @@
 
         <div class="sidebar-section-label">Tools</div>
         <button class="sidebar-link" data-section="announcements"><i class="fas fa-bullhorn"></i> Announcements</button>
+        <button class="sidebar-link" data-section="ticker"><i class="fas fa-rectangle-ad"></i> Ticker Strip <span class="sidebar-badge-count" id="badgeTicker" style="display:none;">0</span></button>
         <button class="sidebar-link" data-section="categories"><i class="fas fa-tags"></i> Categories</button>
         <button class="sidebar-link" data-section="logs"><i class="fas fa-clock-rotate-left"></i> Audit Log</button>
         <button class="sidebar-link" data-section="settings"><i class="fas fa-gear"></i> Settings</button>
@@ -838,6 +851,63 @@
           </div>
         </div>
 
+        <!-- ===== TICKER STRIP MESSAGES ===== -->
+        <div class="panel-section" id="section-ticker">
+          <div class="section-header flex items-center gap-2 fade-up">
+            <div style="flex:1;">
+              <h1 class="section-title">Ticker Strip Messages</h1>
+              <p class="section-subtitle">Send custom broadcast messages to the homepage live ticker. Active messages appear with a gold highlight above all product listings.</p>
+            </div>
+            <button class="btn btn-forest" id="newTickerMsgBtn"><i class="fas fa-plus"></i> New Message</button>
+          </div>
+
+          <!-- Active broadcasts banner -->
+          <div id="tickerActiveBanner" class="card fade-up" style="display:none; border-left:4px solid #f59e0b; background:rgba(245,158,11,0.08);">
+            <div class="card-body" style="padding:14px 18px; display:flex; align-items:center; gap:12px;">
+              <i class="fas fa-circle-dot" style="color:#f59e0b; animation:tickerPulse 1.2s ease-in-out infinite;"></i>
+              <span id="tickerActiveBannerText" style="font-size:0.875rem; font-weight:600; color:#f59e0b;"></span>
+            </div>
+          </div>
+
+          <!-- Messages table -->
+          <div class="card fade-up">
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Message</th>
+                    <th>Sub-text</th>
+                    <th>Starts</th>
+                    <th>Ends</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="tickerMsgsTableBody">
+                  <tr><td colspan="6" class="text-center text-muted" style="padding:2rem;">Loading…</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Default messages preview -->
+          <div class="card fade-up delay-1">
+            <div class="card-header">
+              <span class="card-title"><i class="fas fa-info-circle" style="color:var(--forest);"></i> Default Developer Messages</span>
+              <span style="font-size:0.8rem; color:var(--text-muted);">These run automatically when no custom message is active</span>
+            </div>
+            <div class="card-body">
+              <div style="display:flex; flex-direction:column; gap:8px;" id="defaultMsgPreviewList">
+                <div class="ticker-default-preview"><span class="ticker-default-icon">👋</span><div><div style="font-weight:600; font-size:0.8125rem;">Welcome to Ludek Marketplace!</div><div style="font-size:0.75rem; color:var(--text-muted); font-style:italic;">From Louis Ekemini — your campus, your market.</div></div></div>
+                <div class="ticker-default-preview"><span class="ticker-default-icon">🌟</span><div><div style="font-weight:600; font-size:0.8125rem;">You're doing great!</div><div style="font-size:0.75rem; color:var(--text-muted); font-style:italic;">Keep pushing — Louis Ekemini believes in you.</div></div></div>
+                <div class="ticker-default-preview"><span class="ticker-default-icon">📅</span><div><div style="font-weight:600; font-size:0.8125rem;">Happy New Week! <span style="opacity:0.6;">(Mondays only)</span></div><div style="font-size:0.75rem; color:var(--text-muted); font-style:italic;">A fresh week, fresh opportunities. Let's go! — Louis Ekemini</div></div></div>
+                <div class="ticker-default-preview"><span class="ticker-default-icon">🗓️</span><div><div style="font-weight:600; font-size:0.8125rem;">Happy New Month! <span style="opacity:0.6;">(1st of month)</span></div><div style="font-size:0.75rem; color:var(--text-muted); font-style:italic;">A brand-new month of possibilities. Make it legendary — Louis Ekemini.</div></div></div>
+                <div class="ticker-default-preview" style="opacity:0.5;"><span class="ticker-default-icon">➕</span><div><div style="font-weight:600; font-size:0.8125rem;">+ 3 more greetings & encouragement messages</div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- ===== CATEGORIES ===== -->
         <div class="panel-section" id="section-categories">
           <div class="section-header fade-up" style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:10px;">
@@ -936,6 +1006,73 @@
       <div class="modal-footer">
         <button class="btn btn-ghost" id="userModalCancel">Cancel</button>
         <button class="btn btn-forest" id="userModalSave"><i class="fas fa-floppy-disk"></i> Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TICKER MESSAGE MODAL -->
+  <div class="modal-backdrop" id="tickerMsgModal">
+    <div class="modal" style="max-width:540px;">
+      <div class="modal-header">
+        <span class="modal-title" id="tickerMsgModalTitle">New Ticker Message</span>
+        <button class="modal-close" id="tickerMsgModalClose"><i class="fas fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="editTickerMsgId" />
+
+        <div class="form-field">
+          <label class="form-label">Main Message <span style="color:var(--red)">*</span></label>
+          <input class="form-input" id="tickerMsgText" placeholder="e.g. 🎉 50% OFF all electronics this weekend!" maxlength="80" />
+          <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">Keep it short and punchy — max 80 characters.</div>
+        </div>
+
+        <div class="form-field">
+          <label class="form-label">Sub-text <span style="color:var(--text-muted); font-weight:400;">(optional)</span></label>
+          <input class="form-input" id="tickerMsgSub" placeholder="e.g. Use code LUDEK50 · Valid till Sunday" maxlength="60" />
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div class="form-field">
+            <label class="form-label">Start Date &amp; Time</label>
+            <input class="form-input" id="tickerMsgStart" type="datetime-local" />
+            <div style="font-size:0.72rem; color:var(--text-muted); margin-top:3px;">Leave blank = active immediately</div>
+          </div>
+          <div class="form-field">
+            <label class="form-label">End Date &amp; Time</label>
+            <input class="form-input" id="tickerMsgEnd" type="datetime-local" />
+            <div style="font-size:0.72rem; color:var(--text-muted); margin-top:3px;">Leave blank = no expiry</div>
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label class="form-label">Status</label>
+          <select class="form-select" id="tickerMsgActive">
+            <option value="true">Active — show on ticker</option>
+            <option value="false">Inactive — hidden</option>
+          </select>
+        </div>
+
+        <!-- Live preview -->
+        <div style="margin-top:8px;">
+          <div style="font-size:0.8rem; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:8px;">Ticker Preview</div>
+          <div id="tickerMsgPreviewWrap" style="background:#0f2d1c; border-radius:10px; height:58px; display:flex; align-items:center; overflow:hidden; padding:0 12px; gap:10px; border:1px solid rgba(255,255,255,0.08);">
+            <div style="background:#1B5E3B; padding:6px 10px; border-radius:6px; display:flex; align-items:center; gap:6px; flex-shrink:0;">
+              <i class="fas fa-circle-dot" style="color:#4ade80; font-size:0.55rem;"></i>
+              <span style="font-size:0.65rem; font-weight:800; color:#fff; letter-spacing:0.1em;">NEWS</span>
+            </div>
+            <div style="background:linear-gradient(90deg,rgba(180,130,0,0.3),rgba(15,45,28,0.1)); border-left:3px solid #f59e0b; border-radius:6px; padding:6px 14px; display:flex; align-items:center; gap:10px; flex:1;">
+              <i class="fas fa-bullhorn" style="color:#f59e0b; font-size:0.9rem; flex-shrink:0;"></i>
+              <div>
+                <div id="tickerMsgPreviewText" style="font-size:0.8rem; font-weight:700; color:#fde68a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:300px;">Your message here…</div>
+                <div id="tickerMsgPreviewSub" style="font-size:0.68rem; color:#fbbf24; white-space:nowrap;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="tickerMsgModalCancel">Cancel</button>
+        <button class="btn btn-forest" id="tickerMsgModalSave"><i class="fas fa-paper-plane"></i> Publish</button>
       </div>
     </div>
   </div>
