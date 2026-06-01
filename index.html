@@ -905,6 +905,12 @@
     will-change: transform;
   }
   .ticker-track:hover { animation-play-state: paused; }
+  /* Products: keep strip moving on hover so tap/click still fires cleanly */
+  .ticker-product-item { cursor: pointer; }
+  .ticker-product-item:hover { background: rgba(255,255,255,0.07); }
+  /* Non-products pause strip on hover but don't navigate */
+  .ticker-msg-item,
+  .ticker-broadcast-item { pointer-events: none; }
   @keyframes tickerScroll {
     0%   { transform: translateX(0); }
     100% { transform: translateX(-50%); }
@@ -1126,10 +1132,22 @@
     return msgs;
   }
 
+  /* ── Fisher-Yates shuffle ────────────────────────────── */
+  function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
   /* ── Build a message DOM element ────────────────────── */
   function makeMsgEl(msg) {
     var el = document.createElement('div');
     el.className = 'ticker-item ticker-msg-item';
+    /* Non-product: pause on hover/touch but don't navigate */
+    el.style.cursor = 'default';
     el.innerHTML =
       '<div class="ticker-msg-icon">' + msg.icon + '</div>' +
       '<div class="ticker-item-info">' +
@@ -1142,8 +1160,9 @@
   /* ── Build a product DOM element ────────────────────── */
   function makeProductEl(item) {
     var el = document.createElement('a');
-    el.className = 'ticker-item';
+    el.className = 'ticker-item ticker-product-item';
     el.href = 'product.html?id=' + item.id;
+    el.title = item.title;
     var imgHtml = item.image
       ? '<img class="ticker-item-img" src="' + escT(item.image) + '" alt="' + escT(item.title) + '" loading="lazy" />'
       : '<div class="ticker-item-img-placeholder"><i class="fas fa-image"></i></div>';
@@ -1163,6 +1182,7 @@
   function makeBroadcastEl(msg) {
     var el = document.createElement('div');
     el.className = 'ticker-item ticker-broadcast-item';
+    el.style.cursor = 'default';
     el.innerHTML =
       '<div class="ticker-broadcast-icon"><i class="fas fa-bullhorn"></i></div>' +
       '<div class="ticker-item-info">' +
@@ -1172,41 +1192,48 @@
     return el;
   }
 
-  /* ── Weave messages + products ───────────────────────
-     Pattern: MSG MSG MSG · PRODUCTS PRODUCTS ... (repeat)
-     3 rounds of messages, then products flow, repeat          */
+  /* ── Weave messages + products (randomised) ──────────
+     • Products are shuffled randomly
+     • Pick max 2 greetings per pass (avoids quote overload)
+     • Broadcasts always lead, then interleave: 1 msg every
+       3–4 products so the strip feels natural, not spammy   */
   function buildTrack(greetings, broadcasts, products, track) {
-    var allMsgs = [];
+    var shuffledProducts = shuffle(products);
+    /* Pick 2 random greetings per pass — keeps strip light */
+    var pickedGreetings  = shuffle(greetings).slice(0, 2);
 
-    /* Admin broadcast messages come FIRST with priority */
-    broadcasts.forEach(function(b) { allMsgs.push({ type: 'broadcast', data: b }); });
+    /* Build broadcast entries (priority, un-shuffled) */
+    var broadcastEntries = broadcasts.map(function(b) { return { type: 'broadcast', data: b }; });
+    var greetingEntries  = pickedGreetings.map(function(g) { return { type: 'msg', data: g }; });
+    var productEntries   = shuffledProducts.map(function(p) { return { type: 'product', data: p }; });
 
-    /* Then developer greetings */
-    greetings.forEach(function(g) { allMsgs.push({ type: 'msg', data: g }); });
-
-    /* Sequence: 3 msg rounds, then N products, then repeat */
-    var sequence = [];
-    var msgRounds = 3;
-    for (var r = 0; r < msgRounds; r++) {
-      allMsgs.forEach(function(m) { sequence.push(m); });
-    }
-    products.forEach(function(p) { sequence.push({ type: 'product', data: p }); });
-
-    /* Double for seamless loop */
-    var full = sequence.concat(sequence);
-    full.forEach(function(entry) {
-      if (entry.type === 'broadcast') {
-        track.appendChild(makeBroadcastEl(entry.data));
-      } else if (entry.type === 'msg') {
-        track.appendChild(makeMsgEl(entry.data));
-      } else {
-        track.appendChild(makeProductEl(entry.data));
+    /* Interleave: broadcasts first, then weave msgs into products
+       Pattern: [broadcast…] P P P msg P P P msg P P P msg …    */
+    var sequence = broadcastEntries.slice(); // start with any broadcasts
+    var msgCursor = 0;
+    var interval  = 3; // inject a greeting every N products
+    productEntries.forEach(function(p, i) {
+      sequence.push(p);
+      if ((i + 1) % interval === 0 && greetingEntries.length) {
+        sequence.push(greetingEntries[msgCursor % greetingEntries.length]);
+        msgCursor++;
       }
     });
+    /* If products are fewer than interval, still append one greeting */
+    if (productEntries.length && msgCursor === 0 && greetingEntries.length) {
+      sequence.push(greetingEntries[0]);
+    }
 
-    /* Speed: base + extra per item */
-    var total = full.length;
-    track.style.animationDuration = Math.max(60, total * 3) + 's';
+    /* Double for seamless infinite loop */
+    var full = sequence.concat(sequence);
+    full.forEach(function(entry) {
+      if      (entry.type === 'broadcast') track.appendChild(makeBroadcastEl(entry.data));
+      else if (entry.type === 'msg')       track.appendChild(makeMsgEl(entry.data));
+      else                                 track.appendChild(makeProductEl(entry.data));
+    });
+
+    /* Speed proportional to content width */
+    track.style.animationDuration = Math.max(50, sequence.length * 4) + 's';
   }
 
   /* ── Render with products-only fallback ─────────────── */
@@ -1226,6 +1253,25 @@
     }
 
     buildTrack(greetings, broadcasts, products, track);
+
+    /* Touch handling: products navigate, messages keep scrolling.
+       We detect a tap (no significant drag) and only follow the
+       link if the touched element is a product item.             */
+    var bar = document.getElementById('tickerBar');
+    var touchStartX = 0;
+    bar.addEventListener('touchstart', function(e) {
+      touchStartX = e.touches[0].clientX;
+    }, { passive: true });
+    bar.addEventListener('touchend', function(e) {
+      var dx = Math.abs(e.changedTouches[0].clientX - touchStartX);
+      if (dx > 8) return; // was a swipe, not a tap
+      var target = e.target.closest('.ticker-product-item');
+      if (target && target.href) {
+        e.preventDefault();
+        window.location.href = target.href;
+      }
+      /* Non-product tap: do nothing — strip keeps scrolling */
+    }, { passive: false });
   }
 
   /* ── Init: load products + admin messages ────────────── */
