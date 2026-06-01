@@ -904,13 +904,14 @@
     animation: tickerScroll 55s linear infinite;
     will-change: transform;
   }
-  .ticker-track:hover { animation-play-state: paused; }
-  /* Products: keep strip moving on hover so tap/click still fires cleanly */
+  /* Only pause on real mouse hover — not touch */
+  @media (hover: hover) and (pointer: fine) {
+    .ticker-track:hover { animation-play-state: paused; }
+    .ticker-product-item:hover { background: rgba(255,255,255,0.07); }
+  }
   .ticker-product-item { cursor: pointer; }
-  .ticker-product-item:hover { background: rgba(255,255,255,0.07); }
-  /* Non-products pause strip on hover but don't navigate */
   .ticker-msg-item,
-  .ticker-broadcast-item { pointer-events: none; }
+  .ticker-broadcast-item { cursor: default; }
   @keyframes tickerScroll {
     0%   { transform: translateX(0); }
     100% { transform: translateX(-50%); }
@@ -1254,24 +1255,29 @@
 
     buildTrack(greetings, broadcasts, products, track);
 
-    /* Touch handling: products navigate, messages keep scrolling.
-       We detect a tap (no significant drag) and only follow the
-       link if the touched element is a product item.             */
-    var bar = document.getElementById('tickerBar');
+    /* Touch handling: keep strip running, navigate only on product tap.
+       iOS/Android fire a synthetic :hover on touch which can freeze the
+       CSS animation — we force it back to running on every touchstart.  */
+    var bar   = document.getElementById('tickerBar');
     var touchStartX = 0;
     bar.addEventListener('touchstart', function(e) {
       touchStartX = e.touches[0].clientX;
+      /* Force strip running — defeats any browser synthetic hover pause */
+      track.style.animationPlayState = 'running';
     }, { passive: true });
     bar.addEventListener('touchend', function(e) {
+      track.style.animationPlayState = 'running'; // keep running after lift
       var dx = Math.abs(e.changedTouches[0].clientX - touchStartX);
-      if (dx > 8) return; // was a swipe, not a tap
+      if (dx > 8) return; // swipe — don't navigate
       var target = e.target.closest('.ticker-product-item');
       if (target && target.href) {
         e.preventDefault();
         window.location.href = target.href;
       }
-      /* Non-product tap: do nothing — strip keeps scrolling */
     }, { passive: false });
+    bar.addEventListener('touchcancel', function() {
+      track.style.animationPlayState = 'running';
+    }, { passive: true });
   }
 
   /* ── Init: load products + admin messages ────────────── */
