@@ -166,21 +166,23 @@
     var labels = {
       overview:'Dashboard', users:'Users', listings:'Listings',
       sellers:'Sellers', reports:'Reports', announcements:'Announcements',
-      ticker:'Ticker Strip', categories:'Categories', logs:'Audit Log', settings:'Settings'
+      ticker:'Ticker Strip', categories:'Categories', logs:'Audit Log',
+      settings:'Settings', notifications:'Notifications'
     };
     var el = document.getElementById('topbarPage');
     if (el) el.textContent = labels[section] || section;
     closeSidebar();
-    if (section === 'overview')      { renderOverviewRecentListings(); renderUserBreakdown(); renderMostSaved(); drawRegChart(); }
-    if (section === 'users')         renderUsersTable();
-    if (section === 'listings')      renderListingsTable();
-    if (section === 'sellers')       renderSellersTable();
-    if (section === 'reports')       renderReportsTable();
-    if (section === 'announcements') renderAnnouncementsTable();
-    if (section === 'ticker')        renderTickerSection();
-    if (section === 'categories')    renderCategories();
-    if (section === 'logs')          renderLogs();
-    if (section === 'settings')      renderSettings();
+    if (section === 'overview')       { renderOverviewRecentListings(); renderUserBreakdown(); renderMostSaved(); drawRegChart(); }
+    if (section === 'users')          renderUsersTable();
+    if (section === 'listings')       renderListingsTable();
+    if (section === 'sellers')        renderSellersTable();
+    if (section === 'reports')        renderReportsTable();
+    if (section === 'announcements')  renderAnnouncementsTable();
+    if (section === 'ticker')         renderTickerSection();
+    if (section === 'categories')     renderCategories();
+    if (section === 'logs')           renderLogs();
+    if (section === 'settings')       renderSettings();
+    if (section === 'notifications')  renderNotificationsSection();
   }
   window.navigateTo = navigateTo;
 
@@ -815,6 +817,7 @@
         '<td><div style="display:flex;gap:5px;">' +
           '<button class="btn btn-ghost btn-sm btn-icon" onclick="openAdminEditListing(\'' + l.id + '\')" title="Edit listing"><i class="fas fa-pen"></i></button>' +
           '<button class="btn btn-ghost btn-sm btn-icon" onclick="toggleListingStatus(\'' + l.id + '\',\'' + (l.status||'draft') + '\')" title="Toggle status"><i class="fas ' + toggleIcon + '"></i></button>' +
+          '<button class="btn btn-ghost btn-sm btn-icon" onclick="exportSingleListingPDF(\'' + l.id + '\')" title="Export listing PDF" style="color:var(--forest);"><i class="fas fa-file-pdf"></i></button>' +
           '<button class="btn btn-ghost btn-sm btn-icon" onclick="adminDeleteListing(\'' + l.id + '\')" title="Delete" style="color:var(--red);"><i class="fas fa-trash"></i></button>' +
         '</div></td>' +
       '</tr>';
@@ -1042,6 +1045,7 @@
           '<button class="btn btn-ghost btn-sm btn-icon" onclick="openStoreOverview(\'' + s.id + '\')" title="View Store"><i class="fas fa-shop"></i></button>' +
           '<button class="btn btn-ghost btn-sm btn-icon" onclick="openAdminAddListing(\'' + s.id + '\')" title="Add Listing"><i class="fas fa-plus"></i></button>' +
           '<button class="btn btn-ghost btn-sm btn-icon" onclick="openUserEdit(\'' + s.id + '\')" title="Edit User"><i class="fas fa-pen"></i></button>' +
+          '<button class="btn btn-ghost btn-sm btn-icon" onclick="exportSingleSellerPDF(\'' + s.id + '\')" title="Export seller PDF" style="color:var(--forest);"><i class="fas fa-file-pdf"></i></button>' +
           '<button class="btn btn-ghost btn-sm btn-icon" onclick="suspendStore(\'' + s.id + '\',\'' + (s.status||'active') + '\')" title="' + (s.status==='suspended' ? 'Restore Store' : 'Suspend Store') + '" style="color:' + (s.status==='suspended' ? 'var(--forest)' : 'var(--red)') + ';"><i class="fas fa-' + (s.status==='suspended' ? 'shop' : 'ban') + '"></i></button>' +
         '</div></td>' +
       '</tr>';
@@ -1685,10 +1689,13 @@
   // ============================================================
   document.getElementById('confirmModalOk').addEventListener('click', function() {
     if (state.pendingDeleteFn) {
-      state.pendingDeleteFn();
+      var fn = state.pendingDeleteFn;
       state.pendingDeleteFn = null;
+      closeModal('confirmModal'); // close first for sync fns; async fns handle their own toasts
+      fn();
+    } else {
+      closeModal('confirmModal');
     }
-    closeModal('confirmModal');
   });
   ['confirmModalClose','confirmModalCancel'].forEach(function(id) {
     document.getElementById(id).addEventListener('click', function() {
@@ -1826,10 +1833,11 @@
     }).join('');
 
     var categories = ['electronics','fashion','food','books','hostel','services','tutoring','housing'];
+    var isCustomCat = listing && listing.category && categories.indexOf(listing.category) === -1;
     var catOptions = categories.map(function(c) {
       var sel = listing && listing.category === c ? ' selected' : '';
       return '<option value="' + c + '"' + sel + '>' + c.charAt(0).toUpperCase() + c.slice(1) + '</option>';
-    }).join('');
+    }).join('') + '<option value="custom"' + (isCustomCat ? ' selected' : '') + '>✏️ Other (specify below)</option>';
 
     var isEdit = !!listing;
 
@@ -1936,16 +1944,34 @@
           '</div>' +
         '</div>' +
 
+        // Custom Category (hidden unless 'Other' selected)
+        '<div id="alCustomCategoryRow" style="display:' + (isCustomCat ? 'block' : 'none') + ';">' +
+          '<label style="display:block;font-size:0.8rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">Custom Category <span style="color:var(--red);">*</span></label>' +
+          '<input id="alCustomCategory" style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--font-body);font-size:0.9rem;color:var(--text-primary);background:var(--milk);outline:none;" placeholder="e.g. Accessories, Photography…" maxlength="40" value="' + esc(isCustomCat ? listing.category||'' : '') + '" />' +
+        '</div>' +
+
         // Description
         '<div>' +
           '<label style="display:block;font-size:0.8rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">Description</label>' +
           '<textarea id="alDesc" style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--font-body);font-size:0.9rem;color:var(--text-primary);background:var(--milk);outline:none;resize:vertical;min-height:100px;" placeholder="Describe the product…">' + esc(listing ? listing.description||'' : '') + '</textarea>' +
         '</div>' +
 
-        // WhatsApp
+        // WhatsApp (auto-filled from seller)
         '<div>' +
-          '<label style="display:block;font-size:0.8rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">WhatsApp Override <span style="font-weight:400;text-transform:none;color:var(--text-light);">(optional)</span></label>' +
+          '<label style="display:block;font-size:0.8rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">WhatsApp <span style="font-weight:400;text-transform:none;color:var(--text-light);">(auto-filled from seller · 234 prefix)</span></label>' +
           '<input id="alWhatsapp" style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--font-body);font-size:0.9rem;color:var(--text-primary);background:var(--milk);outline:none;" placeholder="2348012345678" value="' + esc(listing ? listing.whatsapp||'' : '') + '" />' +
+        '</div>' +
+
+        // Location
+        '<div>' +
+          '<label style="display:block;font-size:0.8rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">Location <span style="font-weight:400;text-transform:none;color:var(--text-light);">(optional)</span></label>' +
+          '<input id="alLocation" style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--font-body);font-size:0.9rem;color:var(--text-primary);background:var(--milk);outline:none;" placeholder="e.g. Block C, Hall 3…" maxlength="60" value="' + esc(listing ? listing.location||'' : '') + '" />' +
+        '</div>' +
+
+        // Negotiable toggle
+        '<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg);border-radius:8px;border:1.5px solid var(--border);">' +
+          '<input type="checkbox" id="alNegotiable"' + (listing && listing.negotiable ? ' checked' : '') + ' style="width:16px;height:16px;cursor:pointer;accent-color:var(--forest);" />' +
+          '<label for="alNegotiable" style="font-size:0.9rem;color:var(--text-primary);cursor:pointer;user-select:none;">Price is negotiable</label>' +
         '</div>' +
 
       '</div>'; // end scroll body
@@ -1963,6 +1989,31 @@
     // Save button
     document.getElementById('alSaveBtn').addEventListener('click', function(){
       saveAdminListing(listing ? listing.id : null);
+    });
+
+    // Auto-import seller's phone with 234 country code when seller changes
+    document.getElementById('alSeller').addEventListener('change', function() {
+      var sid = this.value;
+      var s = state.allSellers.find(function(x){ return x.id === sid; });
+      if (s && s.whatsapp) {
+        var digits = String(s.whatsapp).replace(/\D/g, '');
+        if (digits.startsWith('0') && digits.length === 11) digits = '234' + digits.slice(1);
+        if (!digits.startsWith('234')) digits = '234' + digits;
+        document.getElementById('alWhatsapp').value = digits;
+      } else {
+        document.getElementById('alWhatsapp').value = '';
+      }
+    });
+    // Trigger immediately for pre-selected seller (add mode)
+    if (!listing && seller) {
+      var _el = document.getElementById('alSeller');
+      _el.dispatchEvent(new Event('change'));
+    }
+
+    // Custom category toggle
+    document.getElementById('alCategory').addEventListener('change', function() {
+      var customRow = document.getElementById('alCustomCategoryRow');
+      if (customRow) customRow.style.display = this.value === 'custom' ? 'block' : 'none';
     });
 
     // Wire file inputs
@@ -2046,15 +2097,25 @@
     var sellerId  = document.getElementById('alSeller').value;
     var title     = document.getElementById('alTitle').value.trim();
     var price     = parseFloat(document.getElementById('alPrice').value);
-    var category  = document.getElementById('alCategory').value;
+    var catRaw    = document.getElementById('alCategory').value;
+    var customCat = (document.getElementById('alCustomCategory') || {}).value || '';
+    var category  = catRaw === 'custom' ? customCat.trim() : catRaw;
     var condition = document.getElementById('alCondition').value;
     var desc      = document.getElementById('alDesc').value.trim();
     var status    = document.getElementById('alStatus').value;
-    var whatsapp  = document.getElementById('alWhatsapp').value.trim();
+    var whatsappRaw = document.getElementById('alWhatsapp').value.trim();
+    // Sanitize phone: strip non-digits, ensure 234 prefix
+    var waDigits = whatsappRaw.replace(/\D/g, '');
+    if (waDigits.startsWith('0') && waDigits.length === 11) waDigits = '234' + waDigits.slice(1);
+    if (waDigits && !waDigits.startsWith('234')) waDigits = '234' + waDigits;
+    var whatsapp  = waDigits;
+    var location  = (document.getElementById('alLocation') || {}).value || '';
+    var negotiable = !!(document.getElementById('alNegotiable') || {}).checked;
     var images    = alUploadedImages.filter(Boolean);
 
     if (!sellerId) { showToast('Select a seller.', 'error'); return; }
     if (!title)    { showToast('Title is required.', 'error'); return; }
+    if (!category) { showToast('Category is required.', 'error'); return; }
     if (isNaN(price) || price < 0) { showToast('Enter a valid price.', 'error'); return; }
 
     var seller     = state.allSellers.find(function(x){ return x.id === sellerId; });
@@ -2071,6 +2132,8 @@
       category:     category,
       condition:    condition,
       description:  desc,
+      location:     location.trim(),
+      negotiable:   negotiable,
       status:       status,
       images:       images,
       coverImage:   images[0] || '',
@@ -2181,3 +2244,591 @@
     modal.addEventListener('click', function(e){ if (e.target === modal) modal.remove(); });
   }
   window.openStoreOverview = openStoreOverview;
+
+  // ============================================================
+  // PDF EXPORT HELPERS
+  // ============================================================
+  function pdfHeader(doc, title, subtitle) {
+    var pageW = doc.internal.pageSize.getWidth();
+    doc.setFillColor(44, 85, 20);
+    doc.rect(0, 0, pageW, 22, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(13);
+    doc.setFont('helvetica', 'bold');
+    doc.text('LUDEK MARKETPLACE', 14, 10);
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.text(title, 14, 17);
+    if (subtitle) {
+      doc.setFontSize(8);
+      doc.text(subtitle, pageW - 14, 17, { align: 'right' });
+    }
+    doc.setTextColor(30, 30, 30);
+    return 28; // y cursor after header
+  }
+
+  function pdfFooter(doc) {
+    var pageCount = doc.internal.getNumberOfPages();
+    var pageW = doc.internal.pageSize.getWidth();
+    var pageH = doc.internal.pageSize.getHeight();
+    for (var i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setFontSize(7);
+      doc.setTextColor(160, 160, 160);
+      doc.text('Ludek Marketplace Admin · Generated ' + new Date().toLocaleString('en-NG'), 14, pageH - 6);
+      doc.text('Page ' + i + ' of ' + pageCount, pageW - 14, pageH - 6, { align: 'right' });
+    }
+  }
+
+  // ── 1. All Listings PDF ────────────────────────────────────
+  function exportAllListingsPDF() {
+    if (!window.jspdf) { showToast('PDF library not loaded yet. Try again.', 'error'); return; }
+    var doc = new window.jspdf.jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+    var y = pdfHeader(doc, 'All Listings Report', new Date().toLocaleDateString('en-NG'));
+
+    var rows = state.allListings.map(function(l) {
+      return [
+        l.title || '—',
+        l.category || '—',
+        '₦' + Number(l.price || 0).toLocaleString('en-NG'),
+        l.condition || '—',
+        l.status || '—',
+        l.sellerName || l.storeName || '—',
+        l.location || '—',
+        String(l.views || 0),
+        formatDate(l.createdAt)
+      ];
+    });
+
+    doc.autoTable({
+      startY: y,
+      head: [['Title', 'Category', 'Price', 'Condition', 'Status', 'Seller', 'Location', 'Views', 'Date']],
+      body: rows,
+      styles: { fontSize: 7, cellPadding: 2 },
+      headStyles: { fillColor: [44, 85, 20], textColor: 255, fontStyle: 'bold' },
+      alternateRowStyles: { fillColor: [245, 250, 240] },
+      margin: { left: 14, right: 14 }
+    });
+
+    pdfFooter(doc);
+    doc.save('ludek-all-listings-' + Date.now() + '.pdf');
+    writeLog('PDF export', 'All Listings (' + rows.length + ' items)', 'blue');
+    showToast('All Listings PDF exported (' + rows.length + ' listings).', 'success');
+  }
+  window.exportAllListingsPDF = exportAllListingsPDF;
+
+  // ── 2. Single Listing PDF ──────────────────────────────────
+  function exportSingleListingPDF(listingId) {
+    if (!window.jspdf) { showToast('PDF library not loaded yet. Try again.', 'error'); return; }
+    var l = state.allListings.find(function(x){ return x.id === listingId; });
+    if (!l) { showToast('Listing not found.', 'error'); return; }
+
+    var doc = new window.jspdf.jsPDF({ unit: 'mm', format: 'a4' });
+    var y = pdfHeader(doc, 'Listing Detail Sheet', 'ID: ' + listingId);
+    var pageW = doc.internal.pageSize.getWidth();
+
+    // Title block
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(30, 30, 30);
+    var titleLines = doc.splitTextToSize(l.title || 'Untitled', pageW - 28);
+    doc.text(titleLines, 14, y);
+    y += titleLines.length * 7 + 4;
+
+    // Status badge line
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(100, 100, 100);
+    doc.text('Status: ' + (l.status || '—') + '   |   Condition: ' + (l.condition || '—') + '   |   Category: ' + (l.category || '—'), 14, y);
+    y += 8;
+
+    // Price
+    doc.setFontSize(18);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(44, 85, 20);
+    doc.text('₦' + Number(l.price || 0).toLocaleString('en-NG') + (l.negotiable ? '  (Negotiable)' : ''), 14, y);
+    y += 10;
+
+    // Divider
+    doc.setDrawColor(200, 200, 200);
+    doc.line(14, y, pageW - 14, y);
+    y += 6;
+
+    // Details table
+    doc.autoTable({
+      startY: y,
+      body: [
+        ['Seller', l.sellerName || l.storeName || '—'],
+        ['Store', l.storeName || '—'],
+        ['WhatsApp', l.whatsapp || '—'],
+        ['Location', l.location || '—'],
+        ['Views', String(l.views || 0)],
+        ['Chat Taps', String(l.chatTaps || 0)],
+        ['Featured', l.featured ? 'Yes' : 'No'],
+        ['Added by Admin', l.addedByAdmin ? 'Yes' : 'No'],
+        ['Created', formatDate(l.createdAt)],
+        ['Last Updated', formatDate(l.updatedAt)],
+      ],
+      styles: { fontSize: 9, cellPadding: 3 },
+      columnStyles: { 0: { fontStyle: 'bold', cellWidth: 40, fillColor: [245, 250, 240] } },
+      margin: { left: 14, right: 14 }
+    });
+
+    y = doc.lastAutoTable.finalY + 8;
+
+    // Description
+    if (l.description) {
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(30, 30, 30);
+      doc.text('Description', 14, y);
+      y += 5;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
+      doc.setTextColor(60, 60, 60);
+      var descLines = doc.splitTextToSize(l.description, pageW - 28);
+      doc.text(descLines, 14, y);
+    }
+
+    pdfFooter(doc);
+    var filename = 'listing-' + (l.title || listingId).replace(/[^a-z0-9]/gi, '-').toLowerCase().slice(0, 30) + '.pdf';
+    doc.save(filename);
+    writeLog('PDF export', 'Single listing: ' + (l.title || listingId), 'blue');
+    showToast('Listing PDF exported.', 'success');
+  }
+  window.exportSingleListingPDF = exportSingleListingPDF;
+
+  // ── 3. Seller Profile PDF (all sellers) ───────────────────
+  function exportSellersPDF() {
+    if (!window.jspdf) { showToast('PDF library not loaded yet. Try again.', 'error'); return; }
+    var doc = new window.jspdf.jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+    var y = pdfHeader(doc, 'Seller Profiles Report', new Date().toLocaleDateString('en-NG'));
+
+    var rows = state.allSellers.map(function(s) {
+      var name = ((s.firstName || '') + ' ' + (s.lastName || '')).trim() || s.email || '—';
+      var listingCount = state.sellerListingCounts[s.id] || 0;
+      var checks = [!!s.firstName, !!s.photoURL, !!s.bannerURL, !!s.whatsapp, !!(s.bio && s.bio.trim().length > 10)];
+      var completeness = Math.round((checks.filter(Boolean).length / checks.length) * 100) + '%';
+      return [
+        name,
+        s.storeName || '—',
+        s.email || '—',
+        s.whatsapp || '—',
+        String(listingCount),
+        s.verified ? 'Verified' : 'Unverified',
+        s.status === 'suspended' ? 'Suspended' : 'Active',
+        completeness,
+        s.bio ? s.bio.slice(0, 60) + (s.bio.length > 60 ? '…' : '') : '—',
+        formatDate(s.createdAt)
+      ];
+    });
+
+    doc.autoTable({
+      startY: y,
+      head: [['Name', 'Store', 'Email', 'WhatsApp', 'Listings', 'Verified', 'Status', 'Profile%', 'Bio', 'Joined']],
+      body: rows,
+      styles: { fontSize: 6.5, cellPadding: 2 },
+      headStyles: { fillColor: [44, 85, 20], textColor: 255, fontStyle: 'bold' },
+      alternateRowStyles: { fillColor: [245, 250, 240] },
+      margin: { left: 14, right: 14 }
+    });
+
+    pdfFooter(doc);
+    doc.save('ludek-seller-profiles-' + Date.now() + '.pdf');
+    writeLog('PDF export', 'Seller Profiles (' + rows.length + ' sellers)', 'blue');
+    showToast('Seller Profiles PDF exported (' + rows.length + ' sellers).', 'success');
+  }
+  window.exportSellersPDF = exportSellersPDF;
+
+  // ── 4. Single Seller Profile PDF ──────────────────────────
+  function exportSingleSellerPDF(sellerId) {
+    if (!window.jspdf) { showToast('PDF library not loaded yet. Try again.', 'error'); return; }
+    var s = state.allSellers.find(function(x){ return x.id === sellerId; });
+    if (!s) { showToast('Seller not found.', 'error'); return; }
+
+    var doc = new window.jspdf.jsPDF({ unit: 'mm', format: 'a4' });
+    var y = pdfHeader(doc, 'Seller Profile Sheet', 'ID: ' + sellerId);
+    var pageW = doc.internal.pageSize.getWidth();
+
+    var name = ((s.firstName || '') + ' ' + (s.lastName || '')).trim() || s.email || '—';
+
+    doc.setFontSize(15);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(30, 30, 30);
+    doc.text(s.storeName || name, 14, y);
+    y += 7;
+
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(100, 100, 100);
+    doc.text(name + '   ·   ' + (s.email || '—'), 14, y);
+    y += 10;
+
+    doc.setDrawColor(200, 200, 200);
+    doc.line(14, y, pageW - 14, y);
+    y += 6;
+
+    var listings = state.allListings.filter(function(l){ return l.sellerId === sellerId; });
+    var totalViews = listings.reduce(function(sum, l){ return sum + (l.views || 0); }, 0);
+    var checks = [!!s.firstName, !!s.photoURL, !!s.bannerURL, !!s.whatsapp, !!(s.bio && s.bio.trim().length > 10)];
+    var completeness = Math.round((checks.filter(Boolean).length / checks.length) * 100) + '%';
+
+    doc.autoTable({
+      startY: y,
+      body: [
+        ['Store Name', s.storeName || '—'],
+        ['Full Name', name],
+        ['Email', s.email || '—'],
+        ['WhatsApp', s.whatsapp || '—'],
+        ['Status', s.status === 'suspended' ? 'Suspended' : 'Active'],
+        ['Verified', s.verified ? 'Yes ✓' : 'No'],
+        ['Profile Completeness', completeness],
+        ['Total Listings', String(listings.length)],
+        ['Active Listings', String(listings.filter(function(l){ return l.status === 'active'; }).length)],
+        ['Total Views', String(totalViews)],
+        ['Joined', formatDate(s.createdAt)],
+      ],
+      styles: { fontSize: 9, cellPadding: 3 },
+      columnStyles: { 0: { fontStyle: 'bold', cellWidth: 50, fillColor: [245, 250, 240] } },
+      margin: { left: 14, right: 14 }
+    });
+
+    y = doc.lastAutoTable.finalY + 8;
+
+    if (s.bio) {
+      doc.setFontSize(10); doc.setFont('helvetica', 'bold'); doc.setTextColor(30, 30, 30);
+      doc.text('Bio', 14, y); y += 5;
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(60, 60, 60);
+      var bioLines = doc.splitTextToSize(s.bio, pageW - 28);
+      doc.text(bioLines, 14, y);
+      y += bioLines.length * 5 + 8;
+    }
+
+    if (listings.length) {
+      doc.setFontSize(10); doc.setFont('helvetica', 'bold'); doc.setTextColor(30, 30, 30);
+      doc.text('Listings (' + listings.length + ')', 14, y);
+      var listingRows = listings.map(function(l){
+        return [l.title || '—', '₦' + Number(l.price||0).toLocaleString('en-NG'), l.status || '—', String(l.views||0), formatDate(l.createdAt)];
+      });
+      doc.autoTable({
+        startY: y + 4,
+        head: [['Title', 'Price', 'Status', 'Views', 'Created']],
+        body: listingRows,
+        styles: { fontSize: 8, cellPadding: 2 },
+        headStyles: { fillColor: [44, 85, 20], textColor: 255, fontStyle: 'bold' },
+        alternateRowStyles: { fillColor: [245, 250, 240] },
+        margin: { left: 14, right: 14 }
+      });
+    }
+
+    pdfFooter(doc);
+    var fname = 'seller-' + (s.storeName || name).replace(/[^a-z0-9]/gi, '-').toLowerCase().slice(0, 30) + '.pdf';
+    doc.save(fname);
+    writeLog('PDF export', 'Seller profile: ' + name, 'blue');
+    showToast('Seller profile PDF exported.', 'success');
+  }
+  window.exportSingleSellerPDF = exportSingleSellerPDF;
+
+  // ── 5. Full Marketplace Analytics PDF ─────────────────────
+  function exportAnalyticsPDF() {
+    if (!window.jspdf) { showToast('PDF library not loaded yet. Try again.', 'error'); return; }
+    var doc = new window.jspdf.jsPDF({ unit: 'mm', format: 'a4' });
+    var y = pdfHeader(doc, 'Marketplace Analytics Report', new Date().toLocaleString('en-NG'));
+    var pageW = doc.internal.pageSize.getWidth();
+
+    // ── Overview stats ──
+    var totalUsers    = state.allUsers.length;
+    var totalSellers  = state.allSellers.length;
+    var totalListings = state.allListings.length;
+    var activeListings = state.allListings.filter(function(l){ return l.status === 'active'; }).length;
+    var draftListings  = state.allListings.filter(function(l){ return l.status === 'draft'; }).length;
+    var totalViews     = state.allListings.reduce(function(sum, l){ return sum + (l.views || 0); }, 0);
+    var totalChats     = state.allListings.reduce(function(sum, l){ return sum + (l.chatTaps || 0); }, 0);
+    var totalSaves     = Object.values(state.savedCounts || {}).reduce(function(a, b){ return a + b; }, 0);
+    var featuredCount  = state.allListings.filter(function(l){ return l.featured; }).length;
+    var verifiedSellers = state.allSellers.filter(function(s){ return s.verified; }).length;
+    var suspendedSellers = state.allSellers.filter(function(s){ return s.status === 'suspended'; }).length;
+
+    // Stats table
+    doc.setFontSize(11); doc.setFont('helvetica', 'bold'); doc.setTextColor(44, 85, 20);
+    doc.text('Platform Overview', 14, y); y += 5;
+
+    doc.autoTable({
+      startY: y,
+      body: [
+        ['Total Users', String(totalUsers), 'Total Sellers', String(totalSellers)],
+        ['Total Listings', String(totalListings), 'Active Listings', String(activeListings)],
+        ['Draft Listings', String(draftListings), 'Featured Listings', String(featuredCount)],
+        ['Total Views', String(totalViews), 'Total Chat Taps', String(totalChats)],
+        ['Total Saves', String(totalSaves), 'Verified Sellers', String(verifiedSellers)],
+        ['Suspended Sellers', String(suspendedSellers), 'Total Announcements', String(state.allAnnouncements.length)],
+      ],
+      styles: { fontSize: 9, cellPadding: 3 },
+      columnStyles: {
+        0: { fontStyle: 'bold', fillColor: [245, 250, 240], cellWidth: 45 },
+        2: { fontStyle: 'bold', fillColor: [245, 250, 240], cellWidth: 45 }
+      },
+      margin: { left: 14, right: 14 }
+    });
+
+    y = doc.lastAutoTable.finalY + 10;
+
+    // Category breakdown
+    var catMap = {};
+    state.allListings.forEach(function(l) {
+      var c = l.category || 'uncategorized';
+      catMap[c] = (catMap[c] || 0) + 1;
+    });
+    var catRows = Object.keys(catMap).sort(function(a,b){ return catMap[b]-catMap[a]; }).map(function(c){
+      return [c.charAt(0).toUpperCase() + c.slice(1), String(catMap[c]),
+              Math.round(catMap[c] / Math.max(totalListings, 1) * 100) + '%'];
+    });
+
+    doc.setFontSize(11); doc.setFont('helvetica', 'bold'); doc.setTextColor(44, 85, 20);
+    doc.text('Category Breakdown', 14, y); y += 5;
+    doc.autoTable({
+      startY: y,
+      head: [['Category', 'Listings', 'Share']],
+      body: catRows,
+      styles: { fontSize: 9, cellPadding: 2 },
+      headStyles: { fillColor: [44, 85, 20], textColor: 255, fontStyle: 'bold' },
+      alternateRowStyles: { fillColor: [245, 250, 240] },
+      margin: { left: 14, right: 14 },
+      tableWidth: 80
+    });
+
+    y = doc.lastAutoTable.finalY + 10;
+
+    // Top 10 listings by views
+    var top10 = state.allListings.slice().sort(function(a,b){ return (b.views||0)-(a.views||0); }).slice(0, 10);
+    var top10Rows = top10.map(function(l, i){
+      return [String(i+1), l.title || '—', l.sellerName || '—', String(l.views||0), String(l.chatTaps||0), '₦'+Number(l.price||0).toLocaleString('en-NG')];
+    });
+
+    doc.setFontSize(11); doc.setFont('helvetica', 'bold'); doc.setTextColor(44, 85, 20);
+    doc.text('Top 10 Listings by Views', 14, y); y += 5;
+    doc.autoTable({
+      startY: y,
+      head: [['#', 'Title', 'Seller', 'Views', 'Chats', 'Price']],
+      body: top10Rows,
+      styles: { fontSize: 8, cellPadding: 2 },
+      headStyles: { fillColor: [44, 85, 20], textColor: 255, fontStyle: 'bold' },
+      alternateRowStyles: { fillColor: [245, 250, 240] },
+      margin: { left: 14, right: 14 }
+    });
+
+    y = doc.lastAutoTable.finalY + 10;
+    if (y > 250) { doc.addPage(); y = 20; }
+
+    // Top sellers by listing count
+    var sellerRank = state.allSellers.slice().sort(function(a,b){
+      return (state.sellerListingCounts[b.id]||0) - (state.sellerListingCounts[a.id]||0);
+    }).slice(0, 10);
+    var sellerRows = sellerRank.map(function(s, i){
+      var name = ((s.firstName||'')+ ' '+(s.lastName||'')).trim() || s.email || '—';
+      var cnt = state.sellerListingCounts[s.id] || 0;
+      var sViews = state.allListings.filter(function(l){ return l.sellerId === s.id; }).reduce(function(sum,l){ return sum+(l.views||0); },0);
+      return [String(i+1), s.storeName||name, name, String(cnt), String(sViews), s.verified?'✓':'—'];
+    });
+
+    doc.setFontSize(11); doc.setFont('helvetica', 'bold'); doc.setTextColor(44, 85, 20);
+    doc.text('Top 10 Sellers by Listings', 14, y); y += 5;
+    doc.autoTable({
+      startY: y,
+      head: [['#', 'Store', 'Name', 'Listings', 'Views', 'Verified']],
+      body: sellerRows,
+      styles: { fontSize: 8, cellPadding: 2 },
+      headStyles: { fillColor: [44, 85, 20], textColor: 255, fontStyle: 'bold' },
+      alternateRowStyles: { fillColor: [245, 250, 240] },
+      margin: { left: 14, right: 14 }
+    });
+
+    pdfFooter(doc);
+    doc.save('ludek-analytics-' + Date.now() + '.pdf');
+    writeLog('PDF export', 'Full Analytics Report', 'blue');
+    showToast('Analytics PDF exported successfully.', 'success');
+  }
+  window.exportAnalyticsPDF = exportAnalyticsPDF;
+
+  // ============================================================
+  // NOTIFICATIONS SECTION
+  // ============================================================
+  function renderNotificationsSection() {
+    // Populate listing dropdown
+    var listingSel = document.getElementById('notifListingSelect');
+    if (listingSel) {
+      var active = state.allListings.filter(function(l){ return l.status === 'active'; });
+      listingSel.innerHTML = '<option value="">— Select a listing —</option>' +
+        active.map(function(l){
+          return '<option value="' + l.id + '">' + esc(l.title||'Untitled') + ' · ' + esc(l.sellerName||'') + '</option>';
+        }).join('');
+    }
+
+    // Populate seller dropdown
+    var sellerSel = document.getElementById('notifSellerSelect');
+    if (sellerSel) {
+      sellerSel.innerHTML = '<option value="">— Select a seller —</option>' +
+        state.allSellers.map(function(s){
+          var name = ((s.firstName||'')+' '+(s.lastName||'')).trim() || s.email || s.id;
+          return '<option value="' + s.id + '">' + esc(s.storeName || name) + ' (' + esc(name) + ')</option>';
+        }).join('');
+
+      sellerSel.addEventListener('change', function() {
+        updateSellerPreview(this.value);
+      });
+    }
+
+    loadNotificationHistory();
+  }
+
+  function updateSellerPreview(sellerId) {
+    var preview = document.getElementById('notifSellerPreview');
+    if (!preview) return;
+    if (!sellerId) { preview.style.display = 'none'; return; }
+    var s = state.allSellers.find(function(x){ return x.id === sellerId; });
+    if (!s) { preview.style.display = 'none'; return; }
+    var name = ((s.firstName||'')+' '+(s.lastName||'')).trim() || s.email || '—';
+    var cnt = state.sellerListingCounts[sellerId] || 0;
+    preview.style.display = 'block';
+    preview.innerHTML =
+      '<strong>' + esc(s.storeName || name) + '</strong>' +
+      (s.storeName ? ' &nbsp;·&nbsp; ' + esc(name) : '') +
+      ' &nbsp;·&nbsp; ' + cnt + ' listing(s)' +
+      (s.verified ? ' &nbsp;<span style="color:var(--forest);font-weight:700;">✓ Verified</span>' : '') +
+      (s.bio ? '<br><span style="color:var(--text-muted);font-size:0.82rem;">' + esc(s.bio.slice(0, 100)) + (s.bio.length > 100 ? '…' : '') + '</span>' : '');
+  }
+
+  function pickRandomSeller() {
+    if (!state.allSellers.length) { showToast('No sellers loaded.', 'error'); return; }
+    var activeSellers = state.allSellers.filter(function(s){ return s.status !== 'suspended'; });
+    if (!activeSellers.length) { showToast('No active sellers.', 'error'); return; }
+    var picked = activeSellers[Math.floor(Math.random() * activeSellers.length)];
+    var sel = document.getElementById('notifSellerSelect');
+    if (sel) { sel.value = picked.id; updateSellerPreview(picked.id); }
+    showToast('Randomly picked: ' + (picked.storeName || picked.firstName || picked.email), 'success');
+  }
+  window.pickRandomSeller = pickRandomSeller;
+
+  // Write notification doc to Firestore — read by users' apps in real time
+  function writeNotification(payload) {
+    return db.collection('notifications').add(Object.assign({}, payload, {
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      adminId:   state.adminUser ? state.adminUser.uid : null,
+      readBy:    []  // array of uids who've dismissed it
+    }));
+  }
+
+  function sendNewProductNotification() {
+    var listingId = (document.getElementById('notifListingSelect') || {}).value;
+    var customMsg = ((document.getElementById('notifListingMsg') || {}).value || '').trim();
+    if (!listingId) { showToast('Select a listing first.', 'error'); return; }
+
+    var listing = state.allListings.find(function(l){ return l.id === listingId; });
+    if (!listing) { showToast('Listing not found in state.', 'error'); return; }
+
+    var title   = '🛍️ New Arrival: ' + (listing.title || 'Product');
+    var message = customMsg || ('Check out this new listing on Ludek Marketplace!');
+
+    writeNotification({
+      type:       'new_product',
+      targetAll:  true,
+      title:      title,
+      message:    message,
+      listingId:  listingId,
+      listingTitle: listing.title || '',
+      coverImage: listing.coverImage || (listing.images && listing.images[0]) || null,
+      price:      listing.price || 0,
+      sellerName: listing.sellerName || listing.storeName || ''
+    }).then(function() {
+      showToast('New product notification sent to all users!', 'success');
+      writeLog('Notification sent', 'New product: ' + listing.title, 'green');
+      loadNotificationHistory();
+      // Also write an announcement for the announcements feed
+      db.collection('announcements').add({
+        title:     title,
+        message:   message,
+        type:      'new_product',
+        listingId: listingId,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      }).catch(function(){});
+    }).catch(function(e){ showToast('Failed: ' + e.message, 'error'); });
+  }
+  window.sendNewProductNotification = sendNewProductNotification;
+
+  function sendSellerSpotlight() {
+    var sellerId  = (document.getElementById('notifSellerSelect') || {}).value;
+    var customMsg = ((document.getElementById('notifSellerMsg') || {}).value || '').trim();
+    if (!sellerId) { showToast('Select a seller first.', 'error'); return; }
+
+    var seller = state.allSellers.find(function(s){ return s.id === sellerId; });
+    if (!seller) { showToast('Seller not found.', 'error'); return; }
+
+    var storeName = seller.storeName || ((seller.firstName||'')+' '+(seller.lastName||'')).trim() || seller.email;
+    var title   = '⭐ Seller Spotlight: ' + storeName;
+    var message = customMsg || ('Discover ' + storeName + '\'s listings on Ludek Marketplace today!');
+    var cnt = state.sellerListingCounts[sellerId] || 0;
+
+    writeNotification({
+      type:        'seller_spotlight',
+      targetAll:   true,
+      title:       title,
+      message:     message,
+      sellerId:    sellerId,
+      sellerName:  storeName,
+      sellerPhoto: seller.photoURL || null,
+      listingCount: cnt
+    }).then(function() {
+      showToast('Seller spotlight sent to all users!', 'success');
+      writeLog('Notification sent', 'Spotlight: ' + storeName, 'amber');
+      loadNotificationHistory();
+      db.collection('announcements').add({
+        title:    title,
+        message:  message,
+        type:     'seller_spotlight',
+        sellerId: sellerId,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      }).catch(function(){});
+    }).catch(function(e){ showToast('Failed: ' + e.message, 'error'); });
+  }
+  window.sendSellerSpotlight = sendSellerSpotlight;
+
+  function loadNotificationHistory() {
+    var container = document.getElementById('notifHistoryContainer');
+    if (!container) return;
+    container.innerHTML = '<div style="color:var(--text-muted);font-size:0.85rem;">Loading…</div>';
+
+    db.collection('notifications').orderBy('createdAt', 'desc').limit(20).get()
+      .then(function(snap) {
+        if (snap.empty) {
+          container.innerHTML = '<div style="color:var(--text-muted);font-size:0.85rem;padding:12px 0;">No notifications sent yet.</div>';
+          return;
+        }
+        var icons = { new_product: '🛍️', seller_spotlight: '⭐', announcement: '📢' };
+        container.innerHTML = snap.docs.map(function(d) {
+          var n = d.data();
+          var icon = icons[n.type] || '🔔';
+          var readCount = Array.isArray(n.readBy) ? n.readBy.length : 0;
+          return '<div style="display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);">' +
+            '<span style="font-size:1.2rem;flex-shrink:0;line-height:1;">' + icon + '</span>' +
+            '<div style="flex:1;min-width:0;">' +
+              '<div style="font-weight:600;font-size:0.875rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(n.title||'—') + '</div>' +
+              '<div style="font-size:0.8rem;color:var(--text-muted);margin-top:2px;">' + esc(n.message||'') + '</div>' +
+              '<div style="font-size:0.75rem;color:var(--text-light);margin-top:3px;">' + formatDate(n.createdAt) + ' &nbsp;·&nbsp; ' + readCount + ' read</div>' +
+            '</div>' +
+            '<button onclick="deleteNotification(\'' + d.id + '\')" style="flex-shrink:0;background:none;border:none;color:var(--text-light);cursor:pointer;padding:2px 5px;font-size:12px;" title="Delete"><i class="fas fa-xmark"></i></button>' +
+          '</div>';
+        }).join('');
+      })
+      .catch(function(e) {
+        container.innerHTML = '<div style="color:var(--red);font-size:0.85rem;">Failed to load: ' + esc(e.message) + '</div>';
+      });
+  }
+  window.loadNotificationHistory = loadNotificationHistory;
+
+  function deleteNotification(id) {
+    db.collection('notifications').doc(id).delete()
+      .then(function() { showToast('Notification removed.', 'success'); loadNotificationHistory(); })
+      .catch(function(){ showToast('Failed to remove.', 'error'); });
+  }
+  window.deleteNotification = deleteNotification;
+
