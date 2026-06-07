@@ -2,7 +2,7 @@ const { google } = require('googleapis');
 
 const FIREBASE_PROJECT_ID = 'dmb-5b8e2';
 
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -34,12 +34,19 @@ module.exports = async function handler(req, res) {
             body: JSON.stringify({
               message: {
                 token,
-                notification: { title, body },
-                data: { url: url || 'https://ludek-marketplace.vercel.app', type: type || 'general' },
+                // NO top-level notification block — forces SW handler
+                data: {
+                  url:  url  || 'https://ludek-marketplace.vercel.app',
+                  type: type || 'general',
+                  title: title || 'Ludek Marketplace',
+                  body:  body  || ''
+                },
                 webpush: {
                   notification: {
-                    icon: 'https://ludek-marketplace.vercel.app/assets/icon-192.png',
-                    badge: 'https://ludek-marketplace.vercel.app/assets/icon-192.png'
+                    title: title || 'Ludek Marketplace',
+                    body:  body  || '',
+                    icon:  '/assets/icon-192.png',
+                    badge: '/assets/icon-192.png'
                   },
                   fcm_options: {
                     link: url || 'https://ludek-marketplace.vercel.app'
@@ -55,11 +62,10 @@ module.exports = async function handler(req, res) {
     const success = results.filter(r => r.status === 'fulfilled').length;
     const failed  = results.filter(r => r.status === 'rejected').length;
 
-    console.log('[FCM] Success:', success, 'Failed:', failed);
     return res.status(200).json({ success, failed });
 
   } catch (err) {
     console.error('[FCM V1] Error:', err);
     return res.status(500).json({ error: err.message });
   }
-};
+      }
