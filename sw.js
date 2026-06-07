@@ -1,5 +1,18 @@
 // Ludek Marketplace — Service Worker
 // Version: 16.0.0
+importScripts('https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging-compat.js');
+
+firebase.initializeApp({
+  apiKey: "AIzaSyAvhaV4JR59o2lW7tniMu1GyrEte6ZjvQ8",
+  authDomain: "dmb-5b8e2.firebaseapp.com",
+  projectId: "dmb-5b8e2",
+  storageBucket: "dmb-5b8e2.firebasestorage.app",
+  messagingSenderId: "225510920822",
+  appId: "1:225510920822:web:89cc6d0f27ec97d90ac557"
+});
+
+const messaging = firebase.messaging();
 
 
 if ('serviceWorker' in navigator) {
