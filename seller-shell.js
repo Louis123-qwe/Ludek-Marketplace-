@@ -6,6 +6,26 @@
 //          logout, listing count badge
 // ============================================================
 
+async function registerFCMToken(uid) {
+  try {
+    if (!firebase.messaging || typeof firebase.messaging !== 'function') return;
+    const messaging = firebase.messaging();
+
+    const VAPID_KEY = 'BJ99V5eLRXBR5XxzyzSimoxHhg2YL4UBgJxvzEcy3CfwbdE9PPCc8MJM1BwA6UL4D-T6e6Q4v3SnhYIdO8wBaJE';
+
+    const permission = await Notification.requestPermission();
+    if (permission !== 'granted') return;
+
+    const token = await messaging.getToken({ vapidKey: VAPID_KEY, serviceWorkerRegistration: await navigator.serviceWorker.ready });
+    if (!token) return;
+
+    await firebase.firestore().collection('users').doc(uid).update({ fcmToken: token });
+    console.log('[Ludek FCM] Token registered:', token.slice(0, 20) + '…');
+  } catch (err) {
+    console.warn('[Ludek FCM] Token registration skipped:', err.message);
+  }
+}
+
 (function SellerShell() {
 
   // ── Wait for Firebase auth state ──────────────────────────
@@ -215,33 +235,6 @@ function hydrateShell(user, data) {
     });
   }
 
-
-  // ── FCM Push Notification Token Registration ──────────────
-  // Requests browser notification permission and saves the FCM
-  // token to Firestore so Cloud Functions can send push notifications.
-  async function registerFCMToken(uid) {
-    try {
-      
-      if (!firebase.messaging || typeof firebase.messaging !== 'function') return;
-      const messaging = firebase.messaging();
-
-      
-      const VAPID_KEY = 'BJ99V5eLRXBR5XxzyzSimoxHhg2YL4UBgJxvzEcy3CfwbdE9PPCc8MJM1BwA6UL4D-T6e6Q4v3SnhYIdO8wBaJE'; 
-
-      const permission = await Notification.requestPermission();
-      if (permission !== 'granted') return;
-
-      const token = await messaging.getToken({ vapidKey: VAPID_KEY, serviceWorkerRegistration: await navigator.serviceWorker.ready });
-      if (!token) return;
-
-      // Save token to Firestore user doc
-      await firebase.firestore().collection('users').doc(uid).update({ fcmToken: token });
-      console.log('[Ludek FCM] Token registered:', token.slice(0, 20) + '…');
-    } catch (err) {
-      // Silently fail — push is enhancement, not critical
-      console.warn('[Ludek FCM] Token registration skipped:', err.message);
-    }
-  }
 
   // ── Boot ──────────────────────────────────────────────────
   waitForFirebase(() => {
