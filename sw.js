@@ -1,5 +1,5 @@
 // Ludek Marketplace — Service Worker
-// Version: 15.0.0
+// Version: 16.0.0
 
 
 if ('serviceWorker' in navigator) {
@@ -10,9 +10,9 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-const CACHE_NAME = 'ludek-v15';
-const STATIC_CACHE = 'ludek-static-v15';
-const DYNAMIC_CACHE = 'ludek-dynamic-v15';
+const CACHE_NAME = 'ludek-v16';
+const STATIC_CACHE = 'ludek-static-v16';
+const DYNAMIC_CACHE = 'ludek-dynamic-v16';
 
 const STATIC_ASSETS = [
   '/',
