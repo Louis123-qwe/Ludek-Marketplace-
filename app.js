@@ -32,6 +32,46 @@
   }
 })();
 
+
+
+// ============================================================
+// FCM — FOREGROUND MESSAGE HANDLER
+// ============================================================
+(function initFCMForeground() {
+  if (!('serviceWorker' in navigator)) return;
+
+  window.addEventListener('load', async () => {
+    try {
+      if (!firebase.messaging || typeof firebase.messaging !== 'function') return;
+      const messaging = firebase.messaging();
+
+      messaging.onMessage((payload) => {
+        const n     = payload.notification || {};
+        const d     = payload.data         || {};
+        const title = n.title || d.title   || 'Ludek Marketplace';
+        const body  = n.body  || d.body    || '';
+        const url   = payload.fcmOptions?.link || d.url || '/';
+
+        // Show native browser notification (requires permission, which sellers already granted)
+        if (Notification.permission === 'granted') {
+          navigator.serviceWorker.ready.then(reg => {
+            reg.showNotification(title, {
+              body,
+              icon:    '/assets/icon-192.png',
+              badge:   '/assets/icon-192.png',
+              vibrate: [100, 50, 100],
+              data:    { url }
+            });
+          });
+        }
+      });
+
+    } catch (err) {
+      console.warn('[Ludek FCM] Foreground handler skipped:', err.message);
+    }
+  });
+})();
+
 // ============================================================
 // PWA — INSTALL PROMPT
 // ============================================================
