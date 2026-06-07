@@ -156,39 +156,14 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
-// Background sync placeholder
-self.addEventListener('sync', (event) => {
-  if (event.tag === 'sync-listings') {
-    console.log('[SW] Background sync: sync-listings');
-  }
-});
-
-// Push notification — handled by Firebase Messaging SDK
-// The manual handler below is a fallback only for non-FCM pushes
-self.addEventListener('push', (event) => {
-  // If Firebase Messaging is handling it, let it through
-  if (event.data) {
-    try {
-      const payload = event.data.json();
-      // FCM sends notification in payload.notification
-      const title = (payload.notification && payload.notification.title) || payload.title || 'Ludek Marketplace';
-      const body  = (payload.notification && payload.notification.body)  || payload.body  || 'New activity on your listings';
-      const url   = (payload.fcmOptions && payload.fcmOptions.link) || (payload.data && payload.data.url) || '/';
-
-      const options = {
-        body,
-        icon:    '/assets/icon-192.png',
-        badge:   '/assets/icon-192.png',
-        vibrate: [100, 50, 100],
-        data:    { url }
-      };
-      event.waitUntil(self.registration.showNotification(title, options));
-    } catch(e) {
-      // fallback
-      event.waitUntil(self.registration.showNotification('Ludek Marketplace', {
-        body: event.data.text() || 'New activity on your listings',
-        icon: '/assets/icon-192.png'
-      }));
-    }
-  }
+messaging.onBackgroundMessage((payload) => {
+  const title = payload.notification.title || 'Ludek Marketplace';
+  const options = {
+    body:    payload.notification.body || '',
+    icon:    '/assets/icon-192.png',
+    badge:   '/assets/icon-192.png',
+    vibrate: [100, 50, 100],
+    data:    { url: payload.fcmOptions?.link || '/' }
+  };
+  self.registration.showNotification(title, options);
 });
