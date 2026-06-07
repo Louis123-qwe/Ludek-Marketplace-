@@ -14,9 +14,9 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-const CACHE_NAME = 'ludek-v24';
-const STATIC_CACHE = 'ludek-static-v24';
-const DYNAMIC_CACHE = 'ludek-dynamic-v24';
+const CACHE_NAME = 'ludek-v25';
+const STATIC_CACHE = 'ludek-static-v25';
+const DYNAMIC_CACHE = 'ludek-dynamic-v25';
 
 const STATIC_ASSETS = [
   '/',
@@ -148,13 +148,17 @@ self.addEventListener('fetch', (event) => {
 });
 
 messaging.onBackgroundMessage((payload) => {
-  const title = payload.notification.title || 'Ludek Marketplace';
+  const n   = payload.notification || {};
+  const d   = payload.data         || {};
+
+  const title = n.title || d.title || 'Ludek Marketplace';
   const options = {
-    body:    payload.notification.body || '',
+    body:    n.body  || d.body  || '',
     icon:    '/assets/icon-192.png',
     badge:   '/assets/icon-192.png',
     vibrate: [100, 50, 100],
-    data:    { url: payload.fcmOptions?.link || '/' }
+    data:    { url: payload.fcmOptions?.link || d.url || '/' }
   };
+
   self.registration.showNotification(title, options);
 });
