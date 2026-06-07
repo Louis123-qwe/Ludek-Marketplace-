@@ -23,9 +23,9 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-const CACHE_NAME = 'ludek-v21';
-const STATIC_CACHE = 'ludek-static-v21';
-const DYNAMIC_CACHE = 'ludek-dynamic-v21';
+const CACHE_NAME = 'ludek-v22';
+const STATIC_CACHE = 'ludek-static-v22';
+const DYNAMIC_CACHE = 'ludek-dynamic-v22';
 
 const STATIC_ASSETS = [
   '/',
