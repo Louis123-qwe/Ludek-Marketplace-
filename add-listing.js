@@ -9,10 +9,9 @@
 
 (function AddListing() {
 
-  // ── Cloudinary config (set your own upload preset) ─────────
-  const CLOUDINARY_CLOUD_NAME = 'dataktghg';   // ← replace
-  const CLOUDINARY_UPLOAD_PRESET = 'Ludek Marketplace';    // ← Cloudinary preset names must be lowercase_underscore (no spaces)
-
+  // ── Cloudinary config  ─────────
+  const CLOUDINARY_CLOUD_NAME = 'dataktghg';   
+  const CLOUDINARY_UPLOAD_PRESET = 'Ludek Marketplace';    
   // ── State ──────────────────────────────────────────────────
   let currentUser  = null;
   let currentData  = null;
@@ -39,7 +38,23 @@ function runInit() {
   setupCharCounters();
   setupFormSubmit();
   setupRadioCards();
+  autoFillPhone();
 }
+
+  // ── Auto-fill WhatsApp from seller profile (add mode only) ─
+  function autoFillPhone() {
+    // Only pre-fill in add mode (not edit — edit loads its own data)
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('edit')) return;
+    if (!currentData) return;
+    const waField = document.getElementById('listingWhatsapp');
+    if (!waField || waField.value) return; // already filled
+    let digits = String(currentData.whatsapp || currentData.phone || '').replace(/\D/g, '');
+    if (!digits) return;
+    if (digits.startsWith('0') && digits.length === 11) digits = '234' + digits.slice(1);
+    if (!digits.startsWith('234')) digits = '234' + digits;
+    waField.value = digits;
+  }
   // ── Edit Mode Detection ────────────────────────────────────
   // If URL has ?edit=<listingId>, we load existing data
   function detectEditMode() {
