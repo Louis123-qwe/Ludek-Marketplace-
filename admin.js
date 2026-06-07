@@ -2727,7 +2727,7 @@ async function sendFCMPush(payload) {
       return;
     }
 
-    const response = await fetch('/send-notification', {
+    const response = await fetch('/api/send-notification', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -2749,12 +2749,13 @@ async function sendFCMPush(payload) {
 
   // Write notification doc to Firestore — read by users' apps in real time
   function writeNotification(payload) {
-  sendFCMPush(payload); 
+  sendFCMPush(payload); // ← must be inside
   return db.collection('notifications').add(Object.assign({}, payload, {
     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
     targetAll: true
   }));
   }
+
   function sendNewProductNotification() {
     var listingId = (document.getElementById('notifListingSelect') || {}).value;
     var customMsg = ((document.getElementById('notifListingMsg') || {}).value || '').trim();
