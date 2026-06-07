@@ -23,9 +23,9 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-const CACHE_NAME = 'ludek-v20';
-const STATIC_CACHE = 'ludek-static-v20';
-const DYNAMIC_CACHE = 'ludek-dynamic-v20';
+const CACHE_NAME = 'ludek-v21';
+const STATIC_CACHE = 'ludek-static-v21';
+const DYNAMIC_CACHE = 'ludek-dynamic-v21';
 
 const STATIC_ASSETS = [
   '/',
@@ -163,23 +163,32 @@ self.addEventListener('sync', (event) => {
   }
 });
 
-// Push notification placeholder
+// Push notification — handled by Firebase Messaging SDK
+// The manual handler below is a fallback only for non-FCM pushes
 self.addEventListener('push', (event) => {
-  const data = event.data ? event.data.json() : {};
-  const title = data.title || 'Ludek Marketplace';
-  const options = {
-    body: data.body || 'New activity on your listings',
-    icon: '/assets/icon-192.png',
-    badge: '/assets/icon-192.png',
-    vibrate: [100, 50, 100],
-    data: { url: data.url || '/' }
-  };
-  event.waitUntil(self.registration.showNotification(title, options));
-});
+  // If Firebase Messaging is handling it, let it through
+  if (event.data) {
+    try {
+      const payload = event.data.json();
+      // FCM sends notification in payload.notification
+      const title = (payload.notification && payload.notification.title) || payload.title || 'Ludek Marketplace';
+      const body  = (payload.notification && payload.notification.body)  || payload.body  || 'New activity on your listings';
+      const url   = (payload.fcmOptions && payload.fcmOptions.link) || (payload.data && payload.data.url) || '/';
 
-self.addEventListener('notificationclick', (event) => {
-  event.notification.close();
-  event.waitUntil(
-    clients.openWindow(event.notification.data.url || '/')
-  );
+      const options = {
+        body,
+        icon:    '/assets/icon-192.png',
+        badge:   '/assets/icon-192.png',
+        vibrate: [100, 50, 100],
+        data:    { url }
+      };
+      event.waitUntil(self.registration.showNotification(title, options));
+    } catch(e) {
+      // fallback
+      event.waitUntil(self.registration.showNotification('Ludek Marketplace', {
+        body: event.data.text() || 'New activity on your listings',
+        icon: '/assets/icon-192.png'
+      }));
+    }
+  }
 });
