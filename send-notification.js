@@ -1,6 +1,6 @@
 const { google } = require('googleapis');
 
-const FIREBASE_PROJECT_ID = 'ludek-marketplace'; // ← your project ID
+const FIREBASE_PROJECT_ID = 'dmb-5b8e2'; // ← your project ID
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
