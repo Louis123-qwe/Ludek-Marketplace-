@@ -21,8 +21,9 @@ async function registerFCMToken(uid) {
 
     await firebase.firestore().collection('users').doc(uid).update({ fcmToken: token });
     console.log('[Ludek FCM] Token registered:', token.slice(0, 20) + '…');
-  } catch (err) {
-    console.warn('[Ludek FCM] Token registration skipped:', err.message);
+} catch (err) {
+  console.warn('[Ludek FCM] Token registration skipped:', err.message);
+  alert('[FCM Error] ' + err.message);
   }
 }
 
