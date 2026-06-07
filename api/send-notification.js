@@ -1,8 +1,8 @@
 const { google } = require('googleapis');
 
-const FIREBASE_PROJECT_ID = 'dmb-5b8e2'; // ← your project ID
+const FIREBASE_PROJECT_ID = 'dmb-5b8e2';
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -14,7 +14,6 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'No tokens provided' });
     }
 
-    // Get OAuth2 access token using service account
     const auth = new google.auth.GoogleAuth({
       credentials: JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT),
       scopes: ['https://www.googleapis.com/auth/firebase.messaging']
@@ -22,7 +21,6 @@ export default async function handler(req, res) {
 
     const accessToken = await auth.getAccessToken();
 
-    // Send to each token (V1 API doesn't support multicast directly)
     const results = await Promise.allSettled(
       tokens.map(token =>
         fetch(
@@ -40,8 +38,8 @@ export default async function handler(req, res) {
                 data: { url: url || 'https://ludek-marketplace.vercel.app', type: type || 'general' },
                 webpush: {
                   notification: {
-                    icon: '/favicon.svg',
-                    badge: '/favicon.svg'
+                    icon: 'https://ludek-marketplace.vercel.app/assets/icon-192.png',
+                    badge: 'https://ludek-marketplace.vercel.app/assets/icon-192.png'
                   },
                   fcm_options: {
                     link: url || 'https://ludek-marketplace.vercel.app'
@@ -57,10 +55,11 @@ export default async function handler(req, res) {
     const success = results.filter(r => r.status === 'fulfilled').length;
     const failed  = results.filter(r => r.status === 'rejected').length;
 
+    console.log('[FCM] Success:', success, 'Failed:', failed);
     return res.status(200).json({ success, failed });
 
   } catch (err) {
     console.error('[FCM V1] Error:', err);
     return res.status(500).json({ error: err.message });
   }
-                    }
+};
