@@ -2709,15 +2709,52 @@
   }
   window.pickRandomSeller = pickRandomSeller;
 
+
+// ─── FCM Push via Vercel Function ─────────────────────────────
+async function sendFCMPush(payload) {
+  try {
+    const usersSnap = await db.collection('users').get();
+    const tokens = [];
+    usersSnap.forEach(doc => {
+      const token = doc.data().fcmToken;
+      if (token && typeof token === 'string' && token.length > 10) {
+        tokens.push(token);
+      }
+    });
+
+    if (!tokens.length) {
+      console.warn('[FCM] No tokens found.');
+      return;
+    }
+
+    const response = await fetch('/send-notification', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        tokens,
+        title: payload.title,
+        body:  payload.message,
+        url:   payload.url,
+        type:  payload.type
+      })
+    });
+
+    const result = await response.json();
+    console.log('[FCM] Sent:', result.success, 'success,', result.failed, 'failed.');
+
+  } catch (err) {
+    console.error('[FCM] Error:', err);
+  }
+}
+
   // Write notification doc to Firestore — read by users' apps in real time
   function writeNotification(payload) {
-    return db.collection('notifications').add(Object.assign({}, payload, {
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      adminId:   state.adminUser ? state.adminUser.uid : null,
-      readBy:    []  // array of uids who've dismissed it
-    }));
+  sendFCMPush(payload); 
+  return db.collection('notifications').add(Object.assign({}, payload, {
+    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    targetAll: true
+  }));
   }
-
   function sendNewProductNotification() {
     var listingId = (document.getElementById('notifListingSelect') || {}).value;
     var customMsg = ((document.getElementById('notifListingMsg') || {}).value || '').trim();
