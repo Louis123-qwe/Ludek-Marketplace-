@@ -212,6 +212,12 @@ function handleLogin(e) {
         .then(function (userData) {
           // Blocked account check
           if (userData.status === 'blocked') {
+            db().collection('securityEvents').add({
+              type: 'blocked_login_attempt',
+              uid: cred.user.uid,
+              email: cred.user.email || '',
+              at: firebase.firestore.FieldValue.serverTimestamp()
+            }).catch(function () {});
             return auth().signOut().then(function () {
               setLoading('loginBtn', false);
               showAlert('authAlertLogin', 'error',
