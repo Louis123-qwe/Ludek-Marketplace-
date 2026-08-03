@@ -23,7 +23,6 @@ async function registerFCMToken(uid) {
     console.log('[Ludek FCM] Token registered:', token.slice(0, 20) + '…');
 } catch (err) {
   console.warn('[Ludek FCM] Token registration skipped:', err.message);
-  alert('[FCM Error] ' + err.message);
   }
 }
 
@@ -148,7 +147,9 @@ function hydrateShell(user, data) {
   
   window._sellerUser = user;
   window._sellerData = data;
-  
+
+  if (!user.emailVerified) showVerifyBanner(user);
+
   // Reveal content only after auth is confirmed
   var shell = document.getElementById('sellerShell');
   if (shell) shell.style.visibility = '';
@@ -159,6 +160,20 @@ function hydrateShell(user, data) {
     setTimeout(function() { loader.remove(); }, 500);
   }
 }
+
+  function showVerifyBanner(user) {
+    if (document.getElementById('verifyEmailBanner')) return;
+    var bar = document.createElement('div');
+    bar.id = 'verifyEmailBanner';
+    bar.style.cssText = 'background:#fff3cd;color:#7a5b00;padding:10px 16px;text-align:center;font-size:14px;font-weight:500;';
+    bar.innerHTML = 'Please verify your email to post listings. <button id="resendVerifyBtn" style="margin-left:8px;text-decoration:underline;background:none;border:none;color:#7a5b00;cursor:pointer;font-weight:600;">Resend email</button>';
+    document.body.prepend(bar);
+    document.getElementById('resendVerifyBtn').addEventListener('click', function () {
+      user.sendEmailVerification()
+        .then(function () { if (typeof showToast === 'function') showToast('Verification email sent.', 'success'); })
+        .catch(function () { if (typeof showToast === 'function') showToast('Could not send email, try again shortly.', 'error'); });
+    });
+  }
 
   function setAvatarImage(wrapperId, url) {
     const wrap = document.getElementById(wrapperId);
