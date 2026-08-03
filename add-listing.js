@@ -369,6 +369,12 @@ slot.addEventListener('click', (e) => {
 
     if (!validateForm()) return;
 
+    if (!editListingId && currentUser && !currentUser.emailVerified) {
+      showToast('Please verify your email before posting a listing.', 'error');
+      currentUser.sendEmailVerification().catch(function () {});
+      return;
+    }
+
     setSubmitLoading(true);
     isSubmitting = true;
 
