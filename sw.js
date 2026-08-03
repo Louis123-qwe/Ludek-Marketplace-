@@ -14,9 +14,9 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-const CACHE_NAME = 'ludek-v29';
-const STATIC_CACHE = 'ludek-static-v29';
-const DYNAMIC_CACHE = 'ludek-dynamic-v29';
+const CACHE_NAME = 'ludek-v30';
+const STATIC_CACHE = 'ludek-static-v30';
+const DYNAMIC_CACHE = 'ludek-dynamic-v30';
 
 const STATIC_ASSETS = [
   '/',
