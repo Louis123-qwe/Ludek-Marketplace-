@@ -682,3 +682,8 @@
     width: 210px;
   }
 }
+
+
+/* Scale the whole UI to 90%. Uses CSS zoom (no viewport change, so no sideways panning). */
+html { zoom: 0.9; }
+.app, .splash, .page-loading { min-height: calc(100dvh / 0.9); }
