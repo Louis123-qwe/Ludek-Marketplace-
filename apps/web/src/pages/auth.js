@@ -15,10 +15,10 @@ const AUTH_ERRORS = {
   'auth/email-already-in-use': 'An account with this email already exists. Log in instead.',
   'auth/weak-password': 'Choose a stronger password.',
   'auth/too-many-requests': 'Too many attempts. Wait a few minutes and try again.',
-  'auth/network-request-failed': 'Network error. Check your connection and try again.'
+  'auth/network-request-failed': 'Could not reach Google sign-in (auth/network-request-failed). Check your connection or disable ad blockers.'
 };
 
-const authMessage = error => AUTH_ERRORS[error.code] || error.message || 'Could not sign you in. Try again.';
+const authMessage = error => AUTH_ERRORS[error.code] || (error.code ? `${error.message} (${error.code})` : error.message) || 'Could not sign you in. Try again.';
 
 const RULES = [
   ['8 or more characters', value => value.length >= 8],
