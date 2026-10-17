@@ -1,0 +1,8 @@
+title = "Ludek Market gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Firebase web API keys are public client identifiers, not secrets. Restrict the key by HTTP referrer in Google Cloud instead."
+regexes = ['''AIzaSyAvhaV4JR59o2lW7tniMu1GyrEte6ZjvQ8''']

@@ -38,6 +38,8 @@ export const adCard = ad => {
   return `<a ${attrs} href="${esc(ad.link)}" ${external ? 'target="_blank" rel="noopener"' : ''}>${inner}</a>`;
 };
 
+const MAX_DOTS = 5;
+
 export async function mountAds(el) {
   if (!el) return () => {};
   let items = [];
@@ -50,21 +52,49 @@ export async function mountAds(el) {
     el.remove();
     return () => {};
   }
-  el.innerHTML = `<div class="ads-view"><div class="ads-track">${items.map(adCard).join('')}</div></div><div class="ads-dots">${items.map((_, i) => `<i class="${i === 0 ? 'on' : ''}"></i>`).join('')}</div>`;
+  const total = items.length;
+  const loop = total > 1;
+  const dotCount = Math.min(total, MAX_DOTS);
+  el.innerHTML = `<div class="ads-view"><div class="ads-track">${items.map(adCard).join('')}${loop ? adCard(items[0]) : ''}</div></div>${loop ? `<div class="ads-dots">${Array.from({ length: dotCount }, (_, i) => `<i class="${i === 0 ? 'on' : ''}"></i>`).join('')}</div>` : ''}`;
 
   const track = el.querySelector('.ads-track');
   const dots = [...el.querySelectorAll('.ads-dots i')];
   let index = 0;
 
-  const go = next => {
-    index = (next + items.length) % items.length;
-    const first = track.children[0];
-    const step = first.offsetWidth + 12;
-    track.style.transform = `translateX(${-index * step}px)`;
-    dots.forEach((dot, i) => dot.classList.toggle('on', i === index));
+  const place = (to, animate) => {
+    track.style.transition = animate ? '' : 'none';
+    track.style.transform = `translateX(${-to * (track.children[0].offsetWidth + 12)}px)`;
+    if (!animate) void track.offsetWidth;
   };
+  const light = () => {
+    const slot = total <= MAX_DOTS ? index % total : Math.floor(((index % total) * MAX_DOTS) / total);
+    dots.forEach((dot, i) => dot.classList.toggle('on', i === slot));
+  };
+  const go = direction => {
+    if (!loop) return;
+    if (direction > 0) {
+      if (index >= total) {
+        index = 0;
+        place(0, false);
+      }
+      index += 1;
+    } else {
+      if (index <= 0) {
+        index = total;
+        place(total, false);
+      }
+      index -= 1;
+    }
+    place(index, true);
+    light();
+  };
+  track.addEventListener('transitionend', event => {
+    if (event.target !== track || index < total) return;
+    index = 0;
+    place(0, false);
+  });
 
-  let timer = items.length > 1 ? setInterval(() => go(index + 1), 4500) : null;
+  let timer = loop ? setInterval(() => go(1), 4500) : null;
   let startX = 0;
   track.addEventListener('touchstart', event => {
     startX = event.changedTouches[0].clientX;
@@ -72,8 +102,8 @@ export async function mountAds(el) {
   }, { passive: true });
   track.addEventListener('touchend', event => {
     const delta = event.changedTouches[0].clientX - startX;
-    if (Math.abs(delta) > 40) go(index + (delta < 0 ? 1 : -1));
-    if (items.length > 1) timer = setInterval(() => go(index + 1), 4500);
+    if (Math.abs(delta) > 40) go(delta < 0 ? 1 : -1);
+    if (loop) timer = setInterval(() => go(1), 4500);
   });
 
   return () => clearInterval(timer);

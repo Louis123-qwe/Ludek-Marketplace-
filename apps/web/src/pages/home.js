@@ -9,6 +9,7 @@ import { mountStrip } from '../components/strip.js';
 import { mountAds } from '../components/ads.js';
 import { logoMark, wordmark } from '../components/brand.js';
 import { initials, naira, splitName, timeAgo } from '../lib/format.js';
+import { avatar } from '../components/ui.js';
 import { navigate, setTitle } from '../router.js';
 
 const greeting = () => {
@@ -54,8 +55,26 @@ export default async function home(root) {
       </div>
       <div class="ads" id="ads"></div>
       <section class="card2 sales" id="sales" hidden></section>
+      <section id="popular" hidden>
+        <div class="sec-h"><h2>Popular right now</h2><a href="/browse?sort=popular">See all</a></div>
+        <div class="hscroll" id="popularRow"></div>
+      </section>
+      <section id="sellers" hidden>
+        <div class="sec-h"><h2>Top sellers</h2></div>
+        <div class="hscroll hs-sellers" id="sellerRow"></div>
+      </section>
       <div class="sec-h"><h2>Fresh on campus</h2><a href="/browse">See all</a></div>
       <div class="grid2" id="fresh"><div class="lc lc-sk"><div class="lc-media sk"></div></div><div class="lc lc-sk"><div class="lc-media sk"></div></div></div>
+      <div class="sec-h"><h2>How it works</h2></div>
+      <ol class="how">
+        <li><span>${icon('search', 22)}</span><b>Find it</b><small>Browse or search what students are selling.</small></li>
+        <li><span>${icon('chat', 22)}</span><b>Chat</b><small>Message the seller on WhatsApp to agree.</small></li>
+        <li><span>${icon('shield', 22)}</span><b>Meet safely</b><small>Meet on campus and pay after you inspect.</small></li>
+      </ol>
+      <a class="sellcta" href="${profile ? '/add-listing' : '/auth?mode=signup&role=seller'}">
+        <span><b>Got something to sell?</b><small>Post it in a minute. It is free.</small></span>
+        <i>${icon('plus', 22)}</i>
+      </a>
     </section>`;
 
   root.querySelector('#search').addEventListener('submit', event => {
@@ -81,6 +100,28 @@ export default async function home(root) {
             <div class="sr-m"><b>${esc(sale.title)}</b><small>${sale.buyerName ? `${esc(sale.sellerName)} to ${esc(sale.buyerName)}` : `Sold by ${esc(sale.sellerName)}`}</small></div>
             <div class="sr-r"><b>${naira(sale.price)}</b><em class="blink">${esc(timeAgo(sale.at))}</em></div>
           </div>`)}`;
+    })
+    .catch(() => null);
+
+  listings
+    .list({ sort: 'popular', limit: 10 })
+    .then(({ items }) => {
+      if (items.length >= 3) {
+        root.querySelector('#popularRow').innerHTML = items.map(listingCard).join('');
+        root.querySelector('#popular').hidden = false;
+      }
+      const seen = new Map();
+      items.forEach(item => {
+        const seller = item.seller;
+        if (seller?.id && seller.ratingCount > 0 && !seen.has(seller.id)) seen.set(seller.id, seller);
+      });
+      const top = [...seen.values()].sort((a, b) => b.rating - a.rating).slice(0, 8);
+      if (top.length >= 2) {
+        root.querySelector('#sellerRow').innerHTML = top
+          .map(seller => `<a class="sl" href="/seller/${esc(seller.id)}">${avatar(seller, 56)}<b>${esc((seller.storeName || seller.fullName || '').split(' ')[0])}</b><small>★ ${Number(seller.rating).toFixed(1)} (${seller.ratingCount})</small></a>`)
+          .join('');
+        root.querySelector('#sellers').hidden = false;
+      }
     })
     .catch(() => null);
 

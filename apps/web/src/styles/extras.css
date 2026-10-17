@@ -9,7 +9,7 @@
   padding: 36px 20px calc(120px + env(safe-area-inset-bottom));
   color: rgb(250 247 240 / 0.82);
   background: var(--forest-deep);
-  border-radius: 0;
+  border-radius: 32px 32px 0 0;
 }
 
 .sfoot-in {
@@ -548,5 +548,137 @@
 
   .adm-sw-top {
     padding-left: 8px;
+  }
+}
+
+.hscroll {
+  display: flex;
+  gap: 12px;
+  margin-right: -18px;
+  padding: 0 18px 6px 0;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+}
+
+.hscroll::-webkit-scrollbar {
+  display: none;
+}
+
+.hscroll > .lc {
+  flex: none;
+  width: 164px;
+  scroll-snap-align: start;
+}
+
+.hs-sellers {
+  gap: 10px;
+}
+
+.sl {
+  display: grid;
+  flex: none;
+  justify-items: center;
+  gap: 4px;
+  width: 96px;
+  padding: 14px 8px;
+  text-align: center;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+}
+
+.sl b {
+  max-width: 100%;
+  overflow: hidden;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sl small {
+  font-size: 11px;
+  color: var(--ink-2);
+}
+
+.how {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.how li {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  padding: 14px 12px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+}
+
+.how span {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  color: var(--forest);
+  background: var(--leaf-2);
+  border-radius: 14px;
+}
+
+.how b {
+  font-size: 14px;
+}
+
+.how small {
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--ink-2);
+}
+
+.sellcta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 18px;
+  padding: 20px 22px;
+  color: var(--paper);
+  background: var(--forest);
+  border-radius: 26px;
+}
+
+.sellcta b {
+  display: block;
+  font-size: 18px;
+}
+
+.sellcta small {
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+.sellcta i {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  color: var(--forest);
+  background: var(--paper);
+  border-radius: 50%;
+}
+
+@media (min-width: 521px) {
+  .hscroll {
+    margin-right: 0;
+  }
+
+  .hscroll > .lc {
+    width: 210px;
   }
 }
