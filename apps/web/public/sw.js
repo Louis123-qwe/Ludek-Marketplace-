@@ -1,4 +1,4 @@
-const VERSION = 'ludek-market-v2';
+const VERSION = 'ludek-market-v1';
 const SHELL = ['/', '/manifest.json', '/favicon.svg'];
 
 self.addEventListener('install', event => {

@@ -682,8 +682,3 @@
     width: 210px;
   }
 }
-
-/* Desktop: scale the whole UI down 10% (mobile does it via the viewport meta) */
-@media (min-width: 821px) {
-  html { zoom: 0.9; }
-}
