@@ -1,0 +1,4 @@
+[advisories]
+# RUSTSEC-2023-0071 (rsa, Marvin timing attack) concerns private-key operations.
+# This API only verifies Google's public-key signatures on login tokens, and no fixed version exists.
+ignore = ["RUSTSEC-2023-0071"]
