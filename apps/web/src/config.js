@@ -6,10 +6,10 @@ export const BRAND = {
 export const API_URL = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
 
 export const FIREBASE_CONFIG = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || 'AIzaSyAvhaV4JR59o2lW7tniMu1GyrEte6ZjvQ8',
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || 'dmb-5b8e2.firebaseapp.com',
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || 'dmb-5b8e2',
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || '1:225510920822:web:89cc6d0f27ec97d90ac557'
 };
 
 export const DEFAULT_CATEGORIES = [

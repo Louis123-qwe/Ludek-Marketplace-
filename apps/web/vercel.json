@@ -19,7 +19,7 @@
     },
     {
       "source": "/api/:path*",
-      "destination": "https://ludek-market-api.onrender.com/api/:path*"
+      "destination": "https://ludek-marketplace.onrender.com/api/:path*"
     },
     {
       "source": "/(.*)",

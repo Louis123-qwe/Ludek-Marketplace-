@@ -10,3 +10,4 @@ target/
 .vercel/
 .DS_Store
 .si.json
+*.zip
