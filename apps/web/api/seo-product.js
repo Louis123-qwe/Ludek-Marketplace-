@@ -1,5 +1,5 @@
-const SITE = (process.env.SITE_URL || 'https://ludekmarket.vercel.app').replace(/\/$/, '');
-const API = (process.env.API_ORIGIN || 'https://ludek-market-api.onrender.com').replace(/\/$/, '');
+const SITE = (process.env.SITE_URL || 'https://ludek-marketplace.vercel.app').replace(/\/$/, '');
+const API = (process.env.API_ORIGIN || 'https://ludek-marketplace.onrender.com').replace(/\/$/, '');
 
 const ESCAPES = { '<': '&lt;', '>': '&gt;', '&': '&amp;', "'": '&#39;', '"': '&quot;' };
 const html = value => String(value ?? '').replace(/[<>&'"]/g, char => ESCAPES[char]);
