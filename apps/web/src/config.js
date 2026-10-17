@@ -3,7 +3,9 @@ export const BRAND = {
   campus: 'UNICROSS, Okuku Campus'
 };
 
-export const API_URL = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
+// In production the browser always calls same-origin /api (Vercel proxies it to Render);
+// a cross-origin value would be blocked by the CSP.
+export const API_URL = import.meta.env.DEV ? (import.meta.env.VITE_API_URL || '').replace(/\/$/, '') : '';
 
 export const FIREBASE_CONFIG = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY || 'AIzaSyAvhaV4JR59o2lW7tniMu1GyrEte6ZjvQ8',
