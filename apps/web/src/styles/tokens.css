@@ -1,0 +1,49 @@
+:root {
+  --forest: #2d5016;
+  --forest-2: #3d6b1f;
+  --forest-deep: #1e3810;
+  --leaf: #eff6e8;
+  --leaf-2: #c8dfb0;
+  --gold: #3d6b1f;
+  --gold-2: #4e8426;
+  --gold-ink: #ffffff;
+  --star: #f59e0b;
+  --paper: #faf7f0;
+  --paper-2: #f0ebe0;
+  --card: #ffffff;
+  --ink: #1a1207;
+  --ink-2: #4a3728;
+  --ink-3: #7a6552;
+  --line: #e4dccf;
+  --line-2: #d9cdbb;
+  --danger: #b93a2b;
+  --danger-bg: #fbe9e5;
+  --warn: #8a4a00;
+  --warn-bg: #fdf0d6;
+  --ok: #2d5016;
+  --ok-bg: #eff6e8;
+
+  --r-sm: 6px;
+  --r-md: 12px;
+  --r-lg: 18px;
+  --r-xl: 24px;
+  --r-pill: 9999px;
+
+  --shadow-1: 0 2px 8px rgb(45 80 22 / 0.08), 0 1px 3px rgb(45 80 22 / 0.06);
+  --shadow-2: 0 16px 48px rgb(45 80 22 / 0.18), 0 8px 20px rgb(45 80 22 / 0.1);
+
+  --glass-bg: rgb(255 255 255 / 0.55);
+  --glass-bg-strong: rgb(250 247 240 / 0.78);
+  --glass-border: rgb(255 255 255 / 0.65);
+  --glass-edge: inset 0 1px 0 rgb(255 255 255 / 0.7), inset 0 -1px 0 rgb(45 80 22 / 0.04);
+  --glass-shadow: 0 8px 32px rgb(45 80 22 / 0.14);
+  --glass-blur: blur(18px) saturate(160%);
+
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+
+  --nav-h: 68px;
+  --tab-h: 64px;
+  --side-w: 260px;
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+}

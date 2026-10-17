@@ -1,62 +1,43 @@
-# Ludek Marketplace — CRUTECH Okuku Campus
-## Phase 1: PWA Foundation ✅
+# Ludek Market
 
----
+The campus marketplace for UNICROSS, Okuku Campus.
 
-### Project Structure
+## Structure
 
+| Folder | What it is | Runs on |
+|---|---|---|
+| `apps/web` | Single-page app in JavaScript, built with Vite | Vercel |
+| `apps/api` | REST API in Rust (axum) with Postgres | Render and Neon |
 
-ludek-marketplace/
-├── index.html              ← Landing page (Phase 1)
-├── auth.html               ← Auth placeholder (Phase 2)
-├── marketplace.html        ← Marketplace placeholder (Phase 3)
-├── manifest.json           ← PWA manifest
-├── sw.js                   ← Service worker (offline + caching)
-│
-├── css/
-│   ├── main.css            ← Design system, global styles
-│   └── landing.css         ← Landing page specific styles
-│
-├── js/
-│   └── app.js              ← Core JS: SW registration, nav, PWA install
-│
-├── firebase/
-│   └── config.js           ← Firebase config (fill in your credentials)
-│
-├── assets/
-│   ├── favicon.svg         ← SVG favicon
-│   ├── icon-192.png        ← PWA icon (generate these!)
-│   └── icon-512.png        ← PWA icon (generate these!)
-│
-├── seller/
-│   └── dashboard.html      ← Placeholder (Phase 4)
-│
-└── admin/                  ← Placeholder (Phase 7)
+Firebase is used for sign-in only. Photos are stored on Cloudinary.
 
+## Run it locally
 
----
+1. Start the API:
+   ```bash
+   cd apps/api
+   cp .env.example .env
+   cargo run
+   ```
+   Open `.env` first and add your Neon connection string and your own email in `ADMIN_EMAILS`.
+2. Start the web app from the repo root:
+   ```bash
+   npm install
+   cp apps/web/.env.example apps/web/.env
+   npm run dev:web
+   ```
+   Add your Firebase values to `apps/web/.env`.
 
-### Design Tokens (Theme)
-- **Forest Green:** `#2D5016` (primary brand, backgrounds)
-- **Burnt Orange:** `#D4520A` (CTA, accents, highlights)
-- **Warm Milk:** `#FAF7F0` (page background)
+## Deploy
 
-All colors are CSS custom properties in `css/main.css` under `:root`.
+**API on Render:** create a Blueprint from this repo. It reads `render.yaml`. Then set `DATABASE_URL`, `ADMIN_EMAILS` and `CORS_ORIGINS` in the Render dashboard. Point UptimeRobot at `/health`.
 
----
+**Web on Vercel:** import the repo and set the Root Directory to `apps/web`. Add the `VITE_` values from `apps/web/.env.example` as environment variables. Add your Vercel domain to Firebase under Authentication, Settings, Authorized domains.
 
-### Phase Progress
+## SEO
 
-| Phase | Description              | Status    |
-|-------|--------------------------|-----------|
-| 1     | PWA Foundation           | ✅ Done   |
-| 2     | Auth System (Firebase)   | ⏳ progress  |
-| 3     | Marketplace Feed         | 🔜 Soon   |
-| 4     | Seller Dashboard         | 🔜 Soon   |
-| 5     | Product System           | 🔜 Soon   |
-| 6     | Seller Profile           | 🔜 Soon   |
-| 7     | Admin Dashboard          | 🔜 Soon   |
-| 8     | PWA Finalization         | 🔜 Soon   |
+Every public page sets its own title, description, canonical link, Open Graph and Twitter tags. Product pages carry Product structured data. `/sitemap.xml` is generated from live listings. Search engines and link previews get a pre-rendered page for each product. `robots.txt` blocks private pages.
 
----
+## Security
 
+See `SECURITY.md`.

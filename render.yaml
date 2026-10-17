@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: ludek-market-api
+    runtime: rust
+    rootDir: apps/api
+    plan: free
+    buildCommand: cargo build --release --bin ludek-backend
+    startCommand: ./target/release/ludek-backend
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: TRUST_PROXY
+        value: "true"
+      - key: FIREBASE_PROJECT_ID
+        value: dmb-5b8e2
+      - key: CLOUDINARY_CLOUD_NAME
+        value: dataktghg
+      - key: CLOUDINARY_UPLOAD_PRESET
+        value: Ludek Marketplace
+      - key: DATABASE_URL
+        sync: false
+      - key: ADMIN_EMAILS
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false

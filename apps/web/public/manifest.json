@@ -1,0 +1,47 @@
+{
+  "id": "/",
+  "name": "Ludek Market",
+  "short_name": "Ludek",
+  "description": "Buy and sell on UNICROSS, Okuku Campus.",
+  "lang": "en-NG",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FAF7F0",
+  "theme_color": "#2D5016",
+  "categories": [
+    "shopping",
+    "business"
+  ],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Browse",
+      "url": "/browse"
+    },
+    {
+      "name": "Sell an item",
+      "url": "/add-listing"
+    }
+  ]
+}

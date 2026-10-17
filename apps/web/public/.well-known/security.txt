@@ -1,0 +1,4 @@
+Contact: mailto:security@ludekmarket.com
+Expires: 2027-10-15T22:35:32Z
+Preferred-Languages: en
+Canonical: https://ludekmarket.vercel.app/.well-known/security.txt

@@ -1,0 +1,16 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin
+Disallow: /auth
+Disallow: /welcome
+Disallow: /dashboard
+Disallow: /my-listings
+Disallow: /profile
+Disallow: /add-listing
+Disallow: /listing/
+Disallow: /saved
+Disallow: /notifications
+Disallow: /marketplace
+
+Sitemap: https://ludekmarket.vercel.app/sitemap.xml

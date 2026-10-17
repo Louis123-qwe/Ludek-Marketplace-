@@ -1,7 +1,19 @@
 {
-  "name": "ludek-marketplace",
+  "name": "ludek-market",
+  "private": true,
   "version": "1.0.0",
-  "dependencies": {
-    "googleapis": "^140.0.0"
+  "description": "Campus marketplace for UNICROSS, Okuku Campus",
+  "workspaces": [
+    "apps/web"
+  ],
+  "scripts": {
+    "dev:web": "npm run dev --workspace @ludek/web",
+    "build:web": "npm run build --workspace @ludek/web",
+    "dev:api": "cargo run --manifest-path apps/api/Cargo.toml",
+    "build:api": "cargo build --release --manifest-path apps/api/Cargo.toml --bin ludek-backend",
+    "import:legacy": "cargo run --manifest-path apps/api/Cargo.toml --bin legacy_import"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }

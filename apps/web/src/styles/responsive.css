@@ -1,0 +1,57 @@
+@media (min-width: 521px) {
+  body {
+    background: var(--paper);
+  }
+
+  .app {
+    max-width: 1180px;
+    box-shadow: none;
+  }
+
+  .bare {
+    max-width: 460px;
+  }
+
+  .pad {
+    padding: 28px 32px 0;
+  }
+
+  .grid2 {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+  }
+
+  .cat4 {
+    grid-template-columns: repeat(8, 1fr);
+  }
+
+  .fnav {
+    width: 520px;
+  }
+
+  .app[data-page="home"] .search2 {
+    max-width: 680px;
+  }
+
+  .app[data-page="dashboard"] .view,
+  .app[data-page="my-listings"] .view,
+  .app[data-page="profile"] .view,
+  .app[data-page="add-listing"] .view,
+  .app[data-page="listing"] .view,
+  .app[data-page="notifications"] .view {
+    max-width: 720px;
+    margin-inline: auto;
+  }
+
+  .app[data-page="product"] .view,
+  .app[data-page="seller"] .view {
+    max-width: 880px;
+    margin-inline: auto;
+  }
+}
+
+@media (min-width: 1100px) {
+  .pad {
+    padding: 32px 40px 0;
+  }
+}
